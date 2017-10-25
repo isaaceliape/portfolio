@@ -1,0 +1,35 @@
+.home {
+  width: calc(100vw - 60px);
+  height: calc(100vh - 60px);
+  position: absolute;
+  // outline: 1px solid red;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  .jobs{
+    display: inline;
+    margin-left: 5vh;
+    &.hovered-over{
+      .job-link{
+        color: #000;
+        &.active{
+          color: #fff;
+        }
+      }
+    }
+    .job-link{
+      font-size: 12vh;
+      font-weight: 100;
+      line-height: 0.9em;
+      font-family: Consolas, monospace;
+      color: #fff;
+      text-decoration: none;
+      display: inline;
+      margin-right: 5vh;
+      display: inline;
+      &:hover{
+        color: blue;
+      }
+    }
+  }
+}

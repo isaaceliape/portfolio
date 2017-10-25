@@ -1,25 +1,10 @@
 $mobile-resolution: 768px;
+$monospace: 53px;
 
 @font-face {
-  font-family: 'sk-modernistbold';
-  src: url('../../assets/fonts/sk-modernist-bold-webfont.woff2') format('woff2'),
-        url('../../assets/fonts/sk-modernist-bold-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'sk-modernistmono';
-  src: url('../../assets/fonts/sk-modernist-mono-webfont.woff2') format('woff2'),
-        url('../../assets/fonts/sk-modernist-mono-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'sk-modernistregular';
-  src: url('../../assets/fonts/sk-modernist-regular-webfont.woff2') format('woff2'),
-        url('../../assets/fonts/sk-modernist-regular-webfont.woff') format('woff');
+  font-family: 'ahamonoregular';
+  src: url('../../assets/fonts/ahamono-regular-webfont.woff2') format('woff2'),
+       url('../../assets/fonts/ahamono-regular-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -30,5 +15,38 @@ $mobile-resolution: 768px;
 }
 
 body {
-  
+  background-color: #000;
+  color: #fff;
 }
+
+.title1{
+  font-size: 12vh;
+  font-weight: 100;
+  line-height: 0.9em;
+  font-family: ahamonoregular, monospace;
+}
+.logo{
+  display: inline;
+  cursor: pointer;
+  &:hover{
+    span {
+      width: auto;
+    }
+  }
+  span{
+    display: inline-block;
+    width: 0;
+    overflow: hidden;
+    vertical-align: top;
+    transition: all 1s ease;
+  }
+}
+.menu-and-tooltip{
+  position: absolute;
+  bottom: 0;
+}
+.hide{
+  display: none;
+}
+
+@import 'home'

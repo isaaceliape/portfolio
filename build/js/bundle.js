@@ -22,18 +22,43 @@ var App = function () {
     _classCallCheck(this, App);
 
     console.log('>>> APP <<<');
-    // INITIAL RULES
     this.el = document.querySelector('body');
-
-    this.menuIsOpen = false;
-    this.currentEventOpen = '';
   }
 
   _createClass(App, [{
     key: 'init',
     value: function init() {
+      var _this = this;
+
       // GET ELEMENTS
-      this.readmoreMenu = this.el.querySelector('.readmore-menu');
+      this.tooltip = this.el.querySelector('.tooltip .tooltip-item');
+      this.menu = this.el.querySelector('.menu-and-tooltip .menu');
+      this.jobs = this.el.querySelector('.jobs');
+      this.jobLinks = Array.prototype.slice.call(this.el.querySelectorAll('.jobs .job-link'));
+      this.jobLinks.forEach(function (element) {
+        element.addEventListener('mouseover', _this.jobLinkHover.bind(_this));
+        element.addEventListener('mouseout', _this.jobLinkOut.bind(_this));
+      });
+    }
+  }, {
+    key: 'jobLinkHover',
+    value: function jobLinkHover(e) {
+      var tooltip = e.currentTarget.dataset.tooltip;
+      this.tooltip.innerText = tooltip;
+      this.menu.classList.add('hide');
+      e.currentTarget.classList.add('active');
+      this.jobs.classList.add('hovered-over');
+    }
+  }, {
+    key: 'jobLinkOut',
+    value: function jobLinkOut(e) {
+      this.tooltip.innerText = '';
+
+      this.jobs.classList.remove('hovered-over');
+      this.menu.classList.remove('hide');
+      this.jobLinks.forEach(function (element) {
+        element.classList.remove('active');
+      });
     }
   }]);
 

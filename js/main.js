@@ -6,16 +6,34 @@ import Home from './pages/home';
 class App {
   constructor() {
     console.log('>>> APP <<<');
-    // INITIAL RULES
     this.el = document.querySelector('body');
-
-    this.menuIsOpen = false;
-    this.currentEventOpen = '';
   }
-
   init() {
     // GET ELEMENTS
-    this.readmoreMenu = this.el.querySelector('.readmore-menu');
+    this.tooltip = this.el.querySelector('.tooltip .tooltip-item');
+    this.menu = this.el.querySelector('.menu-and-tooltip .menu');
+    this.jobs = this.el.querySelector('.jobs');
+    this.jobLinks = Array.prototype.slice.call(this.el.querySelectorAll('.jobs .job-link'));
+    this.jobLinks.forEach(element => {
+      element.addEventListener('mouseover', this.jobLinkHover.bind(this))
+      element.addEventListener('mouseout', this.jobLinkOut.bind(this))
+    });
+  }
+  jobLinkHover(e){
+    const tooltip = e.currentTarget.dataset.tooltip;
+    this.tooltip.innerText = tooltip;
+    this.menu.classList.add('hide');
+    e.currentTarget.classList.add('active');
+    this.jobs.classList.add('hovered-over');
+  }
+  jobLinkOut(e){
+    this.tooltip.innerText = '';
+
+    this.jobs.classList.remove('hovered-over');
+    this.menu.classList.remove('hide');
+    this.jobLinks.forEach(element => {
+      element.classList.remove('active')
+    });
   }
 }
 
