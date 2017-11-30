@@ -1,6 +1,75 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Nav = function () {
+  function Nav(app) {
+    var _this = this;
+
+    _classCallCheck(this, Nav);
+
+    this.app = app;
+    this.el = this.app.el.querySelector('.nav');
+    this.menu = this.app.el.querySelector('.menu-and-tooltip .menu');
+    this.closeBtn = this.app.el.querySelector('.close-btn');
+    this.navItens = Array.prototype.slice.call(this.el.querySelectorAll('.nav-item .link'));
+    this.menuAndTooltip = this.app.el.querySelector('.menu-and-tooltip');
+
+    this.menu.addEventListener('click', this.openMenu.bind(this));
+    this.closeBtn.addEventListener('click', this.closeMenu.bind(this));
+    this.navItens.forEach(function (el) {
+      el.addEventListener('click', _this.onClickNavItem.bind(_this));
+    });
+  }
+
+  _createClass(Nav, [{
+    key: 'onClickNavItem',
+    value: function onClickNavItem(e) {
+      e.preventDefault();
+      var targetPageName = e.target.dataset.page;
+      this.closeMenu();
+      this.gotoPage(this.app.pages[targetPageName]);
+    }
+  }, {
+    key: 'gotoPage',
+    value: function gotoPage(targetPage) {
+      this.app.currentPage.close();
+      targetPage.open();
+      this.app.currentPage = targetPage;
+    }
+  }, {
+    key: 'openMenu',
+    value: function openMenu() {
+      console.log('MENU OPENED');
+      this.closeBtn.classList.remove('hide');
+      this.app.currentPage.close();
+      this.menuAndTooltip.classList.add('menu-opened');
+    }
+  }, {
+    key: 'closeMenu',
+    value: function closeMenu() {
+      console.log('MENU CLOSED');
+      this.app.currentPage.open();
+      this.closeBtn.classList.add('hide');
+      this.menuAndTooltip.classList.remove('menu-opened');
+    }
+  }]);
+
+  return Nav;
+}();
+
+exports.default = Nav;
+
+},{}],2:[function(require,module,exports){
+'use strict';
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _gsap = require('gsap');
@@ -9,9 +78,25 @@ var _ScrollToPlugin = require('gsap/ScrollToPlugin');
 
 var _ScrollToPlugin2 = _interopRequireDefault(_ScrollToPlugin);
 
-var _home = require('./pages/home');
+var _Nav = require('./components/Nav');
 
-var _home2 = _interopRequireDefault(_home);
+var _Nav2 = _interopRequireDefault(_Nav);
+
+var _Home = require('./pages/Home');
+
+var _Home2 = _interopRequireDefault(_Home);
+
+var _About = require('./pages/About');
+
+var _About2 = _interopRequireDefault(_About);
+
+var _Services = require('./pages/Services');
+
+var _Services2 = _interopRequireDefault(_Services);
+
+var _Awards = require('./pages/Awards');
+
+var _Awards2 = _interopRequireDefault(_Awards);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28,37 +113,15 @@ var App = function () {
   _createClass(App, [{
     key: 'init',
     value: function init() {
-      var _this = this;
-
-      // GET ELEMENTS
-      this.tooltip = this.el.querySelector('.tooltip .tooltip-item');
-      this.menu = this.el.querySelector('.menu-and-tooltip .menu');
-      this.jobs = this.el.querySelector('.jobs');
-      this.jobLinks = Array.prototype.slice.call(this.el.querySelectorAll('.jobs .job-link'));
-      this.jobLinks.forEach(function (element) {
-        element.addEventListener('mouseover', _this.jobLinkHover.bind(_this));
-        element.addEventListener('mouseout', _this.jobLinkOut.bind(_this));
-      });
-    }
-  }, {
-    key: 'jobLinkHover',
-    value: function jobLinkHover(e) {
-      var tooltip = e.currentTarget.dataset.tooltip;
-      this.tooltip.innerText = tooltip;
-      this.menu.classList.add('hide');
-      e.currentTarget.classList.add('active');
-      this.jobs.classList.add('hovered-over');
-    }
-  }, {
-    key: 'jobLinkOut',
-    value: function jobLinkOut(e) {
-      this.tooltip.innerText = '';
-
-      this.jobs.classList.remove('hovered-over');
-      this.menu.classList.remove('hide');
-      this.jobLinks.forEach(function (element) {
-        element.classList.remove('active');
-      });
+      this.pages = {
+        home: new _Home2.default(this),
+        about: new _About2.default(this),
+        services: new _Services2.default(this),
+        awards: new _Awards2.default(this)
+      };
+      this.nav = new _Nav2.default(this);
+      this.currentPage = this.pages.home;
+      this.currentPage.open();
     }
   }]);
 
@@ -70,8 +133,8 @@ window.onload = function () {
   app.init();
 };
 
-},{"./pages/home":2,"gsap":5,"gsap/ScrollToPlugin":3}],2:[function(require,module,exports){
-"use strict";
+},{"./components/Nav":1,"./pages/About":3,"./pages/Awards":4,"./pages/Home":5,"./pages/Services":6,"gsap":9,"gsap/ScrollToPlugin":7}],3:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -79,24 +142,169 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _gsap = require("gsap");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _ScrollToPlugin = require("gsap/ScrollToPlugin");
+var About = function () {
+  function About(app) {
+    _classCallCheck(this, About);
 
-var _ScrollToPlugin2 = _interopRequireDefault(_ScrollToPlugin);
+    this.app = app;
+    this.el = this.app.el.querySelector('.about');
+  }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  _createClass(About, [{
+    key: 'open',
+    value: function open() {
+      console.log('About::OPEN');
+      this.el.classList.remove('hide');
+    }
+  }, {
+    key: 'close',
+    value: function close() {
+      console.log('About::CLOSE');
+      this.el.classList.add('hide');
+    }
+  }]);
+
+  return About;
+}();
+
+exports.default = About;
+
+},{}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Awards = function () {
+  function Awards(app) {
+    var _this = this;
+
+    _classCallCheck(this, Awards);
+
+    this.app = app;
+    this.el = this.app.el.querySelector('.awards');
+    this.closeBtn = this.el.querySelector('.close');
+
+    this.closeBtn.addEventListener('click', function () {
+      _this.app.nav.gotoPage(_this.app.pages.home);
+    });
+  }
+
+  _createClass(Awards, [{
+    key: 'open',
+    value: function open() {
+      console.log('Awards::OPEN');
+      this.el.classList.remove('hide');
+    }
+  }, {
+    key: 'close',
+    value: function close() {
+      console.log('Awards::CLOSE');
+      this.el.classList.add('hide');
+    }
+  }]);
+
+  return Awards;
+}();
+
+exports.default = Awards;
+
+},{}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Home = function () {
   function Home(app) {
+    var _this = this;
+
     _classCallCheck(this, Home);
+
+    this.app = app;
+    this.el = this.app.el.querySelector('section.home');
+    this.menu = this.app.el.querySelector('.menu');
+    this.logo = this.app.el.querySelector('.logo');
+    this.wrapJobLinks = this.app.el.querySelector('.wrap-job-links');
+    this.tooltip = this.app.el.querySelector('.tooltip .tooltip-item');
+    this.jobLinks = Array.prototype.slice.call(this.el.querySelectorAll('.jobs .job-link'));
+    this.jobs = this.el.querySelector('.jobs');
+
+    this.logo.addEventListener('click', this.logoClick.bind(this));
+    this.logo.addEventListener('mouseover', this.logoHoverIn.bind(this));
+    this.logo.addEventListener('mouseout', this.logoHoverOut.bind(this));
+    this.jobLinks.forEach(function (el) {
+      el.addEventListener('mouseover', _this.jobLinkHover.bind(_this));
+      el.addEventListener('mouseout', _this.jobLinkOut.bind(_this));
+    });
   }
 
   _createClass(Home, [{
-    key: "init",
-    value: function init() {}
+    key: 'open',
+    value: function open() {
+      console.log('Home::OPEN');
+      this.el.classList.remove('hide');
+    }
+  }, {
+    key: 'close',
+    value: function close() {
+      console.log('Home::CLOSE');
+      this.el.classList.add('hide');
+    }
+  }, {
+    key: 'logoClick',
+    value: function logoClick() {
+      this.app.nav.gotoPage(this.app.pages.about);
+    }
+  }, {
+    key: 'logoHoverIn',
+    value: function logoHoverIn() {
+      this.wrapJobLinks.classList.add('hide');
+      this.tooltip.innerText = 'about';
+      this.menu.classList.add('hide');
+      this.logo.classList.add('hover');
+    }
+  }, {
+    key: 'logoHoverOut',
+    value: function logoHoverOut() {
+      this.tooltip.innerText = '';
+      this.menu.classList.remove('hide');
+      this.wrapJobLinks.classList.remove('hide');
+      this.logo.classList.remove('hover');
+    }
+  }, {
+    key: 'jobLinkHover',
+    value: function jobLinkHover(e) {
+      var tooltip = e.currentTarget.dataset.tooltip;
+      this.tooltip.innerText = tooltip;
+      this.menu.classList.add('hide');
+      e.currentTarget.classList.add('active');
+      this.jobs.classList.add('hovered-over');
+      this.logo.style.opacity = 0;
+    }
+  }, {
+    key: 'jobLinkOut',
+    value: function jobLinkOut(e) {
+      this.tooltip.innerText = '';
+      this.logo.style.opacity = 1;
+      this.jobs.classList.remove('hovered-over');
+      this.menu.classList.remove('hide');
+      this.jobLinks.forEach(function (element) {
+        element.classList.remove('active');
+      });
+    }
   }]);
 
   return Home;
@@ -104,7 +312,52 @@ var Home = function () {
 
 exports.default = Home;
 
-},{"gsap":5,"gsap/ScrollToPlugin":3}],3:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Services = function () {
+  function Services(app) {
+    var _this = this;
+
+    _classCallCheck(this, Services);
+
+    this.app = app;
+    this.el = this.app.el.querySelector('section.services');
+    this.closeBtn = this.el.querySelector('.close');
+
+    this.closeBtn.addEventListener('click', function () {
+      _this.app.nav.gotoPage(_this.app.pages.home);
+    });
+  }
+
+  _createClass(Services, [{
+    key: 'open',
+    value: function open() {
+      console.log('Services::OPEN');
+      this.el.classList.remove('hide');
+    }
+  }, {
+    key: 'close',
+    value: function close() {
+      console.log('Services::CLOSE');
+      this.el.classList.add('hide');
+    }
+  }]);
+
+  return Services;
+}();
+
+exports.default = Services;
+
+},{}],7:[function(require,module,exports){
 (function (global){
 /*!
  * VERSION: 1.9.0
@@ -291,7 +544,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 }("ScrollToPlugin"));
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"gsap/TweenLite":4}],4:[function(require,module,exports){
+},{"gsap/TweenLite":8}],8:[function(require,module,exports){
 (function (global){
 /*!
  * VERSION: 1.20.3
@@ -2237,7 +2490,7 @@ var _gsScope = (typeof(module) !== "undefined" && module.exports && typeof(globa
 })((typeof(module) !== "undefined" && module.exports && typeof(global) !== "undefined") ? global : this || window, "TweenLite");
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],5:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /*!
  * VERSION: 1.20.3
@@ -10203,6 +10456,6 @@ if (_gsScope._gsDefine) { _gsScope._gsQueue.pop()(); } //necessary in case Tween
 })((typeof(module) !== "undefined" && module.exports && typeof(global) !== "undefined") ? global : this || window, "TweenMax");
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}]},{},[1])
+},{}]},{},[2])
 
 //# sourceMappingURL=bundle.js.map

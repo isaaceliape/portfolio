@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Isaac Eliape</title>
+		<title>SCLP</title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<meta name="mobile-web-app-capable" content="yes">
@@ -20,26 +20,77 @@
 	</head>
 
 	<body>
-		<div id="app"></div>
-		<section class="home">
-			<h1 class="title1 logo"><span>i</span>s<span>aa</span>c<span>e</span>l<span>ia</span>p<span>e</span></h1>
+		<div class="container">
+			<div class="close-btn hide">
+				<button class="menu-item">close</button>
+			</div>
+			
 			<div class="menu-and-tooltip">
 				<div class="tooltip">
-					<div class="title1 tooltip-item"></div>
+					<div class="tooltip-item"></div>
 				</div>
 				<div class="menu">
-					<h2 class="title1 menu-item">menu</h2>
+					<button class="menu-item">menu</button>
+				</div>
+				<div class="nav">
+					<ul class="nav-wrapper">
+						<li class="nav-item"><a href="#" class="link" data-page="about">about</a></li>
+						<li class="nav-item"><a href="#" class="link" data-page="services">services</a></li>
+						<li class="nav-item"><a href="#" class="link" data-page="awards">awards</a></li>
+					</ul>
 				</div>
 			</div>
-			<div class="jobs">
-				<a href="#" target="_blank" class="job-link" data-tooltip="website">hpmagicwords</a>
-				<a href="#" target="_blank" class="job-link" data-tooltip="website webGL">gettyendless</a>
-				<a href="#" target="_blank" class="job-link" data-tooltip="website animation">tedxsaopaulo</a>
-				<a href="#" target="_blank" class="job-link" data-tooltip="website animation responsive">flplny</a>
-				<a href="#" target="_blank" class="job-link" data-tooltip="website animation">malumoletom</a>
-				<a href="#" target="_blank" class="job-link" data-tooltip="website institutional">fundacaolemann</a>
-			</div>
-		</section>
+			
+			<section class="section home hide" data-page="home">
+				<div class="jobs">
+					<a href="#" class="logo"><span>i</span>s<span>aa</span>c<span>e</span>l<span>ia</span>p<span>e</span></a>
+					<div class="wrap-job-links">
+						<a href="#" target="_blank" class="job-link" data-tooltip="website">hpmagicwords</a>
+						<a href="#" target="_blank" class="job-link" data-tooltip="website webGL">gettyendless</a>
+						<a href="#" target="_blank" class="job-link" data-tooltip="website animation">tedxsaopaulo</a>
+						<a href="#" target="_blank" class="job-link" data-tooltip="website animation responsive">flplny</a>
+						<a href="#" target="_blank" class="job-link" data-tooltip="website animation">malumoletom</a>
+						<a href="#" target="_blank" class="job-link" data-tooltip="website institutional">fundacaolemann</a>
+					</div>
+				</div>
+			</section>
+			
+			<section class="section services hide" data-page="services">
+				<ul class="services-list">
+					<li class="list-item">landing pages</li>
+					<li class="list-item">web apps</li>
+					<li class="list-item">hybrid apps</li>
+					<li class="list-item">websites</li>
+				</ul>
+				<button class="close">close</button>
+			</section>
+			
+			<section class="section awards hide" data-page="awards">
+				<div class="wrap-job-links">
+					<ul class="awards-list">
+						<li class="awards-list">
+							<a href="#" target="_blank">awwwards</a>
+						</li>
+						<li class="awards-list">
+							<a href="#" target="_blank">cannes lions</a>
+						</li>
+						<li class="awards-list">
+							<a href="#" target="_blank">css awards</a>
+						</li>
+						<li class="awards-list">
+							<a href="#" target="_blank">fwa</a>
+						</li>
+					</ul>
+				</div>
+				<button class="close">close</button>
+			</section>
+	
+			<section class="section about hide" data-page="about">
+				<p class="about-text ">
+					sclp is a collection of isaac eliape’s work on web development and ui engineering
+				</p>
+			</section>
+		</div>
 
 		<script>
 			window.isMobile = false;
