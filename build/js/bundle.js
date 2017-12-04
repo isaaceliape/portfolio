@@ -43,6 +43,13 @@ var Nav = function () {
       this.app.currentPage.close();
       targetPage.open();
       this.app.currentPage = targetPage;
+      if (targetPage.pageName !== 'home') {
+        this.app.pages.home.menu.classList.add('hide');
+        this.app.el.classList.add('white');
+      } else {
+        this.app.el.classList.remove('white');
+        this.app.pages.home.menu.classList.remove('hide');
+      }
     }
   }, {
     key: 'openMenu',
@@ -119,6 +126,7 @@ var App = function () {
         services: new _Services2.default(this),
         awards: new _Awards2.default(this)
       };
+      this.container = this.el.querySelector('.container');
       this.nav = new _Nav2.default(this);
       this.currentPage = this.pages.home;
       this.currentPage.open();
@@ -146,23 +154,37 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var About = function () {
   function About(app) {
+    var _this = this;
+
     _classCallCheck(this, About);
 
     this.app = app;
+    this.pageName = 'about';
     this.el = this.app.el.querySelector('.about');
+    this.closeBtn = this.el.querySelector('.close');
+
+    this.closeBtn.addEventListener('click', function () {
+      _this.app.nav.gotoPage(_this.app.pages.home);
+    });
   }
 
   _createClass(About, [{
     key: 'open',
     value: function open() {
+      var _this2 = this;
+
       console.log('About::OPEN');
       this.el.classList.remove('hide');
+      setTimeout(function () {
+        _this2.app.pages.home.menu.classList.add('hide');
+      }, 50);
     }
   }, {
     key: 'close',
     value: function close() {
       console.log('About::CLOSE');
       this.el.classList.add('hide');
+      this.app.pages.home.menu.classList.remove('hide');
     }
   }]);
 
@@ -189,6 +211,7 @@ var Awards = function () {
     _classCallCheck(this, Awards);
 
     this.app = app;
+    this.pageName = 'awards';
     this.el = this.app.el.querySelector('.awards');
     this.closeBtn = this.el.querySelector('.close');
 
@@ -234,6 +257,7 @@ var Home = function () {
     _classCallCheck(this, Home);
 
     this.app = app;
+    this.pageName = 'home';
     this.el = this.app.el.querySelector('section.home');
     this.menu = this.app.el.querySelector('.menu');
     this.logo = this.app.el.querySelector('.logo');

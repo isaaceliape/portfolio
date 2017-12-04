@@ -2,6 +2,7 @@
 export default class Awards {
   constructor(app) {
     this.app = app;
+    this.pageName = 'awards';
     this.el = this.app.el.querySelector('.awards');
     this.closeBtn = this.el.querySelector('.close');
 

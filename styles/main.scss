@@ -1,14 +1,14 @@
 $mobile-resolution: 768px;
 $monospace: 53px;
 
+@import url("//hello.myfonts.net/count/354675");
 @font-face {
-  font-family: 'ahamonoregular';
-  src: url('../../assets/fonts/ahamono-regular-webfont.woff2') format('woff2'),
-       url('../../assets/fonts/ahamono-regular-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
+  font-family: 'ahamono';
+  src: url('../../assets/fonts/ahamono.eot');
+  src: url('../../assets/fonts/ahamono.eot?#iefix') format('embedded-opentype'), url('../../assets/fonts/ahamono.woff2') format('woff2'), url('../../assets/fonts/ahamono.woff') format('woff'), url('../../assets/fonts/ahamono.ttf') format('truetype'), url('../../assets/fonts/ahamono.svg#wf') format('svg');
+	font-weight: normal;
+	font-style: normal;
 }
-
 * {
   margin: 0;
   padding: 0;
@@ -17,20 +17,38 @@ $monospace: 53px;
 body {
   background-color: #000;
   color: #fff;
+  font-family: ahamono;
+  &.white{
+    color: #000;
+    background: #fff;
+    a{
+      color: #000;
+    }
+  }
+}
+
+h1,
+h2{
+  display: inline;
 }
 h1,
 h2,
-.container{
-  font-size: 12vh;
+.container {
+  font-size: 10vh;
   font-weight: 100;
   line-height: 0.9em;
-  font-family: ahamonoregular, monospace;
 }
-a{
+
+li {
+  list-style-type: none;
+}
+
+a {
   text-decoration: none;
   color: #fff;
 }
-.container{
+
+.container {
   box-sizing: border-box;
   width: calc(100vw - 60px);
   height: calc(100vh - 60px);
@@ -40,59 +58,99 @@ a{
   transform: translateX(-50%) translateY(-50%);
   box-sizing: border-box;
 }
-button{
+
+button {
   background: transparent;
   border: none;
   outline: none;
 }
-.section{
-}
-.menu-and-tooltip{
+
+.section {}
+
+.menu-and-tooltip {
   position: absolute;
   bottom: 0;
   width: auto;
   left: 0;
   z-index: 1;
-  &.menu-opened{
+  &.menu-opened {
     width: calc(100% - 60px);
-    .menu{
+    .menu {
       display: none;
     }
-    .nav{
+    .nav {
       display: block;
     }
   }
 }
-.menu{
+
+.menu {
   cursor: pointer;
   display: inline-block;
 }
-.close-btn{
+
+.close-btn {
   cursor: pointer;
   position: absolute;
   top: 0;
   left: 0;
 }
-.hide{
+
+.hide {
   display: none !important;
 }
-.nav{
+
+.nav {
   width: 100%;
   display: none;
-  .nav-wrapper{
+  .nav-wrapper {
     list-style-type: none;
     display: flex;
-    .nav-item{
+    .nav-item {
       flex: 1;
       flex-direction: row;
-      .link{
+      .link {
         text-decoration: none;
         color: #fff;
       }
-      &:last-child{
+      &:last-child {
         text-align: right;
       }
     }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  h1,
+  h2,
+  .container {
+    font-size: 5vh;
+    font-weight: 100;
+    line-height: 1.2em;
+    font-family: ahamono, monospace;
+  }
+  .nav {
+    .nav-wrapper {
+      flex-direction: column;
+      .nav-item {
+        &:last-child {
+          text-align: initial;
+        }
+      }
+    }
+  }
+
+  .container {
+    box-sizing: border-box;
+    width: calc(100vw - 60px);
+    height: calc(90vh - 60px);
+    position: relative;
+    left: initial;
+    top: initial;
+    transform: none;
+    box-sizing: border-box;
+    margin: 0 auto;
+    margin-top: 30px;
   }
 }
 

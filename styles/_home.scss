@@ -1,25 +1,12 @@
 .home {
-  font-size: 0;
-  .logo{
-    display: inline;
-    z-index: 3;
-    line-height: 1.14em;
-    margin-right: 5vh;
-    font-size: 12vh;
-    span{
-      display: inline-block;
-      width: 0;
-      overflow: hidden;
-      vertical-align: top;
-    }
-    &:hover{
-      span{
-        width: auto;
-      }
-    }
-  }
+  font-size: 5vh;
+  line-height: 2.4em;
   .jobs{
-    display: inline-block;
+    font-size: 0;
+    display: flex;
+    flex-flow: row wrap;
+    align-content: space-between;
+    text-align: left;
     &.hovered-over{
       .job-link{
         color: #000;
@@ -28,18 +15,46 @@
         }
       }
     }
-    .wrap-job-links{
-      display: inline;
-    }
     .job-link{
       font-size: 12vh;
       margin-right: 5vh;
       font-weight: 100;
-      line-height: 1.14em;
       vertical-align: top;
-      font-family: Consolas, monospace;
       color: #fff;
       text-decoration: none;
+      display: flex;
+    }
+    .logo{
+      display: flex;
+      z-index: 3;
+      margin-right: 4vh;
+      font-size: 12vh;
+      span{
+        display: inline-block;
+        width: 0;
+        overflow: hidden;
+        vertical-align: top;
+      }
+      &:hover{
+        span{
+          width: auto;
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 500px) {
+  .home{
+    font-size: 5vh;
+    line-height: 1.2em;
+    .jobs{
+      .logo{
+        font-size: 5vh;
+      }
+      .job-link{
+        font-size: 5vh;
+        vertical-align: middle;
+      }
     }
   }
 }

@@ -2,6 +2,7 @@
 export default class Home {
   constructor(app) {
     this.app = app;
+    this.pageName = 'home';
     this.el = this.app.el.querySelector('section.home');
     this.menu = this.app.el.querySelector('.menu');
     this.logo = this.app.el.querySelector('.logo');

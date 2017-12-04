@@ -20,6 +20,7 @@ class App {
       services: new Services(this),
       awards: new Awards(this),
     }
+    this.container = this.el.querySelector('.container');
     this.nav = new Nav(this);
     this.currentPage = this.pages.home;
     this.currentPage.open();

@@ -24,6 +24,13 @@ export default class Nav {
     this.app.currentPage.close();
     targetPage.open();
     this.app.currentPage = targetPage;
+    if (targetPage.pageName !== 'home') {
+      this.app.pages.home.menu.classList.add('hide');
+      this.app.el.classList.add('white');
+    }else{
+      this.app.el.classList.remove('white');
+      this.app.pages.home.menu.classList.remove('hide');
+    }
   }
   openMenu(){
     console.log('MENU OPENED');
