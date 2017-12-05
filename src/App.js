@@ -114,6 +114,16 @@ class App extends Component {
             onClick={this.onClickMenu}
             className="menu"
           />
+
+          {!hideNav &&
+            <Button
+              text="close"
+              className="close"
+              onClick={() => {
+                this.changePage('home');
+              }}
+            />
+          }
           <Nav
             changePage={this.changePage}
             hide={hideNav}
@@ -122,6 +132,7 @@ class App extends Component {
             pageName="home"
             currentPage={currentPage}
           >
+          {hideNav &&
             <div className="jobs">
               {jobsList.map(({ title, link, tooltip, active }) => {
                 const hide = this.isHovering() && !active ? '0' : 1;
@@ -148,6 +159,7 @@ class App extends Component {
                 );
               })}
             </div>
+          }
             <span className="tooltip">{tooltipText}</span>
           </Page>
           <Page
