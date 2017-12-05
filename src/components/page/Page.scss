@@ -1,0 +1,42 @@
+@import './../../shared.scss';
+.Page{
+  &.home{
+    .jobs{
+      text-align: left;
+      display: block;
+      width: 100%;
+      .logo,
+      .job-link{
+        font-size: $fontSize;
+        font-weight: 100;
+        vertical-align: top;
+        color: #fff;
+        text-decoration: none;
+        display: inline-block;
+        margin-right: 0.5em;
+      }
+      .logo{
+        height: auto;
+        line-height: 10vh;
+        cursor: pointer;
+      }
+    }
+    .tooltip{
+      position: absolute;
+      bottom: 0;
+    }
+  }
+  &.about{
+    .contact{
+      position: absolute;
+      bottom: 0;
+    }
+  } 
+  .Button{
+    &.close{
+      position: absolute;
+      right: 0;
+      bottom: 30vh;
+    }
+  }
+}

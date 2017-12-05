@@ -1,0 +1,14 @@
+@import './../../shared.scss';
+
+.Button{
+  border: none;
+  background: transparent;
+  outline: 0;
+  cursor: pointer;
+  &.close-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
