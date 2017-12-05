@@ -3,9 +3,21 @@
 .Container{
   width: calc(100vw - 60px);
   height: calc(100vh - 60px);
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
   box-sizing: border-box;
+  margin: 0 auto;
+  top: 30px;
+  position: relative;
+  box-sizing: border-box;
+  display: block;
+}
+
+@media screen and (max-width: 500px) {
+  .Container{
+    height: calc(90vh - 60px);
+  }
+}
+@media (orientation: landscape) {
+  .Container{
+    height: calc(100vh - 100px);
+  }
 }

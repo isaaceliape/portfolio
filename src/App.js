@@ -15,6 +15,7 @@ class App extends Component {
       hideNav: true,
       whiteBg: false,
       tooltipText: '',
+      isMobile: false,
       jobsList: [
         {
           title: 'sclp',
@@ -54,6 +55,14 @@ class App extends Component {
     this.clearTooltip = this.clearTooltip.bind(this);
     this.isHovering = this.isHovering.bind(this);
   }
+  componentDidMount(){
+    const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
+    this.setState({
+      isMobile,
+    }, () => {
+      console.log(this.state);
+    });
+  }
   changePage(targetPage){
     const whiteBg = targetPage !== 'home';
     this.setState({
@@ -68,6 +77,9 @@ class App extends Component {
     });
   }
   onHoverJob(tooltipText, title){
+    if(this.state.isMobile){
+      return false;
+    }
     let jobsList = Object.assign(this.state.jobsList);
     jobsList = jobsList.map(item => {
       item.active = false;
@@ -82,6 +94,9 @@ class App extends Component {
     });
   }
   clearTooltip(){
+    if(this.state.isMobile){
+      return false;
+    }
     let jobsList = Object.assign(this.state.jobsList);
     jobsList = jobsList.map(item => {
       item.active = false;

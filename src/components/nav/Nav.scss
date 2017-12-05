@@ -12,8 +12,6 @@
     .nav-item {
       flex: 1;
       flex-direction: row;
-      color: $mainColor;
-      font-size: $fontSize;
       cursor: pointer;
       .link {
         text-decoration: none;
@@ -23,5 +21,20 @@
         text-align: right;
       }
     }
+  }
+}
+
+
+@media screen and (max-width: 500px) {
+  .Nav{
+    .nav-wrapper {
+      display: block;
+      .nav-item {
+        display: block;
+        &:last-child {
+          text-align: left;
+        }
+      }
+    }  
   }
 }

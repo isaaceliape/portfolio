@@ -40,3 +40,21 @@
     }
   }
 }
+
+@media screen and (max-width: 500px) {
+  .Page{
+    &.home{
+      .jobs{
+        .logo,
+        .job-link{
+          font-size: 6vh;
+        }
+      }
+    }
+    .Button{
+      &.close{
+        bottom: 20vh;
+      }
+    }
+  }
+}

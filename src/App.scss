@@ -11,7 +11,7 @@
   background-color: #000;
   color: #fff;
   font-family: ahamono;
-  height: 100vh;
+  height: calc(100vh - 70px);
   font-size: 10vh;
   font-weight: 100;
   line-height: 1em;
@@ -54,4 +54,17 @@ a {
 }
 
 @media screen and (max-width: 500px) {
+  .App {
+    font-size: 6vh;
+    line-height: 1.1em;
+    .Button{
+      color: #fff;
+      font-size: 6vh;
+    }
+  }
+}
+@media (orientation: landscape) {
+  .App{
+    height: 100vh;
+  }
 }
