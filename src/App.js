@@ -4,6 +4,7 @@ import Button from './components/button/Button';
 import Container from './components/container/Container';
 import Page from './components/page/Page';
 import Nav from './components/nav/Nav';
+import Letter from './components/letter/Letter';
 import './App.css';
 
 class App extends Component {
@@ -54,14 +55,25 @@ class App extends Component {
     this.onClickMenu = this.onClickMenu.bind(this);
     this.clearTooltip = this.clearTooltip.bind(this);
     this.isHovering = this.isHovering.bind(this);
+    this.splitLetters = this.splitLetters.bind(this);
   }
   componentDidMount(){
     const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
     this.setState({
       isMobile,
-    }, () => {
-      console.log(this.state);
     });
+  }
+  splitLetters(text){ 
+    const letters = ['a','e','i','o','u'];
+    const textReplace = text.split('').map((a, i) => {
+      const random = Math.ceil((Math.random() * (3000 - 500)) + 500);
+      const key = `${i}${a}`;
+      if(_.indexOf(letters, a.toLowerCase()) !== -1){
+        return <Letter key={key} text={a} delay={random} />;
+      }
+      return <span key={key}>{a}</span>;
+    });
+    return textReplace;
   }
   changePage(targetPage){
     const whiteBg = targetPage !== 'home';
@@ -169,7 +181,7 @@ class App extends Component {
                       }
                     }}
                   >
-                    {title}
+                    {this.splitLetters(title)}
                   </a>
                 );
               })}
