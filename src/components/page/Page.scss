@@ -14,6 +14,10 @@
         text-decoration: none;
         display: inline-block;
         margin-right: 0.5em;
+        .word{
+          display: inline-block;
+          // outline: 1px solid red;
+        }
       }
       .logo{
         height: auto;

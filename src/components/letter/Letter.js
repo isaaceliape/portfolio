@@ -14,7 +14,7 @@ class Letter extends React.PureComponent {
     setTimeout(() => {
       this.setState({
         style: {
-          'opacity': 1,
+          'transform': 'translateX(0)',
         },
       });
     }, delay);

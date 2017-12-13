@@ -64,16 +64,20 @@ class App extends Component {
     });
   }
   splitLetters(text){ 
-    const letters = ['a','e','i','o','u'];
+    const random = Math.ceil((Math.random() * (1000 - 0)) + 0);
     const textReplace = text.split('').map((a, i) => {
-      const random = Math.ceil((Math.random() * (3000 - 500)) + 500);
-      const key = `${i}${a}`;
-      if(_.indexOf(letters, a.toLowerCase()) !== -1){
-        return <Letter key={key} text={a} delay={random} />;
-      }
-      return <span key={key}>{a}</span>;
+      const key = `${a}-${i}`;
+      return <Letter
+              key={key}
+              text={a}
+              delay={random}
+            />;
     });
-    return textReplace;
+    return (
+      <span className="word">
+        {textReplace}
+      </span>
+    );
   }
   changePage(targetPage){
     const whiteBg = targetPage !== 'home';
@@ -163,17 +167,27 @@ class App extends Component {
             <div className="jobs">
               {jobsList.map(({ title, link, tooltip, active }) => {
                 const hide = this.isHovering() && !active ? '0' : 1;
+                if(title !== 'sclp'){
+                  return (
+                    <a
+                      className="job-link"
+                      key={`key-${title}`}
+                      style={{opacity: hide}}
+                      href={link}
+                      target="_blank"
+                      onMouseOver={() => {
+                        this.onHoverJob(tooltip, title);
+                      }}
+                      onMouseOut={this.clearTooltip}
+                    >
+                      {this.splitLetters(title)}
+                    </a>
+                  );
+                }
                 return (
                   <a
-                    style={{opacity: hide}}
-                    key={`key-${title}`}
-                    href={link}
-                    target="_blank"
                     className="job-link"
-                    onMouseOver={() => {
-                      this.onHoverJob(tooltip, title);
-                    }}
-                    onMouseOut={this.clearTooltip}
+                    key={`key-${title}`}
                     onClick={(e) => {
                       if(title === 'sclp'){
                         e.preventDefault();
@@ -181,7 +195,7 @@ class App extends Component {
                       }
                     }}
                   >
-                    {this.splitLetters(title)}
+                    {title}
                   </a>
                 );
               })}

@@ -1,9 +1,32 @@
 
 .Letter{
-  display: inline;
+  display: inline-block;
+  width: 5.8vh;
+  overflow: hidden;
+  // outline: 1px solid red;
   span{
-    display: inline;
-    opacity: 0;
-    transition: all 3s ease;
+    width: 5.8vh;
+    display: inline-block;
+    transform: translateX(-100%);
+    transition: transform 1s ease;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .Letter{
+    width: 3vh;
+    font-size: 5vh;
+    span{
+      width: 3vh;
+    }
+  }
+}
+@media (orientation: landscape) {
+  .Letter{
+    // width: 3vh;
+    // font-size: 5vh;
+    // span{
+    //   width: 3vh;
+    // }
   }
 }
