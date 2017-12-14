@@ -1,0 +1,23 @@
+.Cursor{
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  // outline: 1px solid red;
+  transform: translate3d(-50%,-50%,0);
+  // width: 300px;
+  // height: 300px;
+  #square,
+  #circle{
+    fill: none;
+    stroke: black;
+    stroke-width: 8;
+    stroke-linejoin: round;
+    fill: #fff;
+  }
+  svg {
+    display: block;
+    width: 300px;
+    height: 300px;
+  }
+}

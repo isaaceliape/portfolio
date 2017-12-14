@@ -15,6 +15,8 @@ class Button extends React.PureComponent {
       <button
         className={`Button ${this.props.className}`}
         onClick={this.props.onClick}
+        onMouseOver={this.props.onMouseOver}
+        onMouseOut={this.props.onMouseOut}
       >
         {this.props.text}
       </button>
@@ -25,6 +27,8 @@ Button.propTypes = {
   hide: PropTypes.bool,
   onClick: PropTypes.func,
   className: PropTypes.string,
+  onMouseOver: PropTypes.func,
+  onMouseOut: PropTypes.func,
 };
 Button.defaultProps = {
   hide: false,

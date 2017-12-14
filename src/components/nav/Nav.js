@@ -30,7 +30,7 @@ class Nav extends React.PureComponent {
                 this.gotoPage(title);
               }}
             >
-              {title}
+              <span>{title}</span>
             </li>
           ))}
         </ul>

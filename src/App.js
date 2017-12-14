@@ -5,6 +5,7 @@ import Container from './components/container/Container';
 import Page from './components/page/Page';
 import Nav from './components/nav/Nav';
 import Letter from './components/letter/Letter';
+import Cursor from './components/cursor/Cursor';
 import './App.css';
 
 class App extends Component {
@@ -17,6 +18,7 @@ class App extends Component {
       whiteBg: false,
       tooltipText: '',
       isMobile: false,
+      changueCursor: false,
       jobsList: [
         {
           title: 'sclp',
@@ -48,7 +50,7 @@ class App extends Component {
           tooltip: 'website',
           active: false,
         },
-      ]
+      ],
     }
     this.changePage = this.changePage.bind(this);
     this.onHoverJob = this.onHoverJob.bind(this);
@@ -56,6 +58,8 @@ class App extends Component {
     this.clearTooltip = this.clearTooltip.bind(this);
     this.isHovering = this.isHovering.bind(this);
     this.splitLetters = this.splitLetters.bind(this);
+    this.onMouseOverCloseBtn = this.onMouseOverCloseBtn.bind(this);
+    this.onMouseOutCloseBtn = this.onMouseOutCloseBtn.bind(this);
   }
   componentDidMount(){
     const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
@@ -63,14 +67,14 @@ class App extends Component {
       isMobile,
     });
   }
-  splitLetters(text){ 
-    const random = Math.ceil((Math.random() * (1000 - 0)) + 0);
+  splitLetters(text, delay){ 
+    // const random = Math.ceil((Math.random() * (1000 - 0)) + 0);
     const textReplace = text.split('').map((a, i) => {
       const key = `${a}-${i}`;
       return <Letter
               key={key}
               text={a}
-              delay={random}
+              delay={delay}
             />;
     });
     return (
@@ -84,6 +88,7 @@ class App extends Component {
     this.setState({
       currentPage: targetPage,
       hideNav: true,
+      changeCursor: false,
       whiteBg,
     });
   }
@@ -126,6 +131,18 @@ class App extends Component {
   isHovering(){
     return this.state.jobsList.filter(item => item.active === true).length > 0;
   }
+  onMouseOverCloseBtn(){
+    console.log('onMouseOver');
+    this.setState({
+      changeCursor: true,
+    });
+  }
+  onMouseOutCloseBtn(){
+    console.log('onMouseOut');
+    this.setState({
+      changeCursor: false,
+    });
+  }
   render() {
     const {
       tooltipText,
@@ -138,6 +155,7 @@ class App extends Component {
     const hideMenuButton = tooltipText.length > 0 || !hideNav || currentPage !== "home";
     return (
       <div className={`App ${whiteBgClass}`}>
+        <Cursor changeCursor={this.state.changeCursor} />
         <Container>
           <Button
             text="menu"
@@ -153,6 +171,8 @@ class App extends Component {
               onClick={() => {
                 this.changePage('home');
               }}
+              onMouseOver={this.onMouseOverCloseBtn}
+              onMouseOut={this.onMouseOutCloseBtn}
             />
           }
           <Nav
@@ -160,13 +180,16 @@ class App extends Component {
             hide={hideNav}
           />
           <Page
+            onMouseOverCloseBtn={this.onMouseOverCloseBtn}
+            onMouseOutCloseBtn={this.onMouseOutCloseBtn}
             pageName="home"
             currentPage={currentPage}
           >
           {hideNav &&
             <div className="jobs">
-              {jobsList.map(({ title, link, tooltip, active }) => {
+              {jobsList.map(({ title, link, tooltip, active }, i) => {
                 const hide = this.isHovering() && !active ? '0' : 1;
+                const delay = (i * 200) + 1500;
                 if(title !== 'sclp'){
                   return (
                     <a
@@ -180,7 +203,7 @@ class App extends Component {
                       }}
                       onMouseOut={this.clearTooltip}
                     >
-                      {this.splitLetters(title)}
+                      {this.splitLetters(title, delay)}
                     </a>
                   );
                 }
@@ -204,6 +227,8 @@ class App extends Component {
             <span className="tooltip">{tooltipText}</span>
           </Page>
           <Page
+            onMouseOverCloseBtn={this.onMouseOverCloseBtn}
+            onMouseOutCloseBtn={this.onMouseOutCloseBtn}
             pageName="about"
             currentPage={currentPage}
             closePage={this.changePage}
@@ -217,6 +242,8 @@ class App extends Component {
             </a>
           </Page>
           <Page
+            onMouseOverCloseBtn={this.onMouseOverCloseBtn}
+            onMouseOutCloseBtn={this.onMouseOutCloseBtn}
             pageName="services"
             currentPage={currentPage}
             closePage={this.changePage}
@@ -229,6 +256,8 @@ class App extends Component {
             </ul>
           </Page>
           <Page
+            onMouseOverCloseBtn={this.onMouseOverCloseBtn}
+            onMouseOutCloseBtn={this.onMouseOutCloseBtn}
             pageName="awards"
             currentPage={currentPage}
             closePage={this.changePage}

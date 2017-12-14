@@ -24,6 +24,8 @@ class Page extends React.PureComponent {
             onClick={() => {
               closePage("home");
             }}
+            onMouseOver={this.props.onMouseOverCloseBtn}
+            onMouseOut={this.props.onMouseOutCloseBtn}
           />
         }
       </section>
@@ -31,6 +33,8 @@ class Page extends React.PureComponent {
   }
 }
 Page.propTypes = {
+  onMouseOverCloseBtn: PropTypes.func,
+  onMouseOutCloseBtn: PropTypes.func,
   pageName: PropTypes.string,
   currentPage: PropTypes.string,
   closePage: PropTypes.func,
