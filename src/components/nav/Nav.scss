@@ -4,8 +4,10 @@
   width: 100%;
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: -3vh;
   vertical-align: top;
+  padding: 3vh 0;
+  box-sizing: border-box;
   .nav-wrapper {
     list-style-type: none;
     display: flex;

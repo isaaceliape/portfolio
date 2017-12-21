@@ -9,18 +9,20 @@
 
 .App {
   background-color: #000;
-  color: #fff;
   font-family: ahamono;
   height: calc(100vh - 70px);
   font-size: 10vh;
   font-weight: 100;
   line-height: 1em;
-  &.white{
+  color: #fff;
+  &.blackFont{
     color: #000;
-    background: #fff;
     .Button{
       color: #000;
     }
+  }
+  &.white{
+    background: #fff;
   }
   .Button{
     color: #fff;

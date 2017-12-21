@@ -11,13 +11,22 @@ class Letter extends React.PureComponent {
   }
   componentDidMount(){
     const { delay } = this.props;
-    setTimeout(() => {
+    if(this.props.animated){
+      setTimeout(() => {
+        this.setState({
+          style: {
+            'transform': 'translateX(0)',
+          },
+        });
+      }, delay);
+    } else {
       this.setState({
         style: {
           'transform': 'translateX(0)',
+          'transition': 'none',
         },
       });
-    }, delay);
+    }
   }
   render(){
     const { text } = this.props;
@@ -31,8 +40,10 @@ class Letter extends React.PureComponent {
 Letter.propTypes = {
   text: PropTypes.string,
   delay: PropTypes.number,
+  animated: PropTypes.bool,
 };
 Letter.defaultProps = {
   delay: 0,
+  animated: true,
 };
 export default Letter;

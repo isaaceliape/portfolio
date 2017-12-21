@@ -1,10 +1,11 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
+import { TweenMax } from 'gsap';
 import Button from './components/button/Button';
 import Container from './components/container/Container';
 import Page from './components/page/Page';
+import Home from './components/page/Home';
 import Nav from './components/nav/Nav';
-import Letter from './components/letter/Letter';
+import List from './components/list/List';
 import Cursor from './components/cursor/Cursor';
 import './App.css';
 
@@ -16,9 +17,17 @@ class App extends Component {
       currentPage: 'home',
       hideNav: true,
       whiteBg: false,
+      blackFont: false,
       tooltipText: '',
       isMobile: false,
-      changueCursor: false,
+      currentCursor: '+',
+      cursor: {
+        size: 'small',
+        type: '+',
+        rotation: false,
+        color: '#fff',
+      },
+      animateJobList: true,
       jobsList: [
         {
           title: 'sclp',
@@ -53,13 +62,11 @@ class App extends Component {
       ],
     }
     this.changePage = this.changePage.bind(this);
-    this.onHoverJob = this.onHoverJob.bind(this);
     this.onClickMenu = this.onClickMenu.bind(this);
-    this.clearTooltip = this.clearTooltip.bind(this);
-    this.isHovering = this.isHovering.bind(this);
-    this.splitLetters = this.splitLetters.bind(this);
     this.onMouseOverCloseBtn = this.onMouseOverCloseBtn.bind(this);
     this.onMouseOutCloseBtn = this.onMouseOutCloseBtn.bind(this);
+    this.setTooltipText = this.setTooltipText.bind(this);
+    this.setCursor = this.setCursor.bind(this);
   }
   componentDidMount(){
     const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
@@ -67,80 +74,72 @@ class App extends Component {
       isMobile,
     });
   }
-  splitLetters(text, delay){ 
-    // const random = Math.ceil((Math.random() * (1000 - 0)) + 0);
-    const textReplace = text.split('').map((a, i) => {
-      const key = `${a}-${i}`;
-      return <Letter
-              key={key}
-              text={a}
-              delay={delay}
-            />;
-    });
-    return (
-      <span className="word">
-        {textReplace}
-      </span>
-    );
-  }
-  changePage(targetPage){
-    const whiteBg = targetPage !== 'home';
+  setCursor(currentCursor){
     this.setState({
-      currentPage: targetPage,
-      hideNav: true,
-      changeCursor: false,
-      whiteBg,
+      currentCursor,
     });
+  }
+  changePage(targetPage, expandCursor){
+    const whiteBg = targetPage !== 'home';
+    const blackFont = targetPage !== 'home';
+    if(expandCursor){
+      this.setState({
+        currentPage: targetPage,
+        hideNav: true,
+        animateJobList: false,
+        blackFont,
+        cursor: {
+          size: 'bigger',
+          color: '#fff',
+          rotate: false,
+        },
+      });
+      setTimeout(() => {
+        this.setState({
+          whiteBg,
+          cursor: {
+            size: 'small',
+            color: '#000',
+          },
+          currentCursor: '+',
+        })
+      },1000);
+    } else {
+      this.setState({
+        currentPage: targetPage,
+        hideNav: true,
+        animateJobList: false,
+        blackFont,
+        whiteBg,
+        cursor: {
+          size: 'small',
+          rotate: false,
+        },
+      });
+    }
   }
   onClickMenu(){
     this.setState({
       hideNav: false,
     });
   }
-  onHoverJob(tooltipText, title){
-    if(this.state.isMobile){
-      return false;
-    }
-    let jobsList = Object.assign(this.state.jobsList);
-    jobsList = jobsList.map(item => {
-      item.active = false;
-      return item;
-    });
-    const itemIndex = _.findIndex(jobsList, ['title', title]);
-    jobsList[itemIndex].active = true;
-    
+  setTooltipText(tooltipText){
     this.setState({
       tooltipText,
-      jobsList,
     });
-  }
-  clearTooltip(){
-    if(this.state.isMobile){
-      return false;
-    }
-    let jobsList = Object.assign(this.state.jobsList);
-    jobsList = jobsList.map(item => {
-      item.active = false;
-      return item;
-    });
-    this.setState({
-      tooltipText: '',
-      jobsList,
-    });
-  }
-  isHovering(){
-    return this.state.jobsList.filter(item => item.active === true).length > 0;
   }
   onMouseOverCloseBtn(){
-    console.log('onMouseOver');
     this.setState({
-      changeCursor: true,
+      cursor: {
+        rotate: true,
+      }
     });
   }
   onMouseOutCloseBtn(){
-    console.log('onMouseOut');
     this.setState({
-      changeCursor: false,
+      cursor: {
+        rotate: false,
+      }
     });
   }
   render() {
@@ -149,13 +148,20 @@ class App extends Component {
       hideNav,
       currentPage,
       whiteBg,
-      jobsList
+      jobsList,
+      blackFont,
     } = this.state;
     const whiteBgClass = whiteBg ? 'white' : '';
+    const blackFontClass = blackFont ? 'blackFont' : '';
     const hideMenuButton = tooltipText.length > 0 || !hideNav || currentPage !== "home";
     return (
-      <div className={`App ${whiteBgClass}`}>
-        <Cursor changeCursor={this.state.changeCursor} />
+      <div className={`App ${whiteBgClass} ${blackFontClass}`}>
+        <Cursor
+          rotate={this.state.cursor.rotate}
+          currentCursor={this.state.currentCursor}
+          size={this.state.cursor.size}
+          color={this.state.cursor.color}
+        />
         <Container>
           <Button
             text="menu"
@@ -177,6 +183,8 @@ class App extends Component {
           }
           <Nav
             changePage={this.changePage}
+            expandCursor={this.expandCursor}
+            setCursor={this.setCursor}
             hide={hideNav}
           />
           <Page
@@ -185,45 +193,15 @@ class App extends Component {
             pageName="home"
             currentPage={currentPage}
           >
-          {hideNav &&
-            <div className="jobs">
-              {jobsList.map(({ title, link, tooltip, active }, i) => {
-                const hide = this.isHovering() && !active ? '0' : 1;
-                const delay = (i * 200) + 1500;
-                if(title !== 'sclp'){
-                  return (
-                    <a
-                      className="job-link"
-                      key={`key-${title}`}
-                      style={{opacity: hide}}
-                      href={link}
-                      target="_blank"
-                      onMouseOver={() => {
-                        this.onHoverJob(tooltip, title);
-                      }}
-                      onMouseOut={this.clearTooltip}
-                    >
-                      {this.splitLetters(title, delay)}
-                    </a>
-                  );
-                }
-                return (
-                  <a
-                    className="job-link"
-                    key={`key-${title}`}
-                    onClick={(e) => {
-                      if(title === 'sclp'){
-                        e.preventDefault();
-                        this.changePage('about');
-                      }
-                    }}
-                  >
-                    {title}
-                  </a>
-                );
-              })}
-            </div>
-          }
+            <List
+              listItens={jobsList}
+              onHoverJob={this.onHoverJob}
+              setTooltipText={this.setTooltipText}
+              isMobile={this.state.isMobile}
+              changePage={this.changePage}
+              animateJobList={this.state.animateJobList}
+              hide={hideNav}
+            />
             <span className="tooltip">{tooltipText}</span>
           </Page>
           <Page

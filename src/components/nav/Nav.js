@@ -1,33 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Nav.css';
-
+// ●
+// ■
+// ▲
 class Nav extends React.PureComponent {
   constructor(props){
     super(props);
     this.state = {
       navItems: [
-        'about',
-        'services',
-        'awards'
+        {
+          title: 'about',
+          icon: '●',
+        },
+        {
+          title: 'services',
+          icon: '■',
+        },
+        {
+          title: 'awards',
+          icon: '▲',
+        },
       ]
     }
-    this.gotoPage = this.gotoPage.bind(this);
-  }
-  gotoPage(target) {
-    this.props.changePage(target);
   }
   render() {
     return(
       !this.props.hide &&
-      <div className="Nav">
+      <div
+        className="Nav"
+        onMouseOut={() => {
+          this.props.setCursor('+');
+        }}
+      >
         <ul className="nav-wrapper">
-          {this.state.navItems.map((title) => (
+          {this.state.navItems.map(({ title, icon }) => (
             <li
               className="nav-item"
               key={`key-${title}`}
               onClick={() => {
-                this.gotoPage(title);
+                this.props.changePage(title, true);
+              }}
+              onMouseOver={() => {
+                this.props.setCursor(icon);
               }}
             >
               <span>{title}</span>
@@ -41,6 +56,7 @@ class Nav extends React.PureComponent {
 Nav.propTypes = {
   hide: PropTypes.bool,
   changePage: PropTypes.func,
+  setCursor: PropTypes.func,
 };
 Nav.defaultProps = {
   hide: true,
