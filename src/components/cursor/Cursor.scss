@@ -1,5 +1,5 @@
 .Cursor{
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   pointer-events: none;
@@ -7,12 +7,16 @@
   z-index: 0;
   &.bigger{
     span{
-      font-size: 1000vh;
-      transition: font-size 1.5s ease;
+      transform: scale(200) !important;
+      // font-size: 500vh;
+      transition: transform 1s ease;
+      backface-visibility: hidden;
+      -webkit-font-smoothing: subpixel-antialiased;
     }
     &.triangle{
       span{
-        font-size: 1000vh;
+        transform: scale(200) !important;
+        // font-size: 500vh;
       }
     }
   }
@@ -23,6 +27,9 @@
   }
   span{
     font-size: 10vh;
-    transition: transform .2s ease;
+    // transition: transform .2s ease;
+    transition: none;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
   }
 }

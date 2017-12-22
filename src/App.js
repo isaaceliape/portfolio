@@ -13,6 +13,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      beta: 0,
       title: 'Teste',
       currentPage: 'home',
       hideNav: true,
@@ -69,6 +70,34 @@ class App extends Component {
     this.setCursor = this.setCursor.bind(this);
   }
   componentDidMount(){
+    window.addEventListener('deviceorientation', (event) => {
+      // var alpha = event.alpha;
+      // var gamma = event.gamma;
+      const beta = Number(event.beta.toFixed(0)) - 45;
+      let percent = ((beta * 100) / 40).toFixed(0);
+      percent = percent <= 0 ? 0 : percent;
+      percent = percent >= 100 ? 100 : percent;
+      const fraction = 100 / this.state.jobsList.length;
+  
+      let pos = 0;
+      this.state.jobsList.forEach((value, i) => {
+        const start = fraction * i;
+        const end = fraction * (i + 1);
+        if(this.MathInteval(start, end, percent)){
+          pos = i;
+        }
+      });
+      const stateCopy = Object.assign({}, this.state);
+      stateCopy.jobsList.map((x) => {
+        x.active = false;
+      });
+      console.clear();
+      console.log('>>>', stateCopy.jobsList[pos].title);
+      stateCopy.jobsList[pos].active = true;
+      // console.table(stateCopy.jobsList)
+      this.setState(stateCopy);
+    }, false);
+
     const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
     this.setState({
       isMobile,
@@ -142,6 +171,14 @@ class App extends Component {
       }
     });
   }
+  MathInteval(initial, end, value){
+    const interval = [];
+    for (let i = initial; i <= end; i++) {
+      interval.push(i);
+    }
+    const result = interval.find(x => x == value);
+    return result !== undefined;
+  }
   render() {
     const {
       tooltipText,
@@ -154,6 +191,7 @@ class App extends Component {
     const whiteBgClass = whiteBg ? 'white' : '';
     const blackFontClass = blackFont ? 'blackFont' : '';
     const hideMenuButton = tooltipText.length > 0 || !hideNav || currentPage !== "home";
+
     return (
       <div className={`App ${whiteBgClass} ${blackFontClass}`}>
         <Cursor
