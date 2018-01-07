@@ -12,4 +12,3 @@ export const splitLetters = (text, delay, animate) => {
     </span>
   );
 };
-

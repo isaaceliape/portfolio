@@ -5,31 +5,15 @@
   pointer-events: none;
   transform: translate3d(-50%,-50%,0);
   z-index: 0;
-  &.bigger{
-    span{
-      transform: scale(200) !important;
-      // font-size: 500vh;
-      transition: transform 1s ease;
-      backface-visibility: hidden;
-      -webkit-font-smoothing: subpixel-antialiased;
-    }
-    &.triangle{
-      span{
-        transform: scale(200) !important;
-        // font-size: 500vh;
-      }
-    }
-  }
-  &.triangle{
-    span{
-      font-size: 5vh;
-    }
-  }
   span{
     font-size: 10vh;
-    // transition: transform .2s ease;
     transition: none;
     backface-visibility: hidden;
-    -webkit-font-smoothing: subpixel-antialiased;
+    transition: transform .2s ease;
+  }
+}
+@media screen and (max-width: 500px) {
+  .Cursor{
+    display: none;
   }
 }

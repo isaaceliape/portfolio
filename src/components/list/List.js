@@ -8,15 +8,59 @@ class List extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      orientation: 'V',
+      gyroscope: 0,
+      percent: 0,
       animate: this.props.animateJobList,
       listItens: this.props.listItens,
     };
     this.onHoverJob = this.onHoverJob.bind(this);
     this.clearTooltip = this.clearTooltip.bind(this);
+    this.gyroscopeSelection = this.gyroscopeSelection.bind(this);
+    this.orientationchange = this.orientationchange.bind(this);
   }
+  
   componentDidMount(){
+    if(this.props.isMobile){
+      window.addEventListener('deviceorientation', this.gyroscopeSelection);
+    }
     const timeOfLastAnimationDelay = (((this.state.listItens.length + 1) * 200) + 1500) + 200;
     this.stopAnim(timeOfLastAnimationDelay);
+    window.addEventListener('orientationchange', this.orientationchange);
+    this.orientationchange();
+  }
+  orientationchange(e){
+    let orientation = window.innerWidth > window.innerHeight ? 'H' : 'V';
+    this.setState({
+      orientation,
+    })
+  }
+  gyroscopeSelection(e){
+    // var alpha = e.alpha;
+    // var gamma = e.gamma;
+    const beta = Number(e.beta) - 40;
+    let percent = ((beta * 100) / 30).toFixed(0);
+    percent = percent <= 0 ? 0 : percent;
+    percent = percent >= 100 ? 100 : percent;
+    const fraction = 100 / this.state.listItens.length;
+
+    let pos = 0;
+    this.state.listItens.forEach((value, i) => {
+      const start = fraction * i;
+      const end = fraction * (i + 1);
+      if(percent >= start && percent <= end){
+        pos = i;
+      }
+    });
+    pos = pos === 0 ? 1 : pos;
+    const stateCopy = Object.assign({}, this.state);
+    stateCopy.percent = percent;
+    stateCopy.gyroscope = e;
+    stateCopy.listItens.forEach((x) => {
+      x.active = false;
+    });
+    stateCopy.listItens[pos].active = true;
+    this.setState(stateCopy);
   }
   onHoverJob(tooltipText, title){
     if(this.props.isMobile){
@@ -65,6 +109,14 @@ class List extends React.PureComponent {
   render() {
     return(
       <div className="jobs">
+        {/* <span style={{
+          'position':'absolute',
+          'right':'-20px',
+          'top':'-30px',
+          'fontSize':'15px',
+        }}>
+          {this.state.percent}{this.state.orientation}
+        </span> */}
         {this.props.hide &&
           this.state.listItens.map(({ title, link, tooltip, active }, i) => {
             const hide = this.isHovering() && !active ? '0' : 1;
@@ -115,5 +167,6 @@ List.propTypes = {
   isMobile: PropTypes.bool,
   hide: PropTypes.bool,
   animateJobList: PropTypes.bool,
+  setActiveItem: PropTypes.object,
 }
 export default List;

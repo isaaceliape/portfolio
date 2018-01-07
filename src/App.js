@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { TweenMax } from 'gsap';
 import Button from './components/button/Button';
 import Container from './components/container/Container';
 import Page from './components/page/Page';
-import Home from './components/page/Home';
+import { Layer, Stage } from 'react-konva';
 import Nav from './components/nav/Nav';
 import List from './components/list/List';
 import Cursor from './components/cursor/Cursor';
+import Marker from './components/canvas/Marker';
 import './App.css';
 
 class App extends Component {
@@ -14,6 +14,7 @@ class App extends Component {
     super(props);
     this.state = {
       beta: 0,
+      percent: 0,
       title: 'Teste',
       currentPage: 'home',
       hideNav: true,
@@ -21,12 +22,18 @@ class App extends Component {
       blackFont: false,
       tooltipText: '',
       isMobile: false,
-      currentCursor: '+',
+      expand: false,
       cursor: {
         size: 'small',
         type: '+',
         rotation: false,
         color: '#fff',
+      },
+      navHoverEl: {
+        pos: {
+          x: 0,
+          y: 0,
+        }
       },
       animateJobList: true,
       jobsList: [
@@ -67,72 +74,46 @@ class App extends Component {
     this.onMouseOverCloseBtn = this.onMouseOverCloseBtn.bind(this);
     this.onMouseOutCloseBtn = this.onMouseOutCloseBtn.bind(this);
     this.setTooltipText = this.setTooltipText.bind(this);
-    this.setCursor = this.setCursor.bind(this);
+    this.navItemHover = this.navItemHover.bind(this);
   }
-  componentDidMount(){
-    window.addEventListener('deviceorientation', (event) => {
-      // var alpha = event.alpha;
-      // var gamma = event.gamma;
-      const beta = Number(event.beta.toFixed(0)) - 45;
-      let percent = ((beta * 100) / 40).toFixed(0);
-      percent = percent <= 0 ? 0 : percent;
-      percent = percent >= 100 ? 100 : percent;
-      const fraction = 100 / this.state.jobsList.length;
-  
-      let pos = 0;
-      this.state.jobsList.forEach((value, i) => {
-        const start = fraction * i;
-        const end = fraction * (i + 1);
-        if(this.MathInteval(start, end, percent)){
-          pos = i;
-        }
-      });
-      const stateCopy = Object.assign({}, this.state);
-      stateCopy.jobsList.map((x) => {
-        x.active = false;
-      });
-      console.clear();
-      console.log('>>>', stateCopy.jobsList[pos].title);
-      stateCopy.jobsList[pos].active = true;
-      // console.table(stateCopy.jobsList)
-      this.setState(stateCopy);
-    }, false);
 
+  componentWillMount(){
     const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
+    const animateJobList = !isMobile;
+    console.log('animateJobList', animateJobList)
     this.setState({
       isMobile,
     });
   }
-  setCursor(currentCursor){
-    this.setState({
-      currentCursor,
-    });
-  }
-  changePage(targetPage, expandCursor){
+  changePage(targetPage, animate){
     const whiteBg = targetPage !== 'home';
     const blackFont = targetPage !== 'home';
-    if(expandCursor){
+    if(animate){
       this.setState({
         currentPage: targetPage,
         hideNav: true,
         animateJobList: false,
         blackFont,
+        expand: true,
         cursor: {
-          size: 'bigger',
           color: '#fff',
-          rotate: false,
         },
       });
       setTimeout(() => {
         this.setState({
           whiteBg,
+          expand: false,
           cursor: {
-            size: 'small',
             color: '#000',
           },
-          currentCursor: '+',
+          navHoverEl: {
+            pos: {
+              x: -200,
+              y: -200,
+            }
+          },
         })
-      },1000);
+      },500);
     } else {
       this.setState({
         currentPage: targetPage,
@@ -171,13 +152,12 @@ class App extends Component {
       }
     });
   }
-  MathInteval(initial, end, value){
-    const interval = [];
-    for (let i = initial; i <= end; i++) {
-      interval.push(i);
-    }
-    const result = interval.find(x => x == value);
-    return result !== undefined;
+  navItemHover(pos){
+    this.setState({
+      navHoverEl:{
+        pos,
+      }
+    })
   }
   render() {
     const {
@@ -191,14 +171,25 @@ class App extends Component {
     const whiteBgClass = whiteBg ? 'white' : '';
     const blackFontClass = blackFont ? 'blackFont' : '';
     const hideMenuButton = tooltipText.length > 0 || !hideNav || currentPage !== "home";
-
     return (
       <div className={`App ${whiteBgClass} ${blackFontClass}`}>
+        <Stage
+          className='canvas'
+          width={window.innerWidth}
+          height={window.innerHeight}
+        >
+          <Layer>
+            <Marker
+              expand={this.state.expand}
+              pos={this.state.navHoverEl.pos}
+            />
+          </Layer>
+        </Stage>
         <Cursor
           rotate={this.state.cursor.rotate}
-          currentCursor={this.state.currentCursor}
           size={this.state.cursor.size}
           color={this.state.cursor.color}
+          isMobile={this.state.isMobile}
         />
         <Container>
           <Button
@@ -213,7 +204,7 @@ class App extends Component {
               text="close"
               className="close"
               onClick={() => {
-                this.changePage('home');
+                this.changePage('home', false);
               }}
               onMouseOver={this.onMouseOverCloseBtn}
               onMouseOut={this.onMouseOutCloseBtn}
@@ -221,8 +212,7 @@ class App extends Component {
           }
           <Nav
             changePage={this.changePage}
-            expandCursor={this.expandCursor}
-            setCursor={this.setCursor}
+            navItemHover={this.navItemHover}
             hide={hideNav}
           />
           <Page

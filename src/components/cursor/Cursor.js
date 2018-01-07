@@ -15,7 +15,9 @@ class Cursor extends React.PureComponent {
     this.onMouseMove = this.onMouseMove.bind(this);
   }
   componentDidMount(){
-    window.addEventListener('mousemove', this.onMouseMove );
+    if(!this.props.isMobile){
+      window.addEventListener('mousemove', this.onMouseMove );
+    }
   }
   onMouseMove(event){
     this.setState({
@@ -27,12 +29,11 @@ class Cursor extends React.PureComponent {
     });
   }
   render(){
-    const rotation = this.props.rotate ? 'rotate(135deg)' : 'none';
-    const triangle = this.props.currentCursor === '▲' ? 'triangle' : '';
     const visible = this.state.visible ? '1' : '0';
+    const rotation = this.props.rotate ? 'rotate(135deg)': 'none';
     return(
       <div
-        className={`Cursor ${this.props.size} ${triangle}`}
+        className='Cursor'
         style={{
           left: this.state.position.x,
           top: this.state.position.y,
@@ -46,7 +47,7 @@ class Cursor extends React.PureComponent {
             'transform': rotation,
           }}
         >
-          {this.props.currentCursor}
+          +
         </span>
       </div>
     );
@@ -54,9 +55,9 @@ class Cursor extends React.PureComponent {
 }
 Cursor.propTypes = {
   rotate: PropTypes.bool,
-  currentCursor: PropTypes.string,
   size: PropTypes.string,
   color: PropTypes.string,
+  isMobile: PropTypes.bool,
 }
 Cursor.defaultProps = {
   rotate: false,

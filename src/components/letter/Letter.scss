@@ -15,6 +15,7 @@
 @media screen and (max-width: 500px) {
   .Letter{
     width: 3vh;
+    // font-size: 5vh;
     font-size: 5vh;
     span{
       width: 3vh;
@@ -22,11 +23,11 @@
   }
 }
 @media (orientation: landscape) {
-  .Letter{
-    // width: 3vh;
-    // font-size: 5vh;
-    // span{
-    //   width: 3vh;
-    // }
-  }
+  // .Letter{
+  //   width: 3vh;
+  //   font-size: 5vh;
+  //   span{
+  //     width: 3vh;
+  //   }
+  // }
 }

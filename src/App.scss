@@ -38,6 +38,10 @@
     bottom: 0;
     line-height: 0.6em;
   }
+  .canvas{
+    position: absolute;
+    z-index: 0;
+  }
 }
 *{
   padding: 0;
@@ -59,11 +63,12 @@ a {
 
 @media screen and (max-width: 500px) {
   .App {
-    font-size: 6vh;
+    font-size: 5vh;
+    // font-size: 20px;
     line-height: 1.1em;
     .Button{
       color: #fff;
-      font-size: 6vh;
+      font-size: 5vh;
     }
   }
 }

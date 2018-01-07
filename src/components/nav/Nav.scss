@@ -20,6 +20,12 @@
         text-decoration: none;
         color: #fff;
       }
+      span{
+        pointer-events: none;
+      }
+      &:hover {
+        opacity: 0;
+      }
       &:last-child {
         text-align: right;
       }
@@ -34,6 +40,11 @@
       display: block;
       .nav-item {
         display: block;
+        // outline: 1px solid red;
+        line-height: 5vh;
+        &:hover {
+          opacity: 1;
+        }
         &:last-child {
           text-align: left;
         }
