@@ -6,79 +6,92 @@ class Marker extends React.Component {
   constructor(props){
     super(props);
     this.expand = this.expand.bind(this);
+    this.animationTiming = this.animationTiming.bind(this);
     this.count = 0;
+    this.animating = false;
   }
   state = {
     color: 'white',
-    width: 100,
-    height: 100,
+    width: (this.props.getScreenWidth() / 100) * 12,
+    height: (this.props.getScreenHeight() / 100) * 12,
+    animating: false,
   };
   componentDidUpdate(){
     if(this.props.expand){
-      console.log('pros', this.props);
       this.expand();
     }
   }
+  animationTiming(){
+    this.setState({
+      animating: false,
+    });
+  }
   expand(){
-    // this.animation();
-    if(this.props.pos.icon === 'circle'){
-      this.Circle.to({
-        width: window.innerWidth * 2,
-        height: window.innerHeight * 2,
-        duration: 0.5,
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
-      });
-    }
-    if(this.props.pos.icon === 'rect'){
-      this.Rect.to({
-        width: window.innerWidth,
-        height: window.innerHeight,
-        duration: 0.5,
-        x: 0,
-        y: 0,
-      });
-    }
-    if(this.props.pos.icon === 'triangle'){
-      this.Poly.to({
-        width: window.innerWidth * 4,
-        height: window.innerHeight * 4,
-        duration: 0.5,
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
-      });
+    const { getScreenWidth } = this.props;
+    if(this.animating === false){
+      this.animating = true;
+      setTimeout(() => {
+        this.animating = false;
+      }, this.props.animationDuration);
+
+      const animationDuration = this.props.animationDuration / 1000;
+      if(this.props.pos.icon === 'circle'){
+        this.Circle.to({
+          width: getScreenWidth() * 3,
+          height: getScreenWidth() * 3,
+          x: getScreenWidth() / 2,
+          y: getScreenWidth() / 2,
+          animationDuration,
+        });
+      }
+      if(this.props.pos.icon === 'rect'){
+        this.Rect.to({
+          width: getScreenWidth() * 2,
+          height: getScreenWidth() * 2,
+          x: - (getScreenWidth() / 2),
+          y: - (getScreenWidth() / 2),
+          animationDuration,
+        });
+      }
+      if(this.props.pos.icon === 'triangle'){
+        this.Poly.to({
+          width: getScreenWidth() * 4,
+          height: getScreenWidth() * 4,
+          x: getScreenWidth() / 2,
+          y: getScreenWidth() / 2,
+          animationDuration,
+        });
+      }
     }
   }
   render() {
     return (
       <Group>
-        {this.props.pos.icon === 'rect' &&
-          <Rect
-            x={this.props.pos.x - (this.state.width / 2)}
-            y={this.props.pos.y - (this.state.height / 2)}
-            width={this.state.width}
-            height={this.state.height}
-            fill={this.state.color}
-            ref={(Rect) => { this.Rect = Rect; }}
-          />
-        }
         {this.props.pos.icon === 'circle' &&
           <Circle
-            x={this.props.pos.x}
-            y={this.props.pos.y}
-            width={this.state.width}
-            height={this.state.height}
-            radius={50}
+            x={this.props.pos.x - (this.props.pos.width / 100) * 30}
+            y={this.props.pos.y - (this.props.pos.height / 100) * 15}
+            radius={(this.props.pos.height / 100) * 40}
             fill={this.state.color}
             ref={(Circle) => { this.Circle = Circle; }}
           />
         }
+        {this.props.pos.icon === 'rect' &&
+          <Rect
+            x={this.props.pos.x - ((this.props.pos.width / 100) * 10)}
+            y={this.props.pos.y - ((this.props.pos.height / 100) * 55)}
+            width={(this.props.pos.height / 100) * 80}
+            height={(this.props.pos.height / 100) * 80}
+            fill={this.state.color}
+            ref={(Rect) => { this.Rect = Rect; }}
+          />
+        }
         {this.props.pos.icon === 'triangle' &&
           <RegularPolygon
-            x={this.props.pos.x}
+            x={this.props.pos.x + ((this.props.pos.width / 100) * 30)}
             y={this.props.pos.y}
-            width={this.state.width}
-            height={this.state.height}
+            width={(this.props.pos.height / 100) * 110}
+            height={(this.props.pos.height / 100) * 110}
             sides={3}
             fill={this.state.color}
             ref={(Poly) => { this.Poly = Poly; }}
@@ -90,7 +103,11 @@ class Marker extends React.Component {
 }
 Marker.propTypes = {
   expand: PropTypes.bool,
+  isMobile: PropTypes.bool,
   pos: PropTypes.shape({}),
+  animationDuration: PropTypes.number,
+  getScreenWidth: PropTypes.func,
+  getScreenHeight: PropTypes.func,
 };
 Marker.defaultProps = {
   expand: false,

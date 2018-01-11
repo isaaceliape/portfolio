@@ -1,10 +1,21 @@
 @import './../../shared.scss';
+
 .Page{
   &.home{
     .jobs{
       text-align: left;
       display: block;
       width: 100%;
+      position: relative;
+      .hitarea{
+        position: absolute;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        // outline: 1px solid green;
+      }
       .logo,
       .job-link{
         font-size: 10vh;
@@ -13,15 +24,30 @@
         text-decoration: none;
         display: inline-block;
         margin-right: 0.5em;
-        .word{
-          display: inline-block;
-          // outline: 1px solid red;
+        // outline: 1px solid red;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+        z-index: 1;
+        .marquee-hover{
+          position: absolute;
+          opacity: 0;
+          left: 0;
+          top: 0;
+        }
+        &:hover{
+          .marquee-hover{
+            opacity: 1;
+          }
+          marquee{
+            transform: translateY(-100%);
+          }
         }
       }
       .logo{
         height: auto;
         line-height: 10vh;
-        cursor: pointer;
+        pointer-events: none;
       }
     }
     .tooltip{
@@ -31,33 +57,110 @@
     }
   }
   &.about{
-    .contact{
+    .Link{
       position: absolute;
       bottom: 0;
+      left: 0;
+      line-height: 6vh;
+    }
+    .description{
+      width: 75vw;
     }
   } 
+  &.easterEgg{
+    overflow: auto;
+    height: 100vh;
+    .instructions{
+      width: 50vw;
+      display: block;
+      margin-bottom: 5vh;
+    }
+    .tutorial{
+      width: 70vw;
+      margin-top: 28vh;
+    }
+  }
   .Button{
     &.close{
       position: absolute;
       right: 0;
-      bottom: 30vh;
+      bottom: 0;
+      line-height: 6vh;
     }
   }
 }
+@keyframes marquee {
+  0% { 
+    left: 100vw;
+    transform: translateX(0);
+  }
+  100% {
+    left: 0vw;
+    transform: translateX(-110%);
+  }
+}
 
-@media all and (max-width: 500px) {
-  .Page{
-    &.home{
-      .jobs{
-        .logo,
-        .job-link{
-          font-size: 5vh;
+
+/* portrait */
+@media screen and (orientation:portrait) {
+  .App{
+    &.isMobile{
+      .Page{
+        &.home{
+          .jobs{
+            .logo,
+            .job-link{
+              font-size: 5vh;
+              line-height: 1.2em;
+              display: block;
+            }
+          }
+        }
+        &.about{
+          .contact{
+            bottom: 0;
+            line-height: 4vh;
+          }
+        }
+        .Button{
+          &.close{
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            line-height: 5vh;
+          }
         }
       }
     }
-    .Button{
-      &.close{
-        bottom: 20vh;
+  }
+}
+/* landscape */
+@media screen and (orientation:landscape) {
+  .App{
+    &.isMobile{
+      .Page{
+        &.home{
+          .jobs{
+            .logo,
+            .job-link{
+              font-size: 5vw;
+              line-height: 5vw;
+            }
+          }
+        }
+        &.about{
+          .contact{
+            bottom: 0;
+            line-height: 4vh;
+          }
+        }
+        .Button{
+          &.close{
+            position: absolute;
+            right: 0;
+            bottom: 0;
+          }
+        }
       }
     }
   }

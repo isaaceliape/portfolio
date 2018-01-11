@@ -10,11 +10,15 @@
 .App {
   background-color: #000;
   font-family: ahamono;
-  height: calc(100vh - 70px);
+  height: 100vh;
   font-size: 10vh;
   font-weight: 100;
   line-height: 1em;
   color: #fff;
+  overflow: hidden;
+  &.animation{
+    transition: background-color .5s ease;
+  }
   &.blackFont{
     color: #000;
     .Button{
@@ -37,16 +41,103 @@
     position: absolute;
     bottom: 0;
     line-height: 0.6em;
+    &:before{
+      content: '';
+      width: 40vh;
+      height: 8vh;
+      background-image: url('./assets/images/menu.png');
+      background-repeat: no-repeat;
+      background-size: auto 100%; 
+      position: absolute;
+      top: -2.5vh;
+      left: 1.5vh;
+      display: none;
+    }
+    &:hover{
+      color: transparent;
+      &:before{
+        display: block;
+      }
+    }
   }
   .canvas{
     position: absolute;
     z-index: 0;
+  }
+  &.isMobile{
+    font-size: 5vh;
+    line-height: 1.1em;
+    width: 100vw;
+    height: 100vh;
+    .menu {
+      &:before{
+        display: none;
+      }
+      &:hover{
+        color: initial;
+        &:before{
+          display: none;
+        }
+      }
+    }
+    .Button{
+      font-size: 5vh;
+    }
+  }
+}
+/* portrait */
+@media screen and (orientation:portrait) {
+  .App{
+    &.isMobile{
+    }
+  }
+}
+/* landscape */
+@media screen and (orientation:landscape) {
+  .App{
+    &.isMobile{
+      font-size: 6vw;
+      .Button{
+        font-size: 6vw;
+      }
+    }
   }
 }
 *{
   padding: 0;
   margin: 0;
   cursor: none !important;
+}
+p,
+li,
+button,
+a{
+  &::-moz-selection { 
+    background-color: rgba(0, 0, 0, 0.99); 
+    color: white;
+    // &:before{
+    //   content: '';
+    //   width: 100%;
+    //   height: 100%;
+    //   background-color: #000 !important; 
+    //   z-index: 0;
+    //   outline: 1px solid red;
+    //   display: block;
+    // }
+  }
+  &::selection {
+    background-color: rgba(0, 0, 0, 0.99);
+    color: white;
+    // &:before{
+    //   content: '';
+    //   width: 100%;
+    //   height: 100%;
+    //   background-color: #000 !important;
+    //   z-index: 0;
+    //   outline: 1px solid red;
+    //   display: block;
+    // }
+  }
 }
 h1,
 h2{
@@ -61,19 +152,19 @@ a {
   color: inherit;
 }
 
-@media screen and (max-width: 500px) {
-  .App {
-    font-size: 5vh;
-    // font-size: 20px;
-    line-height: 1.1em;
-    .Button{
-      color: #fff;
-      font-size: 5vh;
-    }
-  }
-}
-@media (orientation: landscape) {
-  .App{
-    height: 100vh;
-  }
-}
+// @media screen and (max-width: 500px) {
+//   .App {
+//     font-size: 5vh;
+//     // font-size: 20px;
+//     line-height: 1.1em;
+//     .Button{
+//       color: #fff;
+//       font-size: 5vh;
+//     }
+//   }
+// }
+// @media (orientation: landscape) {
+//   .App{
+//     height: 100vh;
+//   }
+// }

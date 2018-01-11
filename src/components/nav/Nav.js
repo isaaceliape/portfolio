@@ -52,9 +52,13 @@ class Nav extends React.PureComponent {
                 const elInfo = this[icon].children[0].getBoundingClientRect();
                 const x = elInfo.x + (elInfo.width / 2);
                 const y = elInfo.y + (elInfo.height / 2);
+                const width = elInfo.width;
+                const height = elInfo.height;
                 this.props.navItemHover({
                   x,
                   y,
+                  width,
+                  height,
                   icon, 
                 });
               }}

@@ -1,24 +1,55 @@
 @import './../../shared.scss';
 
 .Container{
-  width: calc(100vw - 10vh);
-  height: 90vh;
+  width: calc(100vw - 5vh);
+  height: 95vh;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   margin: 0 auto;
-  top: 5vh;
+  top: 2.5vh;
   position: relative;
   box-sizing: border-box;
   display: block;
-  // outline: 1px solid red;
 }
 
-@media screen and (max-width: 500px) {
-  .Container{
-    height: calc(90vh - 60px);
+.App{
+  &.isMobile{
+    .Container{
+      // outline: 1px solid red;
+    }
+    &.portrait{
+      .Container{
+        height: calc((100vh - 110px));
+      }
+    }
+    &.landscape{
+      .Container{
+        top: 5vh;
+        width: calc(100vw - 10vh);
+        height: calc((100vh - 6vw));
+      }
+    }
   }
 }
-@media (orientation: landscape) {
-  .Container{
-    height: calc(100vh - 100px);
+/* portrait */
+@media screen and (orientation:portrait) {
+  .App{
+    &.isMobile{
+      .Container{
+        height: calc((100vh - 110px));
+      }
+    }
+  }
+}
+/* landscape */
+@media screen and (orientation:landscape) {
+  .App{
+    &.isMobile{
+      .Container{
+        top: 5vh;
+        width: calc(100vw - 10vh);
+        height: calc((100vh - 6vw));
+      }
+    }
   }
 }

@@ -1,14 +1,13 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes, { func } from 'prop-types';
-import { splitLetters } from './../../Helpers';
 import './List.css';
 
 class List extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      orientation: 'V',
+      currentPos: 1,
       gyroscope: 0,
       percent: 0,
       animate: this.props.animateJobList,
@@ -17,31 +16,28 @@ class List extends React.PureComponent {
     this.onHoverJob = this.onHoverJob.bind(this);
     this.clearTooltip = this.clearTooltip.bind(this);
     this.gyroscopeSelection = this.gyroscopeSelection.bind(this);
-    this.orientationchange = this.orientationchange.bind(this);
   }
-  
   componentDidMount(){
     if(this.props.isMobile){
       window.addEventListener('deviceorientation', this.gyroscopeSelection);
     }
     const timeOfLastAnimationDelay = (((this.state.listItens.length + 1) * 200) + 1500) + 200;
     this.stopAnim(timeOfLastAnimationDelay);
-    window.addEventListener('orientationchange', this.orientationchange);
-    this.orientationchange();
-  }
-  orientationchange(e){
-    let orientation = window.innerWidth > window.innerHeight ? 'H' : 'V';
-    this.setState({
-      orientation,
-    })
   }
   gyroscopeSelection(e){
-    // var alpha = e.alpha;
-    // var gamma = e.gamma;
-    const beta = Number(e.beta) - 40;
-    let percent = ((beta * 100) / 30).toFixed(0);
-    percent = percent <= 0 ? 0 : percent;
-    percent = percent >= 100 ? 100 : percent;
+    let percent = 0;
+    if (this.props.orientation === 'portrait'){
+      const beta = Number(e.beta) - 40;
+      percent = ((beta * 100) / 30).toFixed(0);
+      percent = percent <= 0 ? 0 : percent;
+      percent = percent >= 100 ? 100 : percent;
+    } else {
+      const gamma = Number(e.gamma) + 25;
+      percent = ((gamma * 100) / 30).toFixed(0);
+      percent = percent >= 0 ? 0 : percent;
+      percent = percent <= -100 ? -100 : percent;
+      percent = Math.abs(percent);
+    }
     const fraction = 100 / this.state.listItens.length;
 
     let pos = 0;
@@ -60,7 +56,12 @@ class List extends React.PureComponent {
       x.active = false;
     });
     stateCopy.listItens[pos].active = true;
-    this.setState(stateCopy);
+    if(pos !== this.state.currentPos){
+      stateCopy.currentPos = pos;
+      this.setState(stateCopy);
+    } else {
+      return false;
+    }
   }
   onHoverJob(tooltipText, title){
     if(this.props.isMobile){
@@ -108,54 +109,112 @@ class List extends React.PureComponent {
   }
   render() {
     return(
-      <div className="jobs">
-        {/* <span style={{
-          'position':'absolute',
-          'right':'-20px',
-          'top':'-30px',
-          'fontSize':'15px',
-        }}>
-          {this.state.percent}{this.state.orientation}
-        </span> */}
-        {this.props.hide &&
-          this.state.listItens.map(({ title, link, tooltip, active }, i) => {
-            const hide = this.isHovering() && !active ? '0' : 1;
-            let delay = this.state.animate ? (i * 200) + 1500 : 0;
-            if(title !== 'sclp'){
-              return (
-                <a
-                  className="job-link"
-                  key={`key-${title}`}
-                  style={{opacity: hide}}
-                  href={link}
-                  target="_blank"
-                  onMouseOver={() => {
-                    if(!this.state.animate){
-                      this.onHoverJob(tooltip, title);
-                    }
-                  }}
-                  onMouseOut={this.clearTooltip}
-                >
-                  {splitLetters(title, delay, this.state.animate)}
-                </a>
-              );
-            }
-            return (
-              <a
-                className="job-link"
-                key={`key-${title}`}
-                onClick={(e) => {
-                  if(title === 'sclp'){
-                    e.preventDefault();
-                    this.props.changePage('about');
-                  }
-                }}
-              >
-                {title}
-              </a>
-            );
-          })
-        }
+      <div>
+        <div
+          className="jobs"
+          onMouseOut={() => {
+            this.props.setMainState({
+              backgroundColor: "#fff",
+              blackFont: true,
+              bgAnimation: true,
+            })
+          }}
+        >
+          {this.props.hide &&
+            this.state.listItens.map(({ title, link, tooltip, active }, i) => {
+              const hide = this.isHovering() && !active ? '0' : 1;
+              if(this.props.isMobile){
+                if(title !== 'sclp'){
+                  return(
+                    <a
+                      className="job-link"
+                      key={`key-${title}`}
+                      style={{
+                        opacity: hide,
+                        pointerEvents: (hide === '0'? 'none' : 'initial'),
+                      }}
+                      href={link}
+                      target="_blank"
+                    >
+                      <span>{title}</span>
+                    </a>
+                  );
+                }
+                return(
+                    <span
+                      className="job-link"
+                      key={`key-${title}`}
+                      style={{
+                        pointerEvents: 'none',
+                      }}
+                    >
+                      {title}
+                    </span>
+                  );
+              } else {
+                if(title !== 'sclp'){
+                  return (
+                    <a
+                      className="job-link"
+                      key={`key-${title}`}
+                      style={{
+                        opacity: hide,
+                        pointerEvents: (hide === '0'? 'none' : 'initial'),
+                      }}
+                      href={link}
+                      target="_blank"
+                      onMouseOver={() => {
+                        if(!this.state.animate){
+                          this.onHoverJob(tooltip, title);
+                          this.props.setMainState({
+                            backgroundColor: "#000",
+                            blackFont: false,
+                            bgAnimation: true,
+                          });
+                        }
+                      }}
+                      onMouseOut={() => {
+                        this.clearTooltip()
+                      }}
+                    >
+                      <marquee>{title}</marquee>
+                      <span className="marquee-hover">{title}</span>
+                    </a>
+                  );
+                }
+
+                return (
+                  <a
+                    className="logo"
+                    key={`key-${title}`}
+                    style={{
+                      opacity: hide,
+                    }}
+                    onClick={(e) => {
+                      if(title === 'sclp'){
+                        e.preventDefault();
+                        this.props.changePage('about');
+                      }
+                    }}
+                  >
+                    {title}
+                  </a>
+                );
+              }
+            })
+          }
+
+          <div
+            className="hitarea"
+            onMouseOver={() => {
+              this.props.setMainState({
+                backgroundColor: "#fff",
+                blackFont: true,
+                bgAnimation: true,
+              })
+            }}
+          />
+        </div>
       </div>
     );
   }
@@ -164,8 +223,11 @@ List.propTypes = {
   listItens: PropTypes.arrayOf(PropTypes.object),
   setTooltipText: func,
   changePage: func,
+  onHoverJob: func,
+  setMainState: func,
   isMobile: PropTypes.bool,
   hide: PropTypes.bool,
+  orientation: PropTypes.string,
   animateJobList: PropTypes.bool,
   setActiveItem: PropTypes.object,
 }

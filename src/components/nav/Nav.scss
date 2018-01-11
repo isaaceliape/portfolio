@@ -16,6 +16,7 @@
       flex-direction: row;
       cursor: pointer;
       line-height: 0.6em;
+      text-align: center;
       .link {
         text-decoration: none;
         color: #fff;
@@ -26,6 +27,9 @@
       &:hover {
         opacity: 0;
       }
+      &:first-child {
+        text-align: left;
+      }
       &:last-child {
         text-align: right;
       }
@@ -33,22 +37,50 @@
   }
 }
 
-
-@media screen and (max-width: 500px) {
-  .Nav{
-    .nav-wrapper {
-      display: block;
-      .nav-item {
-        display: block;
-        // outline: 1px solid red;
-        line-height: 5vh;
-        &:hover {
-          opacity: 1;
+.App{
+  &.isMobile{
+    .Nav{
+      .nav-wrapper {
+        .nav-item {
+          &:hover {
+            opacity: 1;
+          }
         }
-        &:last-child {
-          text-align: left;
+      }  
+    }
+  }
+}
+/* portrait */
+@media screen and (orientation:portrait) {
+  .App{
+    &.isMobile{
+      .Nav{
+        .nav-wrapper {
+          display: block;
+          .nav-item {
+            display: block;
+            line-height: 1.1em;
+            text-align: left;
+            &:hover {
+              opacity: 1;
+            }
+            &:last-child {
+              text-align: left;
+            }
+          }
+        }  
+      }
+    }
+  }
+}
+/* landscape */
+@media screen and (orientation:landscape) {
+  .App{
+    &.isMobile{
+      &.landscape{
+        .Nav{
         }
       }
-    }  
+    }
   }
 }
