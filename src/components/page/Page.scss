@@ -121,6 +121,9 @@
             bottom: 0;
             line-height: 4vh;
           }
+          .Marquee{
+            margin-top: 5vh;
+          }
         }
         .Button{
           &.close{
@@ -152,6 +155,12 @@
           .contact{
             bottom: 0;
             line-height: 4vh;
+          }
+          .Marquee{
+            margin-top: 10vh;
+          }
+          .Link{
+            margin-top: 5vh;
           }
         }
         .Button{

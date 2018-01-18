@@ -41,7 +41,7 @@ class App extends Component {
         lastButtonPressed: 0,
       },
       changePage: {
-        animationDuration: 500,
+        animationDuration: 1000,
       },
       cursor: {
         color: '#000',
@@ -115,7 +115,6 @@ class App extends Component {
   }
   componentWillMount(){
     const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
-    const animationDuration = isMobile ? 1500 : 1000;
 
     if(!isMobile){
       window.addEventListener("gamepadconnected", this.gameLoop);
@@ -127,18 +126,13 @@ class App extends Component {
 
     this.setState({
       isMobile,
-      changePage: {
-        animationDuration,
-      }
     });
   }
   onMouseMove(event){
     const state = Object.assign({}, this.state);
     state.cursor.position.x = event.pageX;
     state.cursor.position.y = event.pageY;
-    this.setState(state, () => {
-      // console.log(this.state.cursor.position.x, this.state.cursor.position.y);
-    });
+    this.setState(state);
   }
   onKeyUp(e){
     let letter = '';
@@ -185,8 +179,6 @@ class App extends Component {
     this.setState({
       orientation,
     });
-    // console.log('orientation', orientation);
-    // console.log('getScreenHeight', this.getScreenHeight());
   }
   getScreenWidth(){
     const { orientation } = this.state;

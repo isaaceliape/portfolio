@@ -1,0 +1,1 @@
+rsync -avz -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --progress /Users/isaaceliape/workspace/isaaceliape/build/ root@67.205.177.149:/var/www/html/

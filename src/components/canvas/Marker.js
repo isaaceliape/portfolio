@@ -8,14 +8,14 @@ class Marker extends React.Component {
     this.expand = this.expand.bind(this);
     this.animationTiming = this.animationTiming.bind(this);
     this.count = 0;
-    this.animating = false;
+    this.isAnimating = false;
+    this.state = {
+      color: 'white',
+      width: (this.props.getScreenWidth() / 100) * 12,
+      height: (this.props.getScreenHeight() / 100) * 12,
+      animating: false,
+    };
   }
-  state = {
-    color: 'white',
-    width: (this.props.getScreenWidth() / 100) * 12,
-    height: (this.props.getScreenHeight() / 100) * 12,
-    animating: false,
-  };
   componentDidUpdate(){
     if(this.props.expand){
       this.expand();
@@ -27,30 +27,30 @@ class Marker extends React.Component {
     });
   }
   expand(){
-    const { getScreenWidth } = this.props;
-    if(this.animating === false){
-      this.animating = true;
+    const { getScreenWidth, getScreenHeight } = this.props;
+    if(this.isAnimating === false){
+      this.isAnimating = true;
       setTimeout(() => {
-        this.animating = false;
+        this.isAnimating = false;
       }, this.props.animationDuration);
-
-      const animationDuration = this.props.animationDuration / 1000;
+      
+      const duration = this.props.animationDuration / 1000;
       if(this.props.pos.icon === 'circle'){
         this.Circle.to({
           width: getScreenWidth() * 3,
           height: getScreenWidth() * 3,
           x: getScreenWidth() / 2,
           y: getScreenWidth() / 2,
-          animationDuration,
+          duration,
         });
       }
       if(this.props.pos.icon === 'rect'){
         this.Rect.to({
           width: getScreenWidth() * 2,
-          height: getScreenWidth() * 2,
+          height: getScreenHeight() * 2,
           x: - (getScreenWidth() / 2),
-          y: - (getScreenWidth() / 2),
-          animationDuration,
+          y: - ((getScreenHeight() / 100) * 50),
+          duration,
         });
       }
       if(this.props.pos.icon === 'triangle'){
@@ -58,8 +58,8 @@ class Marker extends React.Component {
           width: getScreenWidth() * 4,
           height: getScreenWidth() * 4,
           x: getScreenWidth() / 2,
-          y: getScreenWidth() / 2,
-          animationDuration,
+          y: getScreenHeight() / 2,
+          duration,
         });
       }
     }

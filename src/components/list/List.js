@@ -16,10 +16,30 @@ class List extends React.PureComponent {
     this.onHoverJob = this.onHoverJob.bind(this);
     this.clearTooltip = this.clearTooltip.bind(this);
     this.gyroscopeSelection = this.gyroscopeSelection.bind(this);
+    this.activeAllWorks = this.activeAllWorks.bind(this);
+    this.timer = 0;
+    this.timeToShow = 1700;
+  }
+  activeAllWorks() {
+    let listItens = this.state.listItens.slice(0);
+    for (let i = 0; i < listItens.length; i++) {
+      listItens[i].active = true;
+    }
+    this.setState({
+      listItens,
+    });
+  }
+  componentDidUpdate(){
+    clearTimeout(this.timer);
+    this.timer = setTimeout(this.activeAllWorks, this.timeToShow);
   }
   componentDidMount(){
     if(this.props.isMobile){
-      window.addEventListener('deviceorientation', this.gyroscopeSelection);
+      this.activeAllWorks();
+      setTimeout(() => {
+        console.log('gyroscope');
+        window.addEventListener('deviceorientation', this.gyroscopeSelection);
+      }, 1000);
     }
     const timeOfLastAnimationDelay = (((this.state.listItens.length + 1) * 200) + 1500) + 200;
     this.stopAnim(timeOfLastAnimationDelay);
@@ -122,8 +142,9 @@ class List extends React.PureComponent {
         >
           {this.props.hide &&
             this.state.listItens.map(({ title, link, tooltip, active }, i) => {
-              const hide = this.isHovering() && !active ? '0' : 1;
+              let hide = this.isHovering() && !active ? '0' : 1;
               if(this.props.isMobile){
+                hide = (active === true) ? '1' : '0';
                 if(title !== 'sclp'){
                   return(
                     <a
