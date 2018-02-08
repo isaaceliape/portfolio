@@ -17,6 +17,7 @@ import { PROJECT_PATH } from './Constants';
 
 import './App.css';
 import tutorialImage from './assets/images/tutorial.png';
+import perfilImage from './assets/images/perfil.jpg';
 
 class App extends Component {
   constructor(props){
@@ -367,7 +368,8 @@ class App extends Component {
             pageName="about"
             currentPage={currentPage}
             closePage={this.changePage}
-          >
+          > 
+            <img src={perfilImage} className="perfil" />
             <p className="description">sclp is a collection of isaac eliape’s work on web development and ui engineering</p>
             <Marquee
               setMainState={this.setMainState}

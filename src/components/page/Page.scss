@@ -55,6 +55,17 @@
     }
   }
   &.about{
+    .perfil{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height: 83vh;
+      z-index: 0;
+      transform: translate3d(-50%, -50%, 0);
+      &:hover{
+        z-index: 1;
+      }
+    }
     .Link{
       position: absolute;
       bottom: 0;
@@ -63,6 +74,8 @@
     }
     .description{
       width: 75vw;
+      position: relative;
+      pointer-events: none;
     }
   } 
   &.easterEgg{
