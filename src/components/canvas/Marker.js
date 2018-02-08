@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Rect, Circle, Group, RegularPolygon} from 'react-konva';
+import { getScreenWidth, getScreenHeight } from './../../Helpers';
 
 class Marker extends React.Component {
   constructor(props){
@@ -11,8 +12,8 @@ class Marker extends React.Component {
     this.isAnimating = false;
     this.state = {
       color: 'white',
-      width: (this.props.getScreenWidth() / 100) * 12,
-      height: (this.props.getScreenHeight() / 100) * 12,
+      width: (getScreenWidth() / 100) * 12,
+      height: (getScreenHeight() / 100) * 12,
       animating: false,
     };
   }
@@ -27,7 +28,6 @@ class Marker extends React.Component {
     });
   }
   expand(){
-    const { getScreenWidth, getScreenHeight } = this.props;
     if(this.isAnimating === false){
       this.isAnimating = true;
       setTimeout(() => {
@@ -106,8 +106,6 @@ Marker.propTypes = {
   isMobile: PropTypes.bool,
   pos: PropTypes.shape({}),
   animationDuration: PropTypes.number,
-  getScreenWidth: PropTypes.func,
-  getScreenHeight: PropTypes.func,
 };
 Marker.defaultProps = {
   expand: false,

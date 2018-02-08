@@ -1,0 +1,12 @@
+.Marquee{
+  position: absolute;
+  top: 50vh;
+  left: 0;
+  width: auto;
+  display: inline-block;
+  overflow: hidden;
+  width: 95vw;
+  .marquee-content{
+    display: inline-block;
+  }
+}

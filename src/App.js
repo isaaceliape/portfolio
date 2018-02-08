@@ -1,7 +1,10 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { Layer, Stage } from 'react-konva';
 
 import Nav from './components/nav/Nav';
+import Gamepad from './components/gamepad/Gamepad';
+import { getScreenWidth, getScreenHeight, getOrientation } from './Helpers';
 import Link from './components/link/Link';
 import List from './components/list/List';
 import Page from './components/page/Page';
@@ -10,6 +13,7 @@ import Cursor from './components/cursor/Cursor';
 import Marker from './components/canvas/Marker';
 import Marquee from './components/link/Marquee';
 import Container from './components/container/Container';
+import { PROJECT_PATH } from './Constants';
 
 import './App.css';
 import tutorialImage from './assets/images/tutorial.png';
@@ -59,67 +63,108 @@ class App extends Component {
         }
       },
       animateJobList: false,
+      hideJobList: false,
       jobsList: [
         {
           title: 'sclp',
-          link: '',
           tooltip: 'about',
           active: false,
+          imagePath: '',
+          description: '',
+          technologies: [],
+          link: '',
         },
         {
           title: 'hpmagicwords',
-          link: 'https://www.hpmagicwords.com.br/tool',
           tooltip: 'speech api',
           active: false,
+          imagePath: `${PROJECT_PATH}/hp_magic_works.png`,
+          description: 'the first book written by people who’ve never written before.',
+          technologies: [
+            'html5/css3',
+            'javascript',
+            'custom framework',
+          ],
+          link: 'https://www.hpmagicwords.com.br/tool',
         },
         {
           title: 'gettyendless',
-          link: 'http://www.gettyendless.com/',
           tooltip: 'webGL',
           active: false,
+          imagePath: `${PROJECT_PATH}/getty_endless_possibilities.png`,
+          description: 'creating protraits of famous people with gettyimages photos',
+          technologies: [
+            'html5/css3',
+            'javascript',
+            'webGL',
+          ],
+          link: 'http://www.gettyendless.com/',
         },
         {
           title: 'flplny',
-          link: 'http://flplny.com/',
           tooltip: 'responsive',
           active: false,
+          imagePath: `${PROJECT_PATH}/flplny.png`,
+          description: 'responsive semplice-based portfolio',
+          technologies: [
+            'html5/css3',
+            'javascript',
+            'animations',
+            'wordpress',
+          ],
+          link: 'http://flplny.com/',
         },
         {
           title: 'fundacaolemann',
-          link: 'http://www.fundacaolemann.org.br/',
-          tooltip: 'website',
+          tooltip: 'responsive',
           active: false,
+          imagePath: `${PROJECT_PATH}/fundacao_lemann.png`,
+          description: 'cms and responsive website',
+          technologies: [
+            'html5/css3',
+            'javascript',
+            'wordpress',
+          ],
+          link: 'http://www.fundacaolemann.org.br/',
         },
       ],
     }
     this.onKeyUp = this.onKeyUp.bind(this);
-    this.gameLoop = this.gameLoop.bind(this);
     this.onResize = this.onResize.bind(this);
     this.changePage = this.changePage.bind(this);
     this.onClickMenu = this.onClickMenu.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
     this.navItemHover = this.navItemHover.bind(this);
     this.getMainState = this.getMainState.bind(this);
     this.setMainState = this.setMainState.bind(this);
-    this.buttonPressed = this.buttonPressed.bind(this);
-    this.setTooltipText = this.setTooltipText.bind(this);
-    this.getScreenWidth = this.getScreenWidth.bind(this);
-    this.getScreenHeight = this.getScreenHeight.bind(this);
+    this.loadJobListImages = this.loadJobListImages.bind(this);
     this.onMouseOutCloseBtn = this.onMouseOutCloseBtn.bind(this);
     this.onMouseOverCloseBtn = this.onMouseOverCloseBtn.bind(this);
-    this.changeCursorPosition = this.changeCursorPosition.bind(this);
-
-    this.buttonPressedStatus = false;
 
     window.app = this;
+  }
+  loadJobListImages(){
+    const state = this.getMainState();
+    const jobsList = state.jobsList.slice(0);
+    jobsList.forEach((job) => {
+      if(job.imagePath.length > 0){
+        _.set(job, 'image', require(`${job.imagePath}`));
+        // job.image = require(`${job.imagePath}`);
+      }
+    });
+    state.jobsList = jobsList;
+    this.setState(state);
+  }
+  componentDidMount(){
+    this.loadJobListImages();
   }
   componentWillMount(){
     const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
 
     if(!isMobile){
-      window.addEventListener("gamepadconnected", this.gameLoop);
+      this.Gamepad = new Gamepad(this);
+      this.Gamepad.init();
       window.addEventListener("keyup", this.onKeyUp);
-      window.addEventListener('mousemove', this.onMouseMove );
+      // window.addEventListener('mousemove', this.onMouseMove );
     }
     window.addEventListener('resize', this.onResize);
     this.onResize();
@@ -128,220 +173,72 @@ class App extends Component {
       isMobile,
     });
   }
-  onMouseMove(event){
-    const state = Object.assign({}, this.state);
-    state.cursor.position.x = event.pageX;
-    state.cursor.position.y = event.pageY;
-    this.setState(state);
-  }
   onKeyUp(e){
-    let letter = '';
-    let state = Object.assign({}, this.state);
-    if(e.keyCode === 224 || e.keyCode === 91){
-      letter = 'c+';
-    }
+    let state = this.getMainState();
+
+    //On press ESC
     if(e.keyCode === 27){
       state.hideNav = true;
       state.backgroundColor = "#fff";
       state.blackFont = true;
     }
-    
-    if(this.state.easterEgg.currentKey.substring(0,2) === 'c+' ){
-      switch (e.keyCode) {
-        case 80:
-          letter = this.state.easterEgg.currentKey + 'p';
-          break;
-        case 83:
-          letter = this.state.easterEgg.currentKey + 's';
-          break;
-        case 52:
-          letter = this.state.easterEgg.currentKey + '4';
-          break;
-        default:
-          break;
-      }
-    }
-    if(letter === this.state.easterEgg.keyword){
-      letter = '';
-      // this.changePage('easterEgg');
-      this.setState({
-        currentPage: 'easterEgg',
-        bgAnimation: true,
-        backgroundColor: '#f2f2f2',
-      });
-    }
-    state.easterEgg.currentKey = letter;
     this.setState(state);
   }
   onResize(){
-    var mql = window.matchMedia("(orientation: landscape)");
-    const orientation = mql.matches ? 'landscape' : 'portrait';
     this.setState({
-      orientation,
+      orientation: getOrientation(),
     });
-  }
-  getScreenWidth(){
-    const { orientation } = this.state;
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    if(iOS){
-      return orientation === 'landscape' ? window.screen.height : window.screen.width;
-    }
-    return window.innerWidth;
-  }
-  getScreenHeight(){
-    const { orientation } = this.state;
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    if(iOS){
-      return orientation === 'landscape' ? window.screen.width : window.screen.height;
-    }
-    return window.innerHeight;
-  }
-  buttonPressed(b) {
-    if (typeof(b) === "object") {
-      return b.pressed;
-    }
-    return b === 1.0;
-  }
-  gameLoop(event){
-    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-    if (!gamepads) {
-      return;
-    }
-    var gp = gamepads[0];
-    let state = Object.assign({}, this.state);
-
-    if (this.buttonPressed(gp.buttons[0])) {
-      // console.log('x');
-      state.currentPage = "home";
-      state.backgroundColor = "#fff";
-      state.hideNav = true;
-      state.blackFont = true;
-      state.bgAnimation = true;
-      state.cursor.color = "#000";
-    }
-    if (this.buttonPressed(gp.buttons[2])) {
-      // console.log('■');
-      state.currentPage = "services";
-      state.backgroundColor = "#fff";
-      state.hideNav = true;
-      state.blackFont = true;
-      state.bgAnimation = true;
-      state.cursor.color = "#000";
-    }
-    if (this.buttonPressed(gp.buttons[1])) {
-      // console.log('●');
-      state.currentPage = "about";
-      state.backgroundColor = "#fff";
-      state.hideNav = true;
-      state.blackFont = true;
-      state.bgAnimation = true;
-      state.cursor.color = "#000";
-    }
-    if (this.buttonPressed(gp.buttons[3])) {
-      // console.log('▲');
-      state.currentPage = "awards";
-      state.backgroundColor = "#fff";
-      state.hideNav = true;
-      state.blackFont = true;
-      state.bgAnimation = true;
-      state.cursor.color = "#000";
-    }
-    if (this.buttonPressed(gp.buttons[9])) {
-      // console.log('option');
-      state.currentPage = "home";
-      state.backgroundColor = "#000";
-      state.hideNav = false;
-      state.blackFont = false;
-      state.bgAnimation = true;
-      state.cursor.color = "#fff";
-    }
-    if (this.buttonPressed(gp.buttons[14])) {
-      // console.log('left', state.cursor.position);
-      state.cursor.position.x = (state.cursor.position.x - 10) < 0 ? 0 : state.cursor.position.x - 10 ;
-      // console.log('state.cursor.position.x', state.cursor.position.x);
-    }
-    if (this.buttonPressed(gp.buttons[15])) {
-      // console.log('right', state.cursor.position);
-      state.cursor.position.x = (state.cursor.position.x + 10) > window.innerWidth ? window.innerWidth : state.cursor.position.x + 10 ;
-      // console.log('state.cursor.position.x', state.cursor.position.x);
-    }
-    if (this.buttonPressed(gp.buttons[12])) {
-      // console.log('top', state.cursor.position);
-      state.cursor.position.y = (state.cursor.position.y - 10) < 0 ? 0 : state.cursor.position.y - 10 ;
-    }
-    if (this.buttonPressed(gp.buttons[13])) {
-      // console.log('down', state.cursor.position);
-      state.cursor.position.y = (state.cursor.position.y + 10) > window.innerHeight ? window.innerHeight : state.cursor.position.y + 10 ;
-    }
-    this.setState(state, () => {
-      // console.log('pos', this.state.cursor.position);
-    });
-
-    requestAnimationFrame(this.gameLoop);
   }
   changePage(targetPage, animate){
     const blackFont = targetPage !== 'home';
     const { animationDuration } = this.state.changePage;
     let cursor = Object.assign({}, this.state.cursor);
     if(animate) {
-      cursor.color = '#fff';
-      this.setState({
-        currentPage: targetPage,
-        bgAnimation: false,
-        hideNav: true,
-        animateJobList: false,
-        blackFont,
-        expand: true,
-        cursor,
-      });
+      cursor.color = '#000';
+      let state = this.getMainState();
+      state.currentPage = targetPage;
+      state.bgAnimation = false;
+      state.hideNav = true;
+      state.animateJobList = false;
+      state.blackFont = blackFont;
+      state.expand = true,
+      state.cursor = cursor;
+      this.setState(state);
+      
       setTimeout(() => {
-        cursor.color = '#000';
-        cursor.rotate = false;
-        this.setState({
-          backgroundColor: '#fff',
-          expand: false,
-          cursor,
-          navHoverEl: {
-            pos: {
-              x: -200,
-              y: -200,
-            }
-          },
-        })
+        let state = this.getMainState();
+        state.backgroundColor = '#fff';
+        state.expand = false;
+        state.cursor.rotate = false;
+        state.navHoverEl = {
+          pos: {
+            x: -200,
+            y: -200,
+          }
+        };
+        this.setState(state);
       }, animationDuration);
     } else {
-      cursor.rotate = false;
-      this.setState({
-        currentPage: targetPage,
-        hideNav: true,
-        animateJobList: false,
-        blackFont: true,
-        backgroundColor: '#fff',
-        cursor,
-      });
+      let state = this.getMainState();
+      state.cursor.rotate = false;
+      state.currentPage = targetPage;
+      state.hideNav = true;
+      state.animateJobList = false;
+      state.blackFont = true;
+      state.backgroundColor = '#fff';
+      state.hideJobList = false;
+      this.setState(state);
     }
   }
-  changeCursorPosition(position){
-    let cursor = Object.assign({}, this.state.cursor);
-    cursor.position = position;
-    this.setState({
-      cursor,
-    }, () => {
-      // console.log('changeCursorPosition', this.state.cursor);
-    });
-  }
   onClickMenu(){
-    let cursor = Object.assign({}, this.state.cursor);
-    cursor.color = '#fff';
-    this.setState({
-      hideNav: false,
-      backgroundColor: '#000',
-      blackFont: false,
-      bgAnimation: true,
-      cursor,
-    }, () => {
-      // console.log(this.state.cursor);
-    });
+    let state = Object.assign({}, this.state);
+    state.cursor.color = '#fff';
+    state.hideNav = false;
+    state.backgroundColor = '#000';
+    state.blackFont = false;
+    state.bgAnimation = true;
+    state.hideJobList = true;
+    this.setState(state);
   }
   setMainState(state, cb){
     if (typeof cb === "function") {
@@ -349,11 +246,6 @@ class App extends Component {
     } else {
       this.setState(state);
     }
-  }
-  setTooltipText(tooltipText){
-    this.setState({
-      tooltipText,
-    });
   }
   onMouseOverCloseBtn(){
     let cursor = Object.assign({}, this.state.cursor);
@@ -377,6 +269,7 @@ class App extends Component {
     })
   }
   getMainState(){
+    // return  _.cloneDeep(this.state);
     return Object.assign({}, this.state);
   }
   render() {
@@ -405,8 +298,8 @@ class App extends Component {
       >
         <Stage
           className='canvas'
-          width={this.getScreenWidth()}
-          height={this.getScreenHeight()}
+          width={getScreenWidth()}
+          height={getScreenHeight()}
         >
           <Layer>
             <Marker
@@ -414,8 +307,6 @@ class App extends Component {
               pos={this.state.navHoverEl.pos}
               isMobile={this.state.isMobile}
               animationDuration={this.state.changePage.animationDuration}
-              getScreenWidth={this.getScreenWidth}
-              getScreenHeight={this.getScreenHeight}
             />
           </Layer>
         </Stage>
@@ -426,9 +317,6 @@ class App extends Component {
           isMobile={this.state.isMobile}
           visible={this.state.cursor.visible}
           gamepad={this.state.gamepad.goToDirection}
-          posY={this.state.cursor.position.y}
-          posX={this.state.cursor.position.x}
-          changeCursorPosition={this.changeCursorPosition}
         />
         <Container>
           <Button
@@ -463,11 +351,12 @@ class App extends Component {
               listItens={jobsList}
               onHoverJob={this.onHoverJob}
               setMainState={this.setMainState}
-              setTooltipText={this.setTooltipText}
+              getMainState={this.getMainState}
               isMobile={this.state.isMobile}
+              hideJobList={this.state.hideJobList}
               changePage={this.changePage}
+              currentPage={this.state.currentPage}
               animateJobList={this.state.animateJobList}
-              hide={hideNav}
               orientation={this.state.orientation}
             />
             <span className="tooltip">{tooltipText}</span>
@@ -483,6 +372,7 @@ class App extends Component {
             <Marquee
               setMainState={this.setMainState}
               getMainState={this.getMainState}
+              currentPage={this.state.currentPage}
             >
               <a
                 href="https://linkedin.com/in/isaaceliape"

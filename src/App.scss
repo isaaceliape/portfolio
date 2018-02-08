@@ -41,6 +41,7 @@
     position: absolute;
     bottom: 0;
     line-height: 0.6em;
+    z-index: 1;
     &:before{
       content: '';
       width: 40vh;
@@ -141,7 +142,8 @@ a{
 }
 h1,
 h2{
-  line-height: 100;
+  line-height: 1.2em;
+  font-weight: 100;
 }
 li {
   list-style-type: none;
