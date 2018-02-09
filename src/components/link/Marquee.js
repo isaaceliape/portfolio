@@ -54,6 +54,7 @@ class Marquee extends React.PureComponent {
     const mainState = this.props.getMainState();
     mainState.backgroundColor = backgroundColor;
     mainState.bgAnimation = true;
+    mainState.hidePortrait = true;
     mainState.cursor.color = '#fff';
     mainState.cursor.visible = true;
     this.props.setMainState(mainState);
@@ -70,6 +71,7 @@ class Marquee extends React.PureComponent {
     const mainState = this.props.getMainState();
     mainState.backgroundColor = backgroundColor;
     mainState.bgAnimation = true;
+    mainState.hidePortrait = false;
     mainState.cursor.color = '#000';
     mainState.cursor.visible = true;
     this.props.setMainState(mainState);

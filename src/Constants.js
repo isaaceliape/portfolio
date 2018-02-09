@@ -1,2 +1,2 @@
 
-export const PROJECT_PATH = './assets/images/projects';
+export const PROJECT_PATH = './../../assets/images/projects';

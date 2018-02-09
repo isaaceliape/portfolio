@@ -76,8 +76,26 @@
         position: absolute;
         background-position: center;
         background-size: cover;
-        // visibility: visible !important;
-        // outline: 1px solid red;
+      }
+    }
+  }
+}
+
+/* portrait */
+@media screen and (orientation:portrait) {
+  .App{
+    &.isMobile{
+      .List{
+        .projectPage{
+          &.opened{
+            .wrapProjectImages{
+              
+            }
+          }
+          .wrapProjectImages{
+            width: 90vw;
+          }
+        }
       }
     }
   }

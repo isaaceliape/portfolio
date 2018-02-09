@@ -3,6 +3,7 @@ import React from 'react';
 import Marquee from './../link/Marquee';
 import Button from './../button/Button';
 import PropTypes from 'prop-types';
+
 import './List.css';
 
 class List extends React.PureComponent {
@@ -13,12 +14,80 @@ class List extends React.PureComponent {
       gyroscope: 0,
       percent: 0,
       animate: this.props.animateJobList,
-      listItens: this.props.listItens,
+      listItens: [
+        {
+          title: 'sclp',
+          tooltip: 'about',
+          active: false,
+          image: '',
+          imagePath: '',
+          description: '',
+          technologies: [],
+          link: '',
+        },
+        {
+          title: 'hpmagicwords',
+          tooltip: 'speech api',
+          active: false,
+          image: require('./../../assets/images/projects/hp_magic_works.png'),
+          imagePath: './../../assets/images/projects/hp_magic_works.png',
+          description: 'the first book written by people who’ve never written before.',
+          technologies: [
+            'html5/css3',
+            'javascript',
+            'custom framework',
+          ],
+          link: 'https://www.hpmagicwords.com.br/tool',
+        },
+        {
+          title: 'gettyendless',
+          tooltip: 'webGL',
+          active: false,
+          image: require('./../../assets/images/projects/getty_endless_possibilities.png'),
+          imagePath: './../../assets/images/projects/getty_endless_possibilities.png',
+          description: 'creating protraits of famous people with gettyimages photos',
+          technologies: [
+            'html5/css3',
+            'javascript',
+            'webGL',
+          ],
+          link: 'http://www.gettyendless.com/',
+        },
+        {
+          title: 'flplny',
+          tooltip: 'responsive',
+          active: false,
+          image: require('./../../assets/images/projects/flplny.png'),
+          imagePath: './../../assets/images/projects/flplny.png',
+          description: 'responsive semplice-based portfolio',
+          technologies: [
+            'html5/css3',
+            'javascript',
+            'animations',
+            'wordpress',
+          ],
+          link: 'http://flplny.com/',
+        },
+        {
+          title: 'fundacaolemann',
+          tooltip: 'responsive',
+          active: false,
+          image: require('./../../assets/images/projects/fundacao_lemann.png'),
+          imagePath: './../../assets/images/projects/fundacao_lemann.png',
+          description: 'cms and responsive website',
+          technologies: [
+            'html5/css3',
+            'javascript',
+            'wordpress',
+          ],
+          link: 'http://www.fundacaolemann.org.br/',
+        },
+      ],
       projectIsOpened: false,
       projectPageBackgroundColor: '#fff',
     };
     this.timer = 0;
-    this.timeToShow = 1700;
+    this.timeToShow = 2000;
     this.onClickJob = this.onClickJob.bind(this);
     this.onHoverJob = this.onHoverJob.bind(this);
     this.onMouseOutJob = this.onMouseOutJob.bind(this);
@@ -29,19 +98,22 @@ class List extends React.PureComponent {
     this.gyroscopeSelection = this.gyroscopeSelection.bind(this);
     this.onClickCloseProject = this.onClickCloseProject.bind(this);
   }
+
   activeAllWorks() {
+    let state = Object.assign({}, this.state);
     let listItens = this.state.listItens.slice(0);
     for (let i = 0; i < listItens.length; i++) {
       listItens[i].active = true;
     }
-    this.setState({
-      listItens,
-    });
-    this.props.setMainState({
-      backgroundColor: "#fff",
-      blackFont: true,
-      tooltipText: '',
-    })
+    state.listItens = listItens;
+    // state.currentPos = -1;
+    this.setState(state);
+
+    let mainState = this.props.getMainState();
+    mainState.backgroundColor = '#fff';
+    mainState.blackFont = true;
+    mainState.tooltipText = '';
+    this.props.setMainState(mainState);
   }
   componentDidUpdate(){
     clearTimeout(this.timer);
@@ -62,7 +134,8 @@ class List extends React.PureComponent {
   gyroscopeSelection(e){
     let percent = 0;
     if (this.props.orientation === 'portrait'){
-      const beta = Number(e.beta) - 40;
+      // const beta = Number(e.beta) - 40;
+      const beta = Number(e.beta) - 20;
       percent = ((beta * 100) / 30).toFixed(0);
       percent = percent <= 0 ? 0 : percent;
       percent = percent >= 100 ? 100 : percent;
@@ -219,7 +292,7 @@ class List extends React.PureComponent {
           <div className='wrapProjectImages'>
             {this.state.listItens.map(({ image, imagePath }, i) => {
               return (
-                <h1
+                <p
                   key={`key_${i}_${imagePath}`}
                   className='projectPageImage'
                   style={{

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { Layer, Stage } from 'react-konva';
 
@@ -13,7 +12,7 @@ import Cursor from './components/cursor/Cursor';
 import Marker from './components/canvas/Marker';
 import Marquee from './components/link/Marquee';
 import Container from './components/container/Container';
-import { PROJECT_PATH } from './Constants';
+import Portrait from './components/portrait/Portrait';
 
 import './App.css';
 import tutorialImage from './assets/images/tutorial.png';
@@ -36,6 +35,7 @@ class App extends Component {
       tooltipText: '',
       currentPage: 'home',
       menuHover: false,
+      hidePortrait: true,
       easterEgg: {
         keyword: 'c+ps4',
         currentKey: '',
@@ -65,70 +65,6 @@ class App extends Component {
       },
       animateJobList: false,
       hideJobList: false,
-      jobsList: [
-        {
-          title: 'sclp',
-          tooltip: 'about',
-          active: false,
-          imagePath: '',
-          description: '',
-          technologies: [],
-          link: '',
-        },
-        {
-          title: 'hpmagicwords',
-          tooltip: 'speech api',
-          active: false,
-          imagePath: `${PROJECT_PATH}/hp_magic_works.png`,
-          description: 'the first book written by people who’ve never written before.',
-          technologies: [
-            'html5/css3',
-            'javascript',
-            'custom framework',
-          ],
-          link: 'https://www.hpmagicwords.com.br/tool',
-        },
-        {
-          title: 'gettyendless',
-          tooltip: 'webGL',
-          active: false,
-          imagePath: `${PROJECT_PATH}/getty_endless_possibilities.png`,
-          description: 'creating protraits of famous people with gettyimages photos',
-          technologies: [
-            'html5/css3',
-            'javascript',
-            'webGL',
-          ],
-          link: 'http://www.gettyendless.com/',
-        },
-        {
-          title: 'flplny',
-          tooltip: 'responsive',
-          active: false,
-          imagePath: `${PROJECT_PATH}/flplny.png`,
-          description: 'responsive semplice-based portfolio',
-          technologies: [
-            'html5/css3',
-            'javascript',
-            'animations',
-            'wordpress',
-          ],
-          link: 'http://flplny.com/',
-        },
-        {
-          title: 'fundacaolemann',
-          tooltip: 'responsive',
-          active: false,
-          imagePath: `${PROJECT_PATH}/fundacao_lemann.png`,
-          description: 'cms and responsive website',
-          technologies: [
-            'html5/css3',
-            'javascript',
-            'wordpress',
-          ],
-          link: 'http://www.fundacaolemann.org.br/',
-        },
-      ],
     }
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onResize = this.onResize.bind(this);
@@ -137,26 +73,10 @@ class App extends Component {
     this.navItemHover = this.navItemHover.bind(this);
     this.getMainState = this.getMainState.bind(this);
     this.setMainState = this.setMainState.bind(this);
-    this.loadJobListImages = this.loadJobListImages.bind(this);
     this.onMouseOutCloseBtn = this.onMouseOutCloseBtn.bind(this);
     this.onMouseOverCloseBtn = this.onMouseOverCloseBtn.bind(this);
 
     window.app = this;
-  }
-  loadJobListImages(){
-    const state = this.getMainState();
-    const jobsList = state.jobsList.slice(0);
-    jobsList.forEach((job) => {
-      if(job.imagePath.length > 0){
-        _.set(job, 'image', require(`${job.imagePath}`));
-        // job.image = require(`${job.imagePath}`);
-      }
-    });
-    state.jobsList = jobsList;
-    this.setState(state);
-  }
-  componentDidMount(){
-    this.loadJobListImages();
   }
   componentWillMount(){
     const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
@@ -202,7 +122,7 @@ class App extends Component {
       state.hideNav = true;
       state.animateJobList = false;
       state.blackFont = blackFont;
-      state.expand = true,
+      state.expand = true;
       state.cursor = cursor;
       this.setState(state);
       
@@ -211,6 +131,7 @@ class App extends Component {
         state.backgroundColor = '#fff';
         state.expand = false;
         state.cursor.rotate = false;
+        state.hidePortrait = false;
         state.navHoverEl = {
           pos: {
             x: -200,
@@ -369,7 +290,10 @@ class App extends Component {
             currentPage={currentPage}
             closePage={this.changePage}
           > 
-            <img src={perfilImage} className="perfil" />
+            <Portrait
+              src={perfilImage}
+              hide={this.state.hidePortrait}
+            />
             <p className="description">sclp is a collection of isaac eliape’s work on web development and ui engineering</p>
             <Marquee
               setMainState={this.setMainState}
@@ -451,6 +375,7 @@ class App extends Component {
             <img
               className="tutorial"
               src={tutorialImage}
+              alt="tutorial"
             />
           </Page>
         </Container>

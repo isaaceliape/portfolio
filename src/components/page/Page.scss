@@ -55,13 +55,17 @@
     }
   }
   &.about{
-    .perfil{
+    .Portrait{
       position: absolute;
       left: 50%;
       top: 50%;
       height: 83vh;
       z-index: 0;
       transform: translate3d(-50%, -50%, 0);
+      transition: opacity .5s ease;
+      &.hide{
+        opacity: 0;
+      }
       &:hover{
         z-index: 1;
       }
@@ -128,6 +132,13 @@
           }
         }
         &.about{
+          .Portrait{
+            width: 70vw;
+            height: auto;
+            &:hover{
+              z-index: 0;
+            }
+          }
           .contact{
             bottom: 0;
             line-height: 4vh;
