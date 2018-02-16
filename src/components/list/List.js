@@ -21,6 +21,7 @@ class List extends React.PureComponent {
           active: false,
           image: '',
           imagePath: '',
+          hideImage: true,
           description: '',
           technologies: [],
           link: '',
@@ -31,6 +32,7 @@ class List extends React.PureComponent {
           active: false,
           image: require('./../../assets/images/projects/hp_magic_works.png'),
           imagePath: './../../assets/images/projects/hp_magic_works.png',
+          hideImage: true,
           description: 'the first book written by people who’ve never written before.',
           technologies: [
             'html5/css3',
@@ -45,6 +47,7 @@ class List extends React.PureComponent {
           active: false,
           image: require('./../../assets/images/projects/getty_endless_possibilities.png'),
           imagePath: './../../assets/images/projects/getty_endless_possibilities.png',
+          hideImage: true,
           description: 'creating protraits of famous people with gettyimages photos',
           technologies: [
             'html5/css3',
@@ -59,6 +62,7 @@ class List extends React.PureComponent {
           active: false,
           image: require('./../../assets/images/projects/flplny.png'),
           imagePath: './../../assets/images/projects/flplny.png',
+          hideImage: true,
           description: 'responsive semplice-based portfolio',
           technologies: [
             'html5/css3',
@@ -74,6 +78,7 @@ class List extends React.PureComponent {
           active: false,
           image: require('./../../assets/images/projects/fundacao_lemann.png'),
           imagePath: './../../assets/images/projects/fundacao_lemann.png',
+          hideImage: true,
           description: 'cms and responsive website',
           technologies: [
             'html5/css3',
@@ -86,7 +91,7 @@ class List extends React.PureComponent {
       projectIsOpened: false,
       projectPageBackgroundColor: '#fff',
     };
-    this.timer = 0;
+    this.timer;
     this.timeToShow = 2000;
     this.onClickJob = this.onClickJob.bind(this);
     this.onHoverJob = this.onHoverJob.bind(this);
@@ -100,38 +105,47 @@ class List extends React.PureComponent {
   }
 
   activeAllWorks() {
+    let mainState = this.props.getMainState();
     let state = Object.assign({}, this.state);
-    let listItens = this.state.listItens.slice(0);
+
+    var listItens = state.listItens.map((x) => {
+      return {
+        ...x,
+        active: true,
+        hideImage: true,
+      };
+    });
+
     for (let i = 0; i < listItens.length; i++) {
       listItens[i].active = true;
     }
     state.listItens = listItens;
-    // state.currentPos = -1;
+    // state.currentPos = 0;
     this.setState(state);
 
-    let mainState = this.props.getMainState();
     mainState.backgroundColor = '#fff';
     mainState.blackFont = true;
     mainState.tooltipText = '';
     this.props.setMainState(mainState);
   }
-  componentDidUpdate(){
-    clearTimeout(this.timer);
+  componentWillUpdate(){
     if(this.props.isMobile){
-      this.timer = setTimeout(this.activeAllWorks, this.timeToShow);
+      clearTimeout(window.timer);
+      window.timer = setTimeout(this.activeAllWorks, this.timeToShow);
     }
   }
   componentDidMount(){
     if(this.props.isMobile){
       this.activeAllWorks();
       setTimeout(() => {
-        window.addEventListener('deviceorientation', this.gyroscopeSelection);
+        window.addEventListener('deviceorientation', this.gyroscopeSelection.bind(this));
       }, 1000);
     }
     const timeOfLastAnimationDelay = (((this.state.listItens.length + 1) * 200) + 1500) + 200;
     this.stopAnim(timeOfLastAnimationDelay);
   }
   gyroscopeSelection(e){
+    let state = Object.assign({}, this.state);
     let percent = 0;
     if (this.props.orientation === 'portrait'){
       // const beta = Number(e.beta) - 40;
@@ -146,10 +160,10 @@ class List extends React.PureComponent {
       percent = percent <= -100 ? -100 : percent;
       percent = Math.abs(percent);
     }
-    const fraction = 100 / this.state.listItens.length;
+    const fraction = 100 / state.listItens.length;
 
     let pos = 0;
-    this.state.listItens.forEach((value, i) => {
+    state.listItens.forEach((value, i) => {
       const start = fraction * i;
       const end = fraction * (i + 1);
       if(percent >= start && percent <= end){
@@ -157,26 +171,25 @@ class List extends React.PureComponent {
       }
     });
     pos = pos === 0 ? 1 : pos;
-    let stateCopy = Object.assign({}, this.state);
-    stateCopy.percent = percent;
-    stateCopy.gyroscope = e;
-    stateCopy.listItens.forEach((x) => {
+    state.percent = percent;
+    state.gyroscope = e;
+    state.listItens.forEach((x) => {
       x.active = false;
+      x.hideImage = true;
     });
-    stateCopy.listItens[pos].active = true;
+    state.listItens[pos].active = true;
+    state.listItens[pos].hideImage = false;
     if(pos !== this.state.currentPos){
-      stateCopy.currentPos = pos;
-      this.setState(stateCopy);
+      state.currentPos = pos;
+      this.setState(state);
 
       this.props.setMainState({
         backgroundColor: "#000",
         blackFont: false,
-        tooltipText: stateCopy.listItens[pos].tooltip,
+        tooltipText: state.listItens[pos].tooltip,
       });
-    } else {
-      return false;
     }
-
+    return false;
   }
   onHoverJob(tooltipText, title){
     let mainState = this.props.getMainState();
@@ -184,12 +197,14 @@ class List extends React.PureComponent {
       return false;
     }
     let listItens = Object.assign(this.state.listItens);
-    listItens = listItens.map(item => {
-      item.active = false;
-      return item;
+    listItens = listItens.map(x => {
+      x.active = false;
+      x.hideImage = true;
+      return x;
     });
     let itemIndex = _.findIndex(listItens, ['title', title]);
     listItens[itemIndex].active = true;
+    listItens[itemIndex].hideImage = false;
     
     this.setState({
       listItens,
@@ -224,10 +239,17 @@ class List extends React.PureComponent {
       });
     }, time);
   }
-  onClickJob(){
+  onClickJob(e){
     let listItens = this.state.listItens.slice(0);
+    if(this.props.isMobile){
+      let links = Array.prototype.slice.call(document.querySelectorAll('.job-link'));
+      let pos = _.findIndex(links, e.target);
+      let { link } = listItens[pos];
+      window.open(link);
+      return false;
+    }
     listItens[this.state.currentPos].active = true;
-
+    
     this.setState({
       listItens,
       projectIsOpened: true,
@@ -238,6 +260,7 @@ class List extends React.PureComponent {
     mainState.hideJobList = true;
     mainState.tooltipText = ' ';
     this.props.setMainState(mainState);
+
   }
   onMouseEnterContent(){
     let state = this.props.getMainState();
@@ -290,14 +313,14 @@ class List extends React.PureComponent {
       <div className='List'>
         <div className={`projectPage ${openedClass}`}>
           <div className='wrapProjectImages'>
-            {this.state.listItens.map(({ image, imagePath }, i) => {
+            {this.state.listItens.map(({ image, imagePath, hideImage }, i) => {
               return (
                 <p
                   key={`key_${i}_${imagePath}`}
                   className='projectPageImage'
                   style={{
                     backgroundImage: image !== '' ? `url(${image})` : 'none',
-                    visibility: i === this.state.currentPos && this.isHovering() ? 'visible' : 'hidden',
+                    visibility: i === this.state.currentPos && this.isHovering() && !hideImage ? 'visible' : 'hidden',
                   }}
                 />
               );
@@ -314,9 +337,9 @@ class List extends React.PureComponent {
             >
               <h2 className="description">{currentPage.description}</h2>
               <ul className="technologies">
-                {currentPage.technologies.map((text) => {
+                {currentPage.technologies.map((text, i) => {
                   return(
-                    <li>{text}</li>
+                    <li key={i}>{text}</li>
                   );
                 })}
               </ul>
@@ -357,7 +380,6 @@ class List extends React.PureComponent {
         </div>
         <ul
           className="jobs"
-          onClick={this.onClickJob}
           onMouseOut={() => {
             this.props.setMainState({
               backgroundColor: "#fff",
@@ -376,6 +398,7 @@ class List extends React.PureComponent {
                     <li
                       className="job-link"
                       key={`key-${title}`}
+                      onClick={this.onClickJob}
                       style={{
                         opacity: hide,
                         pointerEvents: (hide === '0'? 'none' : 'initial'),
@@ -416,11 +439,21 @@ class List extends React.PureComponent {
                           });
                         }
                       }}
+                      onClick={this.onClickJob}
                       onMouseOut={() => {
                         this.onMouseOutJob()
                       }}
                     >
-                      <marquee>{title}</marquee>
+                      <div className="job-marquee">
+                        <span
+                          className="text"
+                          style={{
+                            animationDelay: `${i / 2}s`,
+                          }}
+                        >
+                          {title}
+                        </span>
+                      </div>
                       <span className="marquee-hover">{title}</span>
                     </li>
                   );
@@ -433,12 +466,6 @@ class List extends React.PureComponent {
                     style={{
                       opacity: hide,
                     }}
-                    onClick={(e) => {
-                      if(title === 'sclp'){
-                        e.preventDefault();
-                        this.props.changePage('about');
-                      }
-                    }}
                   >
                     {title}
                   </li>
@@ -450,11 +477,11 @@ class List extends React.PureComponent {
           <div
             className="hitarea"
             onMouseOver={() => {
-              this.props.setMainState({
-                backgroundColor: "#fff",
-                blackFont: true,
-                bgAnimation: true,
-              })
+              let mainState = this.props.getMainState();
+              mainState.backgroundColor = '#fff',
+              mainState.blackFont = true,
+              mainState.bgAnimation = true,
+              this.props.setMainState(mainState);
             }}
           />
         </ul>

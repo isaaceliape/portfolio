@@ -34,6 +34,29 @@
           top: 0;
         }
         &:hover{
+          .job-marquee{
+            opacity: 0;
+          }
+        }
+        @keyframes marqueeAnimation {
+          0%   { left: 100%; }
+          100% { left: -100%; }
+        }
+        .job-marquee{
+          display: inline-block;
+          overflow: hidden;
+          .text{
+            display: block;
+            position: relative;
+            left: -50%;
+            left: 100%;
+            animation-name: marqueeAnimation;
+            animation-duration: 10s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+          }
+        }
+        &:hover{
           .marquee-hover{
             opacity: 1;
           }
@@ -69,6 +92,13 @@
       &:hover{
         z-index: 1;
       }
+    }
+    .Marquee{
+      position: relative;
+      top: auto;
+      left: auto;
+      display: block;
+      margin-top: 5vh;
     }
     .Link{
       position: absolute;
@@ -128,6 +158,9 @@
               font-size: 5vh;
               line-height: 1.2em;
               display: block;
+              span{
+                pointer-events: none;
+              }
             }
           }
         }

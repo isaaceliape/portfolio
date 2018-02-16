@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { Layer, Stage } from 'react-konva';
 
@@ -36,6 +37,98 @@ class App extends Component {
       currentPage: 'home',
       menuHover: false,
       hidePortrait: true,
+      projectPage: {
+        percent: 0,
+        gyroscope: 0,
+        currentPos: 0,
+        opened: false,
+        currentItem: 0,
+        backgroundColor: '#fff',
+        listItens: [
+          {
+            title: 'sclp',
+            tooltip: 'about',
+            active: false,
+            image: {
+              src: '',
+              path: '',
+              active: false,
+            },
+            description: '',
+            technologies: [],
+            link: '',
+          },
+          {
+            title: 'hpmagicwords',
+            tooltip: 'speech api',
+            active: false,
+            image: {
+              src: require('./assets/images/projects/hp_magic_works.png'),
+              path: './assets/images/projects/hp_magic_works.png',
+              active: false,
+            },
+            description: 'the first book written by people who’ve never written before.',
+            technologies: [
+              'html5/css3',
+              'javascript',
+              'custom framework',
+            ],
+            link: 'https://www.hpmagicwords.com.br/tool',
+          },
+          {
+            title: 'gettyendless',
+            tooltip: 'webGL',
+            active: false,
+            image: {
+              src: require('./assets/images/projects/getty_endless_possibilities.png'),
+              path: './assets/images/projects/getty_endless_possibilities.png',
+              active: false,
+            },
+            description: 'creating protraits of famous people with gettyimages photos',
+            technologies: [
+              'html5/css3',
+              'javascript',
+              'webGL',
+            ],
+            link: 'http://www.gettyendless.com/',
+          },
+          {
+            title: 'flplny',
+            tooltip: 'responsive',
+            active: false,
+            image: {
+              src: require('./assets/images/projects/flplny.png'),
+              path: './assets/images/projects/flplny.png',
+              active: false,
+            },
+            description: 'responsive semplice-based portfolio',
+            technologies: [
+              'html5/css3',
+              'javascript',
+              'animations',
+              'wordpress',
+            ],
+            link: 'http://flplny.com/',
+          },
+          {
+            title: 'fundacaolemann',
+            tooltip: 'responsive',
+            active: false,
+            image: {
+              src: require('./assets/images/projects/fundacao_lemann.png'),
+              path: './assets/images/projects/fundacao_lemann.png',
+              active: false,
+            },
+            description: 'cms and responsive website',
+            technologies: [
+              'html5/css3',
+              'javascript',
+              'wordpress',
+            ],
+            link: 'http://www.fundacaolemann.org.br/',
+          },
+        ],
+      },
       easterEgg: {
         keyword: 'c+ps4',
         currentKey: '',
@@ -99,9 +192,16 @@ class App extends Component {
 
     //On press ESC
     if(e.keyCode === 27){
-      state.hideNav = true;
-      state.backgroundColor = "#fff";
-      state.blackFont = true;
+      // state.hideNav = true;
+      // state.backgroundColor = "#fff";
+      // state.projectPage.opened = false;
+      // state.blackFont = true;
+      // state.currentPage = 'home';
+      // state.hidePortrait = true;
+      // state.cursor.color = '#000';
+      // state.cursor.rotate = false;
+      // state.bgAnimation = true;
+      // state.hideJobList = false;
     }
     this.setState(state);
   }
@@ -124,6 +224,7 @@ class App extends Component {
       state.blackFont = blackFont;
       state.expand = true;
       state.cursor = cursor;
+      state.hidePortrait = true;
       this.setState(state);
       
       setTimeout(() => {
@@ -270,6 +371,7 @@ class App extends Component {
             currentPage={currentPage}
           >
             <List
+              state={this.state.projectPage}
               listItens={jobsList}
               onHoverJob={this.onHoverJob}
               setMainState={this.setMainState}
