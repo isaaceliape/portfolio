@@ -91,7 +91,6 @@ class List extends React.PureComponent {
       projectIsOpened: false,
       projectPageBackgroundColor: '#fff',
     };
-    this.timer;
     this.timeToShow = 2000;
     this.onClickJob = this.onClickJob.bind(this);
     this.onHoverJob = this.onHoverJob.bind(this);
@@ -102,12 +101,18 @@ class List extends React.PureComponent {
     this.onMouseLeaveContent = this.onMouseLeaveContent.bind(this);
     this.gyroscopeSelection = this.gyroscopeSelection.bind(this);
     this.onClickCloseProject = this.onClickCloseProject.bind(this);
-  }
 
+  }
   activeAllWorks() {
     let mainState = this.props.getMainState();
+    let {hideNav, currentPage} = mainState;
+    // console.table({ hideNav, currentPage});
+    // console.log('activeAllWorks');
+    if(!hideNav || currentPage !== 'home'){
+      // console.log('return false');
+      return false;
+    }
     let state = Object.assign({}, this.state);
-
     var listItens = state.listItens.map((x) => {
       return {
         ...x,
@@ -146,6 +151,10 @@ class List extends React.PureComponent {
   }
   gyroscopeSelection(e){
     let state = Object.assign({}, this.state);
+    let { currentPage, hideNav } = this.props.getMainState();
+    if(state.projectIsOpened || currentPage !== 'home' || !hideNav){
+      return false;
+    }
     let percent = 0;
     if (this.props.orientation === 'portrait'){
       // const beta = Number(e.beta) - 40;
@@ -478,9 +487,9 @@ class List extends React.PureComponent {
             className="hitarea"
             onMouseOver={() => {
               let mainState = this.props.getMainState();
-              mainState.backgroundColor = '#fff',
-              mainState.blackFont = true,
-              mainState.bgAnimation = true,
+              mainState.backgroundColor = '#fff';
+              mainState.blackFont = true;
+              mainState.bgAnimation = true;
               this.props.setMainState(mainState);
             }}
           />

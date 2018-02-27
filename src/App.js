@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { Layer, Stage } from 'react-konva';
 
@@ -249,6 +248,7 @@ class App extends Component {
       state.animateJobList = false;
       state.blackFont = true;
       state.backgroundColor = '#fff';
+      state.cursor.color = '#000';
       state.hideJobList = false;
       this.setState(state);
     }
@@ -473,7 +473,7 @@ class App extends Component {
             }}
           >
             <p className="instructions">plug a ps4 controller to interact with this site.</p>
-            <marquee>click here to enable gamepad flag</marquee>
+            <span>click here to enable gamepad flag</span>
             <img
               className="tutorial"
               src={tutorialImage}
