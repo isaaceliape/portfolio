@@ -8,20 +8,17 @@ linkedin.com/in/isaaceliape
 Frontend Developer with more than 6 years’ of experience, with a graduation in Web Systems & Technologies, Bilingual (Portuguese and English), In free time I'm curious about the secrets of the universe and physics, vocalist of an underground band and bass player by hobby.
 
 ### Skills
-• Javascript, es2015 or higher with Babel.
-• HTML 5, CSS 3, SCSS, LESS, STYLUS.
-• React with Redux.
-• REST APIs.
+• Javascript, ES5 or higher.
+• HTML5, CSS3, SCSS, LESS, STYLUS.
+• React, Redux.
 • Gulp, Webpack.
-• jQuery
 • Git.
+• jQuery.
 • Scrum.
-• PHP
-• Etc
+• PHP.
+• Etc.
 
 ### Employment History
-**Frontend Developer self-employed**
-2017 to Present
 
 **Frontend Developer at Fillet - Digital Agency**
 2017 (9 months)
@@ -53,33 +50,37 @@ Key Projects:
     
 As Frontend Developer I am responsible for:
 • Work close to product owners and clients to understand and solve problems.
-• Improve the base tecnology of the company.
+• Improve the code base tecnology of the company.
 • Code reviews for junior developers.
 • Debugging and Problem solving.
      
 Key Technology used:
-HTML, SCSS, LESS, ES6, Gulp, Jquery, Wordpress, PHP, Codeigniter, Pixi.js, Three.js, Git.
+Javascript, HTML5, SCSS, LESS, ES6, Gulp, Jquery, Wordpress, PHP, Codeigniter, Pixi.js, Three.js, Git.
 
 **Frontend Developer at Doubleleft**
 2014 (6 months) 
-I had the responsibility to maintain and develop improvements in several websites developed in different technologies.
+Doubleleft is a hybrid production studio they develop advanced digital projects for mobile, web and physical spaces.
 
 Key Projects:
-• The main project I worked on was a website for a big institute made in wordpress.
+• Is a site for a big institute made in wordpress.
+• I had to implement all the frontend code and integrate with the CMS.
 
 As Frontend Developer I am responsible for:
-• Develop new components.
+• Work close to product owners and clients to understand and solve problems.
+• Debugging and Problem solving.
+• Implement new site from the design to end.
 
 Key Technology used:
-HTML5, SASS, ES5, JS Animations, Gulp.js, Angular 1, Backbone, wordpress, Jquery, Git.
+HTML5, SASS, ES5, JS Animations, Gulp.js, Angular 1, Backbone, wordpress, Jquery, Git, Scrum.
 
-##### Web Developer at IBM Research
-2014 (3 months) 
-I worked in the research team and i had the responsabilty for developing an interface to a web application that uses computational vision, in this project I used Java Play Framework, HTML5, CSS3, and Javascript.
+**Web Developer at IBM Research**
+2014 (3 months)
 
-Key Projects:
 As Frontend Developer I am responsible for:
+• Developing an interface to a web application.
+
 Key Technology used:
+Java Play Framework, HTML5, SASS, Gulp.js, Git, and Javascript.
 
 **FrontEnd Developer at FCB Brasil**
 2013 to 2014 (1 year)
@@ -93,20 +94,23 @@ As Frontend Developer I am responsible for:
 • Develop newsletters for a airline company and supermarket.
 
 Key Technology used:
-Javascript, JQuery, HTML5, CSS3, and Ajax.
+Javascript, JQuery, HTML5, XHTML CSS3, CSS, and Ajax.
 
 **FrontEnd Developer at Banana Groove Studios**
 2011 to 2013 (1 year and 7 months) 
-I had the responsibility of developing websites and newsletters from start to finish for many clients from different sectors.
+Banana Groove is a technology and creative production studio, focused in create interactive experiences.
 
 Key Projects:
 •The main project I worked on was a social network for the employees of a large bank.
 
 As Frontend Developer I am responsible for:
+• I had the responsibility of developing websites and newsletters from start to finish for many clients from different sectors.
 • Implementing all the front end code.
+• Implementing key features.
+• Debugging and Problem solving.
 
 Key Technology used:
-Javascript, HTML5, CSS3, Jquery, PHP and Codeigniter.
+Javascript, HTML5, CSS3, SASS, Jquery, PHP and Codeigniter.
 
 ### Education
  - ##### SENAC Graduation
