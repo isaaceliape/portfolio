@@ -107,11 +107,11 @@ class List extends React.PureComponent {
     let mainState = this.props.getMainState();
     let {hideNav, currentPage} = mainState;
     // console.table({ hideNav, currentPage});
-    // console.log('activeAllWorks');
     if(!hideNav || currentPage !== 'home'){
-      // console.log('return false');
+      // console.log('activeAllWorks false');
       return false;
     }
+    // console.log('activeAllWorks true');
     let state = Object.assign({}, this.state);
     var listItens = state.listItens.map((x) => {
       return {
@@ -134,13 +134,15 @@ class List extends React.PureComponent {
     this.props.setMainState(mainState);
   }
   componentWillUpdate(){
-    if(this.props.isMobile){
+    const { isMobile } = this.props.getMainState();
+    if(isMobile){
       clearTimeout(window.timer);
       window.timer = setTimeout(this.activeAllWorks, this.timeToShow);
     }
   }
   componentDidMount(){
-    if(this.props.isMobile){
+    const { isMobile } = this.props.getMainState();
+    if(isMobile){
       this.activeAllWorks();
       setTimeout(() => {
         window.addEventListener('deviceorientation', this.gyroscopeSelection.bind(this));
@@ -151,8 +153,10 @@ class List extends React.PureComponent {
   }
   gyroscopeSelection(e){
     let state = Object.assign({}, this.state);
-    let { currentPage, hideNav } = this.props.getMainState();
+    let mainState = this.props.getMainState();
+    let { currentPage, hideNav } = mainState;
     if(state.projectIsOpened || currentPage !== 'home' || !hideNav){
+      // console.log('gyroscopeSelection FALSE');
       return false;
     }
     let percent = 0;
@@ -192,11 +196,10 @@ class List extends React.PureComponent {
       state.currentPos = pos;
       this.setState(state);
 
-      this.props.setMainState({
-        backgroundColor: "#000",
-        blackFont: false,
-        tooltipText: state.listItens[pos].tooltip,
-      });
+      mainState.backgroundColor = '#000';
+      mainState.blackFont = false;
+      mainState.tooltipText = state.listItens[pos].tooltip;
+      this.props.setMainState(mainState);
     }
     return false;
   }
