@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
-import Marquee from './../link/Marquee';
-import Button from './../button/Button';
 import PropTypes from 'prop-types';
+
+import Button from './../button/Button';
+import Marquee from './../link/Marquee';
 
 import './List.css';
 
@@ -92,57 +93,21 @@ class List extends React.PureComponent {
       projectPageBackgroundColor: '#fff',
     };
     this.timeToShow = 2000;
-    this.onClickJob = this.onClickJob.bind(this);
-    this.onHoverJob = this.onHoverJob.bind(this);
-    this.onMouseOutJob = this.onMouseOutJob.bind(this);
+    this.jobsActionOut = this.jobsActionOut.bind(this);
     this.activeAllWorks = this.activeAllWorks.bind(this);
+    this.jobLinkActionIn = this.jobLinkActionIn.bind(this);
+    this.hitareaOutAction = this.hitareaOutAction.bind(this);
+    this.jobLinkActionOut = this.jobLinkActionOut.bind(this);
     this.setProjectBgColor = this.setProjectBgColor.bind(this);
-    this.onMouseEnterContent = this.onMouseEnterContent.bind(this);
-    this.onMouseLeaveContent = this.onMouseLeaveContent.bind(this);
     this.gyroscopeSelection = this.gyroscopeSelection.bind(this);
+    this.jobLinkActionClick = this.jobLinkActionClick.bind(this);
     this.onClickCloseProject = this.onClickCloseProject.bind(this);
-
+    this.onMouseLeaveContent = this.onMouseLeaveContent.bind(this);
+    this.onMouseEnterContent = this.onMouseEnterContent.bind(this);
   }
-  activeAllWorks() {
-    let mainState = this.props.getMainState();
-    let {hideNav, currentPage} = mainState;
-    // console.table({ hideNav, currentPage});
-    if(!hideNav || currentPage !== 'home'){
-      // console.log('activeAllWorks false');
-      return false;
-    }
-    // console.log('activeAllWorks true');
-    let state = Object.assign({}, this.state);
-    var listItens = state.listItens.map((x) => {
-      return {
-        ...x,
-        active: true,
-        hideImage: true,
-      };
-    });
-
-    for (let i = 0; i < listItens.length; i++) {
-      listItens[i].active = true;
-    }
-    state.listItens = listItens;
-    // state.currentPos = 0;
-    this.setState(state);
-
-    mainState.backgroundColor = '#fff';
-    mainState.blackFont = true;
-    mainState.tooltipText = '';
-    this.props.setMainState(mainState);
-  }
-  componentWillUpdate(){
+  componentDidMount() {
     const { isMobile } = this.props.getMainState();
-    if(isMobile){
-      clearTimeout(window.timer);
-      window.timer = setTimeout(this.activeAllWorks, this.timeToShow);
-    }
-  }
-  componentDidMount(){
-    const { isMobile } = this.props.getMainState();
-    if(isMobile){
+    if (isMobile) {
       this.activeAllWorks();
       setTimeout(() => {
         window.addEventListener('deviceorientation', this.gyroscopeSelection.bind(this));
@@ -151,16 +116,90 @@ class List extends React.PureComponent {
     const timeOfLastAnimationDelay = (((this.state.listItens.length + 1) * 200) + 1500) + 200;
     this.stopAnim(timeOfLastAnimationDelay);
   }
-  gyroscopeSelection(e){
-    let state = Object.assign({}, this.state);
-    let mainState = this.props.getMainState();
-    let { currentPage, hideNav } = mainState;
-    if(state.projectIsOpened || currentPage !== 'home' || !hideNav){
+  componentWillUpdate() {
+    const { isMobile } = this.props.getMainState();
+    if (isMobile) {
+      clearTimeout(window.timer);
+      window.timer = setTimeout(this.activeAllWorks, this.timeToShow);
+    }
+  }
+  onHoverJob(tooltipText, title) {
+    const mainState = this.props.getMainState();
+    if (this.props.isMobile) {
+      return false;
+    }
+    let listItens = Object.assign(this.state.listItens);
+    listItens = listItens.map((x) => {
+      const newX = Object.assign(x);
+      newX.active = false;
+      newX.hideImage = true;
+      return newX;
+    });
+    const itemIndex = _.findIndex(listItens, ['title', title]);
+    listItens[itemIndex].active = true;
+    listItens[itemIndex].hideImage = false;
+
+    this.setState({
+      listItens,
+      currentPos: itemIndex,
+    });
+
+    mainState.tooltipText = tooltipText;
+    mainState.cursor.color = '#fff';
+    this.props.setMainState(mainState);
+    return false;
+  }
+  onMouseEnterContent() {
+    const state = this.props.getMainState();
+    if (state.cursor.color !== '#000') {
+      state.cursor.color = '#000';
+      this.props.setMainState(state);
+    }
+  }
+  onMouseLeaveContent() {
+    const state = this.props.getMainState();
+    if (state.cursor.color !== '#fff') {
+      state.cursor.color = '#fff';
+      this.props.setMainState(state);
+    }
+  }
+  onClickCloseProject() {
+    const state = Object.assign({}, this.state);
+    state.projectIsOpened = false;
+
+    const listItens = this.state.listItens.slice(0);
+    for (let i = 0; i < listItens.length; i++) {
+      listItens[i].active = false;
+    }
+    state.listItens = listItens;
+
+    this.setState(state);
+
+    const mainState = this.props.getMainState();
+    mainState.cursor.color = '#000';
+    mainState.cursor.rotate = false;
+    mainState.blackFont = true;
+    mainState.backgroundColor = '#fff';
+    mainState.hideJobList = false;
+    mainState.tooltipText = '';
+    mainState.currentPage = 'home';
+    this.props.setMainState(mainState);
+  }
+  setProjectBgColor(color) {
+    const state = Object.assign({}, this.state);
+    state.projectPageBackgroundColor = color;
+    this.setState(state);
+  }
+  gyroscopeSelection(e) {
+    const state = Object.assign({}, this.state);
+    const mainState = this.props.getMainState();
+    const { currentPage, hideNav } = mainState;
+    if (state.projectIsOpened || currentPage !== 'home' || !hideNav) {
       // console.log('gyroscopeSelection FALSE');
       return false;
     }
     let percent = 0;
-    if (this.props.orientation === 'portrait'){
+    if (this.props.orientation === 'portrait') {
       // const beta = Number(e.beta) - 40;
       const beta = Number(e.beta) - 20;
       percent = ((beta * 100) / 30).toFixed(0);
@@ -179,20 +218,23 @@ class List extends React.PureComponent {
     state.listItens.forEach((value, i) => {
       const start = fraction * i;
       const end = fraction * (i + 1);
-      if(percent >= start && percent <= end){
+      if (percent >= start && percent <= end) {
         pos = i;
       }
     });
     pos = pos === 0 ? 1 : pos;
     state.percent = percent;
     state.gyroscope = e;
-    state.listItens.forEach((x) => {
-      x.active = false;
-      x.hideImage = true;
+    state.listItens = state.listItens.map((x) => {
+      const newX = Object.assign(x);
+      newX.active = false;
+      newX.hideImage = true;
+      return newX;
     });
     state.listItens[pos].active = true;
     state.listItens[pos].hideImage = false;
-    if(pos !== this.state.currentPos){
+
+    if (pos !== this.state.currentPos) {
       state.currentPos = pos;
       this.setState(state);
 
@@ -203,65 +245,70 @@ class List extends React.PureComponent {
     }
     return false;
   }
-  onHoverJob(tooltipText, title){
-    let mainState = this.props.getMainState();
-    if(this.props.isMobile){
+  activeAllWorks() {
+    const mainState = this.props.getMainState();
+    const { hideNav, currentPage } = mainState;
+    // console.table({ hideNav, currentPage});
+    if (!hideNav || currentPage !== 'home') {
+      // console.log('activeAllWorks false');
       return false;
     }
-    let listItens = Object.assign(this.state.listItens);
-    listItens = listItens.map(x => {
-      x.active = false;
-      x.hideImage = true;
-      return x;
-    });
-    let itemIndex = _.findIndex(listItens, ['title', title]);
-    listItens[itemIndex].active = true;
-    listItens[itemIndex].hideImage = false;
-    
-    this.setState({
-      listItens,
-      currentPos: itemIndex,
-    });
-    mainState.tooltipText = tooltipText;
-    mainState.cursor.color = '#fff';
-    this.props.setMainState(mainState);
-  }
+    // console.log('activeAllWorks true');
+    const state = Object.assign({}, this.state);
+    const listItens = state.listItens.map(x => ({
+      ...x,
+      active: true,
+      hideImage: true,
+    }));
 
-  onMouseOutJob(){
-    let mainState = this.props.getMainState();
-    if(this.props.isMobile){
-      return false;
+    for (let i = 0; i < listItens.length; i += i) {
+      listItens[i].active = true;
     }
-    let listItens = Object.assign(this.state.listItens);
-    listItens = listItens.map(item => {
-      item.active = false;
-      return item;
-    });
-    this.setState({
-      listItens,
-    });
+    state.listItens = listItens;
+    // state.currentPos = 0;
+    this.setState(state);
+
+    mainState.backgroundColor = '#fff';
+    mainState.blackFont = true;
     mainState.tooltipText = '';
-    mainState.cursor.color = '#000';
-    this.props.setMainState(mainState)
+    this.props.setMainState(mainState);
+    return false;
   }
-  stopAnim(time){
+  isHovering() {
+    return this.state.listItens.filter(item => item.active === true).length > 0;
+  }
+  stopAnim(time) {
     setTimeout(() => {
       this.setState({
         animate: false,
       });
     }, time);
   }
-  onClickJob(e){
-    let listItens = this.state.listItens.slice(0);
-    if(this.props.isMobile){
-      let links = Array.prototype.slice.call(document.querySelectorAll('.job-link'));
-      let pos = _.findIndex(links, e.target);
-      let { link } = listItens[pos];
+  hitareaOutAction() {
+    const mainState = this.props.getMainState();
+    mainState.backgroundColor = '#fff';
+    mainState.blackFont = true;
+    mainState.bgAnimation = true;
+    this.props.setMainState(mainState);
+  }
+  jobsActionOut() {
+    this.props.setMainState({
+      backgroundColor: '#fff',
+      blackFont: true,
+      bgAnimation: true,
+    });
+  }
+  jobLinkActionClick(e) {
+    const listItens = this.state.listItens.slice(0);
+    if (this.props.isMobile) {
+      const links = Array.prototype.slice.call(document.querySelectorAll('.job-link'));
+      const pos = _.findIndex(links, e.target);
+      const { link } = listItens[pos];
       window.open(link);
       return false;
     }
     listItens[this.state.currentPos].active = true;
-    
+
     this.setState({
       listItens,
       projectIsOpened: true,
@@ -273,74 +320,58 @@ class List extends React.PureComponent {
     mainState.tooltipText = ' ';
     this.props.setMainState(mainState);
 
+    return false;
   }
-  onMouseEnterContent(){
-    let state = this.props.getMainState();
-    if(state.cursor.color !== '#000'){
-      state.cursor.color = '#000';
-      this.props.setMainState(state);
+  jobLinkActionIn(tooltip, title) {
+    if (!this.state.animate) {
+      this.onHoverJob(tooltip, title);
+      this.props.setMainState({
+        backgroundColor: '#000',
+        blackFont: false,
+        bgAnimation: true,
+      });
     }
   }
-  onMouseLeaveContent(e){
-    let state = this.props.getMainState();
-    if(state.cursor.color !== '#fff'){
-      state.cursor.color = '#fff';
-      this.props.setMainState(state);
+  jobLinkActionOut() {
+    const mainState = this.props.getMainState();
+    if (this.props.isMobile) {
+      return false;
     }
-  }
-  isHovering(){
-    return this.state.listItens.filter(item => item.active === true).length > 0;
-  }
-  onClickCloseProject(){
-    let state = Object.assign({}, this.state);
-    state.projectIsOpened = false;
-
-    let listItens = this.state.listItens.slice(0);
-    for (let i = 0; i < listItens.length; i++) {
-      listItens[i].active = false;
-    }
-    state.listItens = listItens;
-
-    this.setState(state);
-
-    let mainState = this.props.getMainState();
-    mainState.cursor.color = '#000';
-    mainState.cursor.rotate = false;
-    mainState.blackFont = true;
-    mainState.backgroundColor = '#fff';
-    mainState.hideJobList = false;
+    let listItens = Object.assign(this.state.listItens);
+    listItens = listItens.map((item) => {
+      const newItem = Object.assign(item);
+      newItem.active = false;
+      return newItem;
+    });
+    this.setState({
+      listItens,
+    });
     mainState.tooltipText = '';
-    mainState.currentPage = 'home';
+    mainState.cursor.color = '#000';
     this.props.setMainState(mainState);
-  }
-  setProjectBgColor(color){
-    const state = Object.assign({}, this.state);
-    state.projectPageBackgroundColor = color;
-    this.setState(state);
+    return false;
   }
   render() {
     const currentPage = this.state.listItens.filter(x => x.active)[0];
     const openedClass = this.state.projectIsOpened ? 'opened' : '';
-    return(
-      <div className='List'>
+    return (
+      <div className="List">
         <div className={`projectPage ${openedClass}`}>
-          <div className='wrapProjectImages'>
-            {this.state.listItens.map(({ image, imagePath, hideImage }, i) => {
-              return (
-                <p
-                  key={`key_${i}_${imagePath}`}
-                  className='projectPageImage'
-                  style={{
-                    backgroundImage: image !== '' ? `url(${image})` : 'none',
-                    visibility: i === this.state.currentPos && this.isHovering() && !hideImage ? 'visible' : 'hidden',
-                  }}
-                />
-              );
-            })}
+          <div className="wrapProjectImages">
+            {this.state.listItens.map(({ image, imagePath, hideImage }, i) => (
+              <p
+                key={`key_${imagePath}`}
+                className="projectPageImage"
+                style={{
+                  backgroundImage: image !== '' ? `url(${image})` : 'none',
+                  visibility: i === this.state.currentPos && this.isHovering() && !hideImage ? 'visible' : 'hidden',
+                }}
+              />
+              ))}
           </div>
           {currentPage instanceof Object &&
             <div
-              className='content'
+              className="content"
               onMouseLeave={this.onMouseLeaveContent}
               onMouseEnter={this.onMouseEnterContent}
               style={{
@@ -349,11 +380,9 @@ class List extends React.PureComponent {
             >
               <h2 className="description">{currentPage.description}</h2>
               <ul className="technologies">
-                {currentPage.technologies.map((text, i) => {
-                  return(
-                    <li key={i}>{text}</li>
-                  );
-                })}
+                {currentPage.technologies.map(text => (
+                  <li key={text}>{text}</li>
+                ))}
               </ul>
               <Marquee
                 props={this.props}
@@ -371,18 +400,27 @@ class List extends React.PureComponent {
                   launch website
                 </a>
               </Marquee>
-
               <Button
                 text="close"
                 className="closeProject"
                 onClick={this.onClickCloseProject}
                 onMouseOver={() => {
-                  let state = this.props.getMainState();
+                  const state = this.props.getMainState();
+                  state.cursor.rotate = true;
+                  this.props.setMainState(state);
+                }}
+                onFocus={() => {
+                  const state = this.props.getMainState();
                   state.cursor.rotate = true;
                   this.props.setMainState(state);
                 }}
                 onMouseOut={() => {
-                  let state = this.props.getMainState();
+                  const state = this.props.getMainState();
+                  state.cursor.rotate = false;
+                  this.props.setMainState(state);
+                }}
+                onBlur={() => {
+                  const state = this.props.getMainState();
                   state.cursor.rotate = false;
                   this.props.setMainState(state);
                 }}
@@ -390,131 +428,124 @@ class List extends React.PureComponent {
             </div>
           }
         </div>
-        <ul
+        <div
           className="jobs"
-          onMouseOut={() => {
-            this.props.setMainState({
-              backgroundColor: "#fff",
-              blackFont: true,
-              bgAnimation: true,
-            })
-          }}
+          onMouseOut={this.jobsActionOut}
+          onBlur={this.jobsActionOut}
         >
           {!this.props.hideJobList &&
-            this.state.listItens.map(({ title, link, tooltip, active }, i) => {
+            this.state.listItens.map(({
+                title,
+                tooltip,
+                active,
+              }, i) => {
               let hide = this.isHovering() && !active ? '0' : 1;
-              if(this.props.isMobile){
+              if (this.props.isMobile) {
                 hide = (active === true) ? '1' : '0';
-                if(title !== 'sclp'){
-                  return(
-                    <li
+                if (title !== 'sclp') {
+                  return (
+                    <button
                       className="job-link"
                       key={`key-${title}`}
-                      onClick={this.onClickJob}
+                      onClick={this.jobLinkActionClick}
                       style={{
                         opacity: hide,
-                        pointerEvents: (hide === '0'? 'none' : 'initial'),
+                        pointerEvents: (hide === '0' ? 'none' : 'initial'),
                       }}
                     >
                       <span>{title}</span>
-                    </li>
+                    </button>
                   );
                 }
-                return(
-                    <span
-                      className="job-link"
-                      key={`key-${title}`}
-                      style={{
-                        pointerEvents: 'none',
-                      }}
-                    >
-                      {title}
-                    </span>
-                  );
-              } else {
-                if(title !== 'sclp'){
-                  return (
-                    <li
-                      className="job-link"
-                      key={`key-${title}`}
-                      style={{
-                        opacity: hide,
-                        pointerEvents: (hide === '0'? 'none' : 'initial'),
-                      }}
-                      onMouseOver={() => {
-                        if(!this.state.animate){
-                          this.onHoverJob(tooltip, title);
-                          this.props.setMainState({
-                            backgroundColor: "#000",
-                            blackFont: false,
-                            bgAnimation: true,
-                          });
-                        }
-                      }}
-                      onClick={this.onClickJob}
-                      onMouseOut={() => {
-                        this.onMouseOutJob()
-                      }}
-                    >
-                      <div className="job-marquee">
-                        <span
-                          className="text"
-                          style={{
-                            animationDelay: `${i / 2}s`,
-                          }}
-                        >
-                          {title}
-                        </span>
-                      </div>
-                      <span className="marquee-hover">{title}</span>
-                    </li>
-                  );
-                }
-
                 return (
-                  <li
-                    className="logo"
+                  <span
+                    className="job-link"
                     key={`key-${title}`}
                     style={{
-                      opacity: hide,
+                      pointerEvents: 'none',
                     }}
                   >
                     {title}
-                  </li>
+                  </span>
+                  );
+              }
+              if (title !== 'sclp') {
+                return (
+                  <button
+                    className="job-link"
+                    key={`key-${title}`}
+                    style={{
+                      opacity: hide,
+                      color: this.isHovering() ? '#fff' : '#000',
+                      pointerEvents: (hide === '0' ? 'none' : 'initial'),
+                    }}
+                    onClick={this.jobLinkActionClick}
+                    onMouseOver={() => {
+                      this.jobLinkActionIn(tooltip, title);
+                    }}
+                    onFocus={() => {
+                      this.jobLinkActionIn(tooltip, title);
+                    }}
+                    onMouseOut={() => {
+                      this.jobLinkActionOut();
+                    }}
+                    onBlur={() => {
+                      this.jobLinkActionOut();
+                    }}
+                  >
+                    <div className="job-marquee">
+                      <span
+                        className="text"
+                        style={{
+                          animationDelay: `${i / 2}s`,
+                        }}
+                      >
+                        {title}
+                      </span>
+                    </div>
+                    <span className="marquee-hover">{title}</span>
+                  </button>
                 );
               }
+              return (
+                <button
+                  className="logo"
+                  key={`key-${title}`}
+                  style={{
+                    opacity: hide,
+                  }}
+                >
+                  {title}
+                </button>
+              );
             })
           }
-
           <div
             className="hitarea"
-            onMouseOver={() => {
-              let mainState = this.props.getMainState();
-              mainState.backgroundColor = '#fff';
-              mainState.blackFont = true;
-              mainState.bgAnimation = true;
-              this.props.setMainState(mainState);
-            }}
+            onMouseOver={this.hitareaOutAction}
+            onFocus={this.hitareaOutAction}
           />
-        </ul>
+        </div>
       </div>
     );
   }
 }
 List.propTypes = {
-  listItens: PropTypes.arrayOf(PropTypes.object),
-  changePage: PropTypes.func,
-  onHoverJob: PropTypes.func,
   setMainState: PropTypes.func,
   getMainState: PropTypes.func,
   isMobile: PropTypes.bool,
   hideJobList: PropTypes.bool,
   orientation: PropTypes.string,
   animateJobList: PropTypes.bool,
-  setActiveItem: PropTypes.object,
   currentPage: PropTypes.string,
-}
+};
 List.defaultProps = {
   hideJobList: false,
-}
+  setMainState: null,
+  getMainState: null,
+  isMobile: null,
+  orientation: null,
+  animateJobList: null,
+  currentPage: null,
+};
 export default List;

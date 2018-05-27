@@ -19,7 +19,7 @@ import tutorialImage from './assets/images/tutorial.png';
 import perfilImage from './assets/images/perfil.jpg';
 
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       beta: 0,
@@ -133,7 +133,7 @@ class App extends Component {
         currentKey: '',
       },
       bgAnimation: false,
-      gamepad:{
+      gamepad: {
         goToDirection: 0,
         lastButtonPressed: 0,
       },
@@ -147,17 +147,17 @@ class App extends Component {
         position: {
           x: -100,
           y: -100,
-        }
+        },
       },
       navHoverEl: {
         pos: {
           x: 0,
           y: 0,
-        }
+        },
       },
       animateJobList: false,
       hideJobList: false,
-    }
+    };
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onResize = this.onResize.bind(this);
     this.changePage = this.changePage.bind(this);
@@ -170,13 +170,13 @@ class App extends Component {
 
     window.app = this;
   }
-  componentWillMount(){
+  componentWillMount() {
     const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
 
-    if(!isMobile){
+    if (!isMobile) {
       this.Gamepad = new Gamepad(this);
       this.Gamepad.init();
-      window.addEventListener("keyup", this.onKeyUp);
+      window.addEventListener('keyup', this.onKeyUp);
       // window.addEventListener('mousemove', this.onMouseMove );
     }
     window.addEventListener('resize', this.onResize);
@@ -186,11 +186,11 @@ class App extends Component {
       isMobile,
     });
   }
-  onKeyUp(e){
-    let state = this.getMainState();
+  onKeyUp(e) {
+    const state = this.getMainState();
 
-    //On press ESC
-    if(e.keyCode === 27){
+    // On press ESC
+    if (e.keyCode === 27) {
       // state.hideNav = true;
       // state.backgroundColor = "#fff";
       // state.projectPage.opened = false;
@@ -204,18 +204,60 @@ class App extends Component {
     }
     this.setState(state);
   }
-  onResize(){
+  onResize() {
     this.setState({
       orientation: getOrientation(),
     });
   }
-  changePage(targetPage, animate){
+  onClickMenu() {
+    const state = Object.assign({}, this.state);
+    state.cursor.color = '#fff';
+    state.hideNav = false;
+    state.backgroundColor = '#000';
+    state.blackFont = false;
+    state.bgAnimation = true;
+    state.hideJobList = true;
+    this.setState(state);
+  }
+  onMouseOverCloseBtn() {
+    const cursor = Object.assign({}, this.state.cursor);
+    cursor.rotate = true;
+    this.setState({
+      cursor,
+    });
+  }
+  onMouseOutCloseBtn() {
+    const cursor = Object.assign({}, this.state.cursor);
+    cursor.rotate = false;
+    this.setState({
+      cursor,
+    });
+  }
+  setMainState(state, cb) {
+    if (typeof cb === 'function') {
+      this.setState(state, cb);
+    } else {
+      this.setState(state);
+    }
+  }
+  getMainState() {
+    // return  _.cloneDeep(this.state);
+    return Object.assign({}, this.state);
+  }
+  navItemHover(pos) {
+    this.setState({
+      navHoverEl: {
+        pos,
+      },
+    });
+  }
+  changePage(targetPage, animate) {
     const blackFont = targetPage !== 'home';
     const { animationDuration } = this.state.changePage;
-    let cursor = Object.assign({}, this.state.cursor);
-    if(animate) {
+    const cursor = Object.assign({}, this.state.cursor);
+    const state = this.getMainState();
+    if (animate) {
       cursor.color = '#000';
-      let state = this.getMainState();
       state.currentPage = targetPage;
       state.bgAnimation = false;
       state.hideNav = true;
@@ -225,9 +267,7 @@ class App extends Component {
       state.cursor = cursor;
       state.hidePortrait = true;
       this.setState(state);
-      
       setTimeout(() => {
-        let state = this.getMainState();
         state.backgroundColor = '#fff';
         state.expand = false;
         state.cursor.rotate = false;
@@ -236,12 +276,11 @@ class App extends Component {
           pos: {
             x: -200,
             y: -200,
-          }
+          },
         };
         this.setState(state);
       }, animationDuration);
     } else {
-      let state = this.getMainState();
       state.cursor.rotate = false;
       state.currentPage = targetPage;
       state.hideNav = true;
@@ -252,48 +291,6 @@ class App extends Component {
       state.hideJobList = false;
       this.setState(state);
     }
-  }
-  onClickMenu(){
-    let state = Object.assign({}, this.state);
-    state.cursor.color = '#fff';
-    state.hideNav = false;
-    state.backgroundColor = '#000';
-    state.blackFont = false;
-    state.bgAnimation = true;
-    state.hideJobList = true;
-    this.setState(state);
-  }
-  setMainState(state, cb){
-    if (typeof cb === "function") {
-      this.setState(state, cb);
-    } else {
-      this.setState(state);
-    }
-  }
-  onMouseOverCloseBtn(){
-    let cursor = Object.assign({}, this.state.cursor);
-    cursor.rotate = true;
-    this.setState({
-      cursor,
-    });
-  }
-  onMouseOutCloseBtn(){
-    let cursor = Object.assign({}, this.state.cursor);
-    cursor.rotate = false;
-    this.setState({
-      cursor,
-    });
-  }
-  navItemHover(pos){
-    this.setState({
-      navHoverEl:{
-        pos,
-      }
-    })
-  }
-  getMainState(){
-    // return  _.cloneDeep(this.state);
-    return Object.assign({}, this.state);
   }
   render() {
     const {
@@ -310,7 +307,7 @@ class App extends Component {
     const bgAnimationClass = bgAnimation ? 'animation' : '';
     const blackFontClass = blackFont ? 'blackFont' : '';
     const isMobileClass = isMobile ? 'isMobile' : '';
-    const hideMenuButton = tooltipText.length > 0 || !hideNav || currentPage !== "home";
+    const hideMenuButton = tooltipText.length > 0 || !hideNav || currentPage !== 'home';
 
     return (
       <div
@@ -320,7 +317,7 @@ class App extends Component {
         }}
       >
         <Stage
-          className='canvas'
+          className="canvas"
           width={getScreenWidth()}
           height={getScreenHeight()}
         >
@@ -355,8 +352,10 @@ class App extends Component {
               onClick={() => {
                 this.changePage('home', false);
               }}
+              onFocus={this.onMouseOverCloseBtn}
               onMouseOver={this.onMouseOverCloseBtn}
               onMouseOut={this.onMouseOutCloseBtn}
+              onBlur={this.onMouseOutCloseBtn}
             />
           }
           <Nav
@@ -373,7 +372,6 @@ class App extends Component {
             <List
               state={this.state.projectPage}
               listItens={jobsList}
-              onHoverJob={this.onHoverJob}
               setMainState={this.setMainState}
               getMainState={this.getMainState}
               isMobile={this.state.isMobile}
@@ -391,12 +389,14 @@ class App extends Component {
             pageName="about"
             currentPage={currentPage}
             closePage={this.changePage}
-          > 
+          >
             <Portrait
               src={perfilImage}
               hide={this.state.hidePortrait}
             />
-            <p className="description">sclp is a collection of isaac eliape’s work on web development and ui engineering</p>
+            <p className="description">
+              sclp is a collection of isaac eliape’s work on web development and ui engineering
+            </p>
             <Marquee
               setMainState={this.setMainState}
               getMainState={this.getMainState}
@@ -413,8 +413,8 @@ class App extends Component {
             </Marquee>
 
             <Link
-              hoverText='hello@sclp.co'
-              href='mailto:hello@sclp.co?subject=site contact'
+              hoverText="hello@sclp.co"
+              href="mailto:hello@sclp.co?subject=site contact"
               setMainState={this.setMainState}
               getMainState={this.getMainState}
             >

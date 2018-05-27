@@ -3,34 +3,34 @@ import PropTypes from 'prop-types';
 import './Cursor.css';
 
 class Cursor extends React.PureComponent {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       x: 0,
       y: 0,
-    }
+    };
     this.onMouseMove = this.onMouseMove.bind(this);
   }
 
-  componentDidMount(){
-    if(!this.props.isMobile){
-      window.addEventListener('mousemove', this.onMouseMove );
+  componentDidMount() {
+    if (!this.props.isMobile) {
+      window.addEventListener('mousemove', this.onMouseMove);
     }
   }
 
-  onMouseMove(event){
-    let state = Object.assign({}, this.state);
+  onMouseMove(event) {
+    const state = Object.assign({}, this.state);
     state.x = event.pageX;
     state.y = event.pageY;
     this.setState(state);
   }
 
-  render(){
+  render() {
     const visible = this.props.visible ? '1' : '0';
     const rotation = this.props.rotate ? 'rotate(135deg)' : 'none';
-    return(
+    return (
       <div
-        className='Cursor'
+        className="Cursor"
         style={{
           left: `${this.state.x}px`,
           top: `${this.state.y}px`,
@@ -40,8 +40,8 @@ class Cursor extends React.PureComponent {
       >
         <span
           style={{
-            'display': 'block',
-            'transform': rotation,
+            display: 'block',
+            transform: rotation,
           }}
         >
           +
@@ -53,14 +53,13 @@ class Cursor extends React.PureComponent {
 Cursor.propTypes = {
   rotate: PropTypes.bool,
   visible: PropTypes.bool,
-  size: PropTypes.string,
   color: PropTypes.string,
   isMobile: PropTypes.bool,
-  goToDirection: PropTypes.number,
-}
+};
 Cursor.defaultProps = {
   rotate: false,
-  x: window.innerWidth / 2,
-  y: window.innerHeight / 2,
-}
+  visible: null,
+  color: null,
+  isMobile: null,
+};
 export default Cursor;

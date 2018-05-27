@@ -1,13 +1,12 @@
 @import './../../shared.scss';
-
-.Page{
-  &.home{
-    .jobs{
+.Page {
+  &.home {
+    .jobs {
       text-align: left;
       display: block;
       width: 100%;
       position: relative;
-      .hitarea{
+      .hitarea {
         position: absolute;
         z-index: 0;
         width: 100%;
@@ -16,7 +15,7 @@
         left: 0;
       }
       .logo,
-      .job-link{
+      .job-link {
         font-size: 10vh;
         font-weight: 100;
         vertical-align: top;
@@ -27,25 +26,34 @@
         white-space: nowrap;
         position: relative;
         z-index: 1;
-        .marquee-hover{
+        font-weight: 500;
+        font-family: ahamono;
+        padding: 0;
+        height: 1.66em;
+        outline: 0;
+        .marquee-hover {
           position: absolute;
           opacity: 0;
           left: 0;
           top: 0;
         }
-        &:hover{
-          .job-marquee{
+        &:hover {
+          .job-marquee {
             opacity: 0;
           }
         }
         @keyframes marqueeAnimation {
-          0%   { left: 100%; }
-          100% { left: -100%; }
+          0% {
+            left: 100%;
+          }
+          100% {
+            left: -100%;
+          }
         }
-        .job-marquee{
+        .job-marquee {
           display: inline-block;
           overflow: hidden;
-          .text{
+          .text {
             display: block;
             position: relative;
             left: -50%;
@@ -56,29 +64,29 @@
             animation-timing-function: linear;
           }
         }
-        &:hover{
-          .marquee-hover{
+        &:hover {
+          .marquee-hover {
             opacity: 1;
           }
-          marquee{
+          marquee {
             transform: translateY(-100%);
           }
         }
       }
-      .logo{
-        height: auto;
+      .logo {
+        height: 1.66em;
         line-height: 10vh;
         pointer-events: none;
       }
     }
-    .tooltip{
+    .tooltip {
       position: absolute;
       bottom: 0;
       line-height: 0.6em;
     }
   }
-  &.about{
-    .Portrait{
+  &.about {
+    .Portrait {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -86,47 +94,47 @@
       z-index: 0;
       transform: translate3d(-50%, -50%, 0);
       transition: opacity .5s ease;
-      &.hide{
+      &.hide {
         opacity: 0;
       }
-      &:hover{
+      &:hover {
         z-index: 1;
       }
     }
-    .Marquee{
+    .Marquee {
       position: relative;
       top: auto;
       left: auto;
       display: block;
       margin-top: 5vh;
     }
-    .Link{
+    .Link {
       position: absolute;
       bottom: 0;
       left: 0;
       line-height: 6vh;
     }
-    .description{
+    .description {
       width: 75vw;
       position: relative;
       pointer-events: none;
     }
-  } 
-  &.easterEgg{
+  }
+  &.easterEgg {
     overflow: auto;
     height: 100vh;
-    .instructions{
+    .instructions {
       width: 50vw;
       display: block;
       margin-bottom: 5vh;
     }
-    .tutorial{
+    .tutorial {
       width: 70vw;
       margin-top: 28vh;
     }
   }
-  .Button{
-    &.close{
+  .Button {
+    &.close {
       position: absolute;
       right: 0;
       bottom: 0;
@@ -134,8 +142,9 @@
     }
   }
 }
+
 @keyframes marquee {
-  0% { 
+  0% {
     left: 100vw;
     transform: translateX(0);
   }
@@ -145,43 +154,43 @@
   }
 }
 
-
 /* portrait */
+
 @media screen and (orientation:portrait) {
-  .App{
-    &.isMobile{
-      .Page{
-        &.home{
-          .jobs{
+  .App {
+    &.isMobile {
+      .Page {
+        &.home {
+          .jobs {
             .logo,
-            .job-link{
+            .job-link {
               font-size: 5vh;
               line-height: 1.2em;
               display: block;
-              span{
+              span {
                 pointer-events: none;
               }
             }
           }
         }
-        &.about{
-          .Portrait{
+        &.about {
+          .Portrait {
             width: 70vw;
             height: auto;
-            &:hover{
+            &:hover {
               z-index: 0;
             }
           }
-          .contact{
+          .contact {
             bottom: 0;
             line-height: 4vh;
           }
-          .Marquee{
+          .Marquee {
             margin-top: 5vh;
           }
         }
-        .Button{
-          &.close{
+        .Button {
+          &.close {
             position: absolute;
             right: 0;
             bottom: 0;
@@ -192,34 +201,36 @@
     }
   }
 }
+
 /* landscape */
+
 @media screen and (orientation:landscape) {
-  .App{
-    &.isMobile{
-      .Page{
-        &.home{
-          .jobs{
+  .App {
+    &.isMobile {
+      .Page {
+        &.home {
+          .jobs {
             .logo,
-            .job-link{
+            .job-link {
               font-size: 5vw;
               line-height: 5vw;
             }
           }
         }
-        &.about{
-          .contact{
+        &.about {
+          .contact {
             bottom: 0;
             line-height: 4vh;
           }
-          .Marquee{
+          .Marquee {
             margin-top: 10vh;
           }
-          .Link{
+          .Link {
             margin-top: 5vh;
           }
         }
-        .Button{
-          &.close{
+        .Button {
+          &.close {
             position: absolute;
             right: 0;
             bottom: 0;

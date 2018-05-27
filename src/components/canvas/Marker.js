@@ -1,42 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Rect, Circle, Group, RegularPolygon} from 'react-konva';
+import { Rect, Circle, Group, RegularPolygon } from 'react-konva';
 import { getScreenWidth, getScreenHeight } from './../../Helpers';
 
 class Marker extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.expand = this.expand.bind(this);
-    this.animationTiming = this.animationTiming.bind(this);
     this.count = 0;
     this.isAnimating = false;
     this.state = {
       color: 'white',
-      width: (getScreenWidth() / 100) * 12,
-      height: (getScreenHeight() / 100) * 12,
-      animating: false,
     };
   }
-  componentDidUpdate(){
-    if(this.props.expand){
+  componentDidUpdate() {
+    if (this.props.expand) {
       this.expand();
     }
   }
-  animationTiming(){
-    this.setState({
-      animating: false,
-    });
-  }
-  expand(){
-    if(this.isAnimating === false){
+  expand() {
+    if (this.isAnimating === false) {
       this.isAnimating = true;
       setTimeout(() => {
         this.isAnimating = false;
       }, this.props.animationDuration);
-      
+
       const duration = this.props.animationDuration / 1000;
-      if(this.props.pos.icon === 'circle'){
-        this.Circle.to({
+      if (this.props.pos.icon === 'circle') {
+        this.CircleRef.to({
           width: getScreenWidth() * 3,
           height: getScreenWidth() * 3,
           x: getScreenWidth() / 2,
@@ -44,16 +35,16 @@ class Marker extends React.Component {
           duration,
         });
       }
-      if(this.props.pos.icon === 'rect'){
-        this.Rect.to({
+      if (this.props.pos.icon === 'rect') {
+        this.RectRef.to({
           width: getScreenWidth() * 2,
           height: getScreenHeight() * 2,
-          x: - (getScreenWidth() / 2),
-          y: - ((getScreenHeight() / 100) * 50),
+          x: -(getScreenWidth() / 2),
+          y: -((getScreenHeight() / 100) * 50),
           duration,
         });
       }
-      if(this.props.pos.icon === 'triangle'){
+      if (this.props.pos.icon === 'triangle') {
         this.Poly.to({
           width: getScreenWidth() * 4,
           height: getScreenWidth() * 4,
@@ -69,11 +60,11 @@ class Marker extends React.Component {
       <Group>
         {this.props.pos.icon === 'circle' &&
           <Circle
-            x={this.props.pos.x - (this.props.pos.width / 100) * 30}
-            y={this.props.pos.y - (this.props.pos.height / 100) * 15}
+            x={this.props.pos.x - ((this.props.pos.width / 100) * 30)}
+            y={this.props.pos.y - ((this.props.pos.height / 100) * 15)}
             radius={(this.props.pos.height / 100) * 40}
             fill={this.state.color}
-            ref={(Circle) => { this.Circle = Circle; }}
+            ref={(CircleRef) => { this.CircleRef = CircleRef; }}
           />
         }
         {this.props.pos.icon === 'rect' &&
@@ -83,7 +74,7 @@ class Marker extends React.Component {
             width={(this.props.pos.height / 100) * 80}
             height={(this.props.pos.height / 100) * 80}
             fill={this.state.color}
-            ref={(Rect) => { this.Rect = Rect; }}
+            ref={(RectRef) => { this.RectRef = RectRef; }}
           />
         }
         {this.props.pos.icon === 'triangle' &&
@@ -103,16 +94,24 @@ class Marker extends React.Component {
 }
 Marker.propTypes = {
   expand: PropTypes.bool,
-  isMobile: PropTypes.bool,
-  pos: PropTypes.shape({}),
+  pos: PropTypes.shape({
+    x: PropTypes.number,
+    y: PropTypes.number,
+    icon: PropTypes.string,
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
   animationDuration: PropTypes.number,
 };
 Marker.defaultProps = {
+  animationDuration: null,
   expand: false,
   pos: {
     x: -200,
     y: -200,
     icon: '',
-  }
+    width: null,
+    height: null,
+  },
 };
 export default Marker;
