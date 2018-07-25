@@ -18,6 +18,13 @@ import './App.css';
 import tutorialImage from './assets/images/tutorial.png';
 import perfilImage from './assets/images/perfil.jpg';
 
+function loadImage(path) {
+  fetch(path)
+    .then(response => response.body)
+    .catch((error) => {
+      console.log(error);
+    });
+}
 class App extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +43,7 @@ class App extends Component {
       currentPage: 'home',
       menuHover: false,
       hidePortrait: true,
-      projectPage: {
+      projects: {
         percent: 0,
         gyroscope: 0,
         currentPos: 0,
@@ -48,11 +55,9 @@ class App extends Component {
             title: 'sclp',
             tooltip: 'about',
             active: false,
-            image: {
-              src: '',
-              path: '',
-              active: false,
-            },
+            image: '',
+            imagePath: '',
+            hideImage: true,
             description: '',
             technologies: [],
             link: '',
@@ -61,11 +66,9 @@ class App extends Component {
             title: 'hpmagicwords',
             tooltip: 'speech api',
             active: false,
-            image: {
-              src: require('./assets/images/projects/hp_magic_works.png'),
-              path: './assets/images/projects/hp_magic_works.png',
-              active: false,
-            },
+            image: loadImage('./assets/images/projects/hp_magic_works.png'),
+            imagePath: './../../assets/images/projects/hp_magic_works.png',
+            hideImage: true,
             description: 'the first book written by people who’ve never written before.',
             technologies: [
               'html5/css3',
@@ -78,11 +81,9 @@ class App extends Component {
             title: 'gettyendless',
             tooltip: 'webGL',
             active: false,
-            image: {
-              src: require('./assets/images/projects/getty_endless_possibilities.png'),
-              path: './assets/images/projects/getty_endless_possibilities.png',
-              active: false,
-            },
+            image: loadImage('./assets/images/projects/getty_endless_possibilities.png'),
+            imagePath: './../../assets/images/projects/getty_endless_possibilities.png',
+            hideImage: true,
             description: 'creating protraits of famous people with gettyimages photos',
             technologies: [
               'html5/css3',
@@ -95,11 +96,9 @@ class App extends Component {
             title: 'flplny',
             tooltip: 'responsive',
             active: false,
-            image: {
-              src: require('./assets/images/projects/flplny.png'),
-              path: './assets/images/projects/flplny.png',
-              active: false,
-            },
+            image: loadImage('./assets/images/projects/flplny.png'),
+            imagePath: './../../assets/images/projects/flplny.png',
+            hideImage: true,
             description: 'responsive semplice-based portfolio',
             technologies: [
               'html5/css3',
@@ -113,11 +112,9 @@ class App extends Component {
             title: 'fundacaolemann',
             tooltip: 'responsive',
             active: false,
-            image: {
-              src: require('./assets/images/projects/fundacao_lemann.png'),
-              path: './assets/images/projects/fundacao_lemann.png',
-              active: false,
-            },
+            image: loadImage('./assets/images/projects/fundacao_lemann.png'),
+            imagePath: './../../assets/images/projects/fundacao_lemann.png',
+            hideImage: true,
             description: 'cms and responsive website',
             technologies: [
               'html5/css3',
@@ -162,6 +159,7 @@ class App extends Component {
     this.onResize = this.onResize.bind(this);
     this.changePage = this.changePage.bind(this);
     this.onClickMenu = this.onClickMenu.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
     this.navItemHover = this.navItemHover.bind(this);
     this.getMainState = this.getMainState.bind(this);
     this.setMainState = this.setMainState.bind(this);
@@ -170,21 +168,21 @@ class App extends Component {
 
     window.app = this;
   }
-  componentWillMount() {
+  componentDidMount() {
     const isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
 
     if (!isMobile) {
       this.Gamepad = new Gamepad(this);
       this.Gamepad.init();
+      window.addEventListener('mousemove', this.onMouseMove);
       window.addEventListener('keyup', this.onKeyUp);
-      // window.addEventListener('mousemove', this.onMouseMove );
     }
     window.addEventListener('resize', this.onResize);
     this.onResize();
 
-    this.setState({
-      isMobile,
-    });
+    // this.setState({
+    //   isMobile,
+    // });
   }
   onKeyUp(e) {
     const state = this.getMainState();
@@ -193,7 +191,7 @@ class App extends Component {
     if (e.keyCode === 27) {
       // state.hideNav = true;
       // state.backgroundColor = "#fff";
-      // state.projectPage.opened = false;
+      // state.projects.opened = false;
       // state.blackFont = true;
       // state.currentPage = 'home';
       // state.hidePortrait = true;
@@ -220,18 +218,36 @@ class App extends Component {
     this.setState(state);
   }
   onMouseOverCloseBtn() {
-    const cursor = Object.assign({}, this.state.cursor);
-    cursor.rotate = true;
     this.setState({
-      cursor,
+      ...this.state,
+      cursor: {
+        ...this.state.cursor,
+        rotate: true,
+      },
     });
   }
   onMouseOutCloseBtn() {
-    const cursor = Object.assign({}, this.state.cursor);
-    cursor.rotate = false;
     this.setState({
-      cursor,
+      ...this.state,
+      cursor: {
+        ...this.state.cursor,
+        rotate: false,
+      },
     });
+  }
+  onMouseMove(event) {
+    const { pageX: x, pageY: y } = event;
+    const state = {
+      ...this.state,
+      cursor: {
+        ...this.state.cursor,
+        position: {
+          x,
+          y,
+        },
+      },
+    };
+    this.setState(state);
   }
   setMainState(state, cb) {
     if (typeof cb === 'function') {
@@ -241,7 +257,6 @@ class App extends Component {
     }
   }
   getMainState() {
-    // return  _.cloneDeep(this.state);
     return Object.assign({}, this.state);
   }
   navItemHover(pos) {
@@ -292,6 +307,7 @@ class App extends Component {
       this.setState(state);
     }
   }
+
   render() {
     const {
       tooltipText,
@@ -331,12 +347,7 @@ class App extends Component {
           </Layer>
         </Stage>
         <Cursor
-          rotate={this.state.cursor.rotate}
-          size={this.state.cursor.size}
-          color={this.state.cursor.color}
-          isMobile={this.state.isMobile}
-          visible={this.state.cursor.visible}
-          gamepad={this.state.gamepad.goToDirection}
+          cursorState={this.state.cursor}
         />
         <Container>
           <Button
@@ -370,7 +381,7 @@ class App extends Component {
             currentPage={currentPage}
           >
             <List
-              state={this.state.projectPage}
+              state={this.state.projects}
               listItens={jobsList}
               setMainState={this.setMainState}
               getMainState={this.getMainState}

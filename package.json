@@ -8,7 +8,7 @@
     "konva": "^1.7.6",
     "lodash": "^4.17.4",
     "node-sass-chokidar": "0.0.3",
-    "npm": "^5.8.0",
+    "npm": "^5.10.0",
     "npm-run-all": "^4.1.2",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
@@ -32,8 +32,8 @@
   },
   "devDependencies": {
     "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-flowtype": "^2.39.1",
-    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-flowtype": "^2.47.1",
+    "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.8.2",
     "mdpdf": "^1.6.0"

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -7,112 +6,33 @@ import './Marquee.css';
 class Marquee extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      posX: window.innerWidth,
-      color: this.props.color,
-      width: 0,
-      isTransiting: true,
-    };
-    this.onMouseOver = this.onMouseOver.bind(this);
-    this.onMouseOut = this.onMouseOut.bind(this);
-    this.loop = this.loop.bind(this);
-  }
-  componentDidMount() {
-    this.loop();
+    this.onClickAction = this.onClickAction.bind(this);
   }
   componentWillUnmount() {
     const state = Object.assign({}, this.state);
     state.stopAnimation = true;
     this.setState(state);
   }
-  onMouseOver() {
-    const backgroundColor = this.props.currentPage === 'about' ? '#000' : '#fff';
-    const state = Object.assign({}, this.state);
-    state.isTransiting = false;
-    state.color = '#fff';
-    this.setState(state);
-
-    if (typeof this.props.setProjectBgColor === 'function') {
-      this.props.setProjectBgColor('#000');
-    }
-    const mainState = this.props.getMainState();
-    mainState.backgroundColor = backgroundColor;
-    mainState.bgAnimation = true;
-    mainState.hidePortrait = true;
-    mainState.cursor.color = '#fff';
-    mainState.cursor.visible = true;
-    this.props.setMainState(mainState);
-  }
-  onMouseOut() {
-    const backgroundColor = this.props.currentPage === 'about' ? '#fff' : '#000';
-    const state = Object.assign({}, this.state);
-    state.isTransiting = true;
-    state.color = '#000';
-    this.setState(state);
-    if (typeof this.props.setProjectBgColor === 'function') {
-      this.props.setProjectBgColor('#fff');
-    }
-    const mainState = this.props.getMainState();
-    mainState.backgroundColor = backgroundColor;
-    mainState.bgAnimation = true;
-    mainState.hidePortrait = false;
-    mainState.cursor.color = '#000';
-    mainState.cursor.visible = true;
-    this.props.setMainState(mainState);
-  }
-  loop() {
-    const state = Object.assign({}, this.state);
-    let limit = 0;
-    if (_.get(this.link, 'clientWidth', 0)) {
-      limit = (this.link.clientWidth - (this.link.clientWidth * 2));
-    }
-    if (this.state.isTransiting) {
-      if (this.state.posX < limit) {
-        state.posX = window.innerWidth;
-      } else {
-        state.posX -= this.props.speed;
-      }
-      this.setState(state);
-    }
-    requestAnimationFrame(this.loop);
+  onClickAction() {
+    window.open(this.props.link);
   }
   render() {
     return (
-      <div className="Marquee">
-        <span
-          className="marquee-content"
-          ref={(link) => { this.link = link; }}
-          onMouseOver={this.onMouseOver}
-          onFocus={this.onMouseOver}
-          onMouseOut={this.onMouseOut}
-          onBlur={this.onMouseOut}
-          style={{
-            transform: `translateX(${this.state.posX}px)`,
-            color: this.state.color,
-          }}
-        >
-          {this.props.children}
+      <div
+        className="Marquee"
+        onClick={this.onClickAction}
+      >
+        <span className="text">
+          launch website
         </span>
       </div>
     );
   }
 }
 Marquee.propTypes = {
-  setMainState: PropTypes.func,
-  getMainState: PropTypes.func,
-  setProjectBgColor: PropTypes.func,
-  speed: PropTypes.number,
-  color: PropTypes.string,
-  currentPage: PropTypes.string,
-  children: PropTypes.node,
+  link: PropTypes.string,
 };
 Marquee.defaultProps = {
-  color: '#000',
-  speed: 1,
-  setMainState: null,
-  getMainState: null,
-  setProjectBgColor: null,
-  currentPage: null,
-  children: null,
+  link: null,
 };
 export default Marquee;

@@ -3,39 +3,22 @@ import PropTypes from 'prop-types';
 import './Cursor.css';
 
 class Cursor extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      x: 0,
-      y: 0,
-    };
-    this.onMouseMove = this.onMouseMove.bind(this);
-  }
-
-  componentDidMount() {
-    if (!this.props.isMobile) {
-      window.addEventListener('mousemove', this.onMouseMove);
-    }
-  }
-
-  onMouseMove(event) {
-    const state = Object.assign({}, this.state);
-    state.x = event.pageX;
-    state.y = event.pageY;
-    this.setState(state);
-  }
-
   render() {
-    const visible = this.props.visible ? '1' : '0';
-    const rotation = this.props.rotate ? 'rotate(135deg)' : 'none';
+    // console.log('cursor RENDER');
+    // console.log('position', this.props.cursorState);
+    // console.log('visible', this.props.cursorState.visible);
+    // console.log('rotate', this.props.cursorState.rotate);
+    const { x, y } = this.props.cursorState.position;
+    const visible = this.props.cursorState.visible ? '1' : '0';
+    const rotation = this.props.cursorState.rotate ? 'rotate(135deg)' : 'none';
     return (
       <div
         className="Cursor"
         style={{
-          left: `${this.state.x}px`,
-          top: `${this.state.y}px`,
+          left: `${x}px`,
+          top: `${y}px`,
           opacity: visible,
-          color: this.props.color,
+          color: this.props.cursorState.color,
         }}
       >
         <span
@@ -51,15 +34,17 @@ class Cursor extends React.PureComponent {
   }
 }
 Cursor.propTypes = {
-  rotate: PropTypes.bool,
-  visible: PropTypes.bool,
-  color: PropTypes.string,
-  isMobile: PropTypes.bool,
+  cursorState: PropTypes.shape({
+    rotate: PropTypes.bool,
+    visible: PropTypes.bool,
+    color: PropTypes.string,
+    position: PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+  }),
 };
 Cursor.defaultProps = {
-  rotate: false,
-  visible: null,
-  color: null,
-  isMobile: null,
+  cursorState: false,
 };
 export default Cursor;

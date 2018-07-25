@@ -104,6 +104,8 @@ class List extends React.PureComponent {
     this.onClickCloseProject = this.onClickCloseProject.bind(this);
     this.onMouseLeaveContent = this.onMouseLeaveContent.bind(this);
     this.onMouseEnterContent = this.onMouseEnterContent.bind(this);
+    this.cursorEnableRotation = this.cursorEnableRotation.bind(this);
+    this.cursorDisableRotation = this.cursorDisableRotation.bind(this);
   }
   componentDidMount() {
     const { isMobile } = this.props.getMainState();
@@ -116,7 +118,7 @@ class List extends React.PureComponent {
     const timeOfLastAnimationDelay = (((this.state.listItens.length + 1) * 200) + 1500) + 200;
     this.stopAnim(timeOfLastAnimationDelay);
   }
-  componentWillUpdate() {
+  componentDidUpdate() {
     const { isMobile } = this.props.getMainState();
     if (isMobile) {
       clearTimeout(window.timer);
@@ -168,7 +170,7 @@ class List extends React.PureComponent {
     state.projectIsOpened = false;
 
     const listItens = this.state.listItens.slice(0);
-    for (let i = 0; i < listItens.length; i++) {
+    for (let i = 0; i < listItens.length; i += 1) {
       listItens[i].active = false;
     }
     state.listItens = listItens;
@@ -351,6 +353,16 @@ class List extends React.PureComponent {
     this.props.setMainState(mainState);
     return false;
   }
+  cursorEnableRotation() {
+    const state = this.props.getMainState();
+    state.cursor.rotate = true;
+    this.props.setMainState(state);
+  }
+  cursorDisableRotation() {
+    const state = this.props.getMainState();
+    state.cursor.rotate = false;
+    this.props.setMainState(state);
+  }
   render() {
     const currentPage = this.state.listItens.filter(x => x.active)[0];
     const openedClass = this.state.projectIsOpened ? 'opened' : '';
@@ -384,46 +396,15 @@ class List extends React.PureComponent {
                   <li key={text}>{text}</li>
                 ))}
               </ul>
-              <Marquee
-                props={this.props}
-                setMainState={this.props.setMainState}
-                getMainState={this.props.getMainState}
-                setProjectBgColor={this.setProjectBgColor}
-                currentPage={this.props.currentPage}
-                speed={2}
-              >
-                <a
-                  className="link"
-                  target="_blank"
-                  href={currentPage.link}
-                >
-                  launch website
-                </a>
-              </Marquee>
+              <Marquee link={currentPage.link} />
               <Button
                 text="close"
                 className="closeProject"
                 onClick={this.onClickCloseProject}
-                onMouseOver={() => {
-                  const state = this.props.getMainState();
-                  state.cursor.rotate = true;
-                  this.props.setMainState(state);
-                }}
-                onFocus={() => {
-                  const state = this.props.getMainState();
-                  state.cursor.rotate = true;
-                  this.props.setMainState(state);
-                }}
-                onMouseOut={() => {
-                  const state = this.props.getMainState();
-                  state.cursor.rotate = false;
-                  this.props.setMainState(state);
-                }}
-                onBlur={() => {
-                  const state = this.props.getMainState();
-                  state.cursor.rotate = false;
-                  this.props.setMainState(state);
-                }}
+                onMouseOver={this.cursorEnableRotation}
+                onFocus={this.cursorEnableRotation}
+                onMouseOut={this.cursorDisableRotation}
+                onBlur={this.cursorDisableRotation}
               />
             </div>
           }
