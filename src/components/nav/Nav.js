@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Nav.css';
 
 class Nav extends React.PureComponent {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       navItems: [
@@ -22,23 +22,26 @@ class Nav extends React.PureComponent {
           icon: 'triangle',
           ref: '',
         },
-      ]
-    }
+      ],
+    };
+    this.navOnMouseOut = this.navOnMouseOut.bind(this);
+  }
+  navOnMouseOut() {
+    this.props.navItemHover({
+      x: -200,
+      y: -200,
+    });
   }
   render() {
-    return(
+    return (
       !this.props.hide &&
       <div
         className="Nav"
-        onMouseOut={() => {
-          this.props.navItemHover({
-            x: -200,
-            y: -200,
-          });
-        }}
+        onMouseOut={this.navOnMouseOut}
+        onBlur={this.navOnMouseOut}
       >
         <ul className="nav-wrapper">
-          {this.state.navItems.map(({ title, icon }, i) => (
+          {this.state.navItems.map(({ title, icon }) => (
             <li
               className="nav-item"
               key={`key-${title}`}
@@ -68,7 +71,7 @@ class Nav extends React.PureComponent {
           ))}
         </ul>
       </div>
-    )
+    );
   }
 }
 Nav.propTypes = {
