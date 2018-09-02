@@ -387,6 +387,8 @@ class List extends React.PureComponent {
               onMouseLeave={this.onMouseLeaveContent}
               onMouseEnter={this.onMouseEnterContent}
               style={{
+                transform: `translateY(${this.state.projectIsOpened ? 0 : 100}%)`,
+                opacity: this.state.projectIsOpened ? 1 : 0,
                 backgroundColor: this.state.projectPageBackgroundColor,
               }}
             >
@@ -518,7 +520,6 @@ List.propTypes = {
   hideJobList: PropTypes.bool,
   orientation: PropTypes.string,
   animateJobList: PropTypes.bool,
-  currentPage: PropTypes.string,
 };
 List.defaultProps = {
   hideJobList: false,
@@ -527,6 +528,5 @@ List.defaultProps = {
   isMobile: null,
   orientation: null,
   animateJobList: null,
-  currentPage: null,
 };
 export default List;

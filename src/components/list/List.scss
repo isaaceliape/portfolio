@@ -21,7 +21,9 @@
         margin-top: 70vh;
         visibility: visible;
         height: auto;
-        transition: transform .5s ease .5s, background-color .5s ease;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: transform .5s ease .2s, opacity .5s ease .2s, background-color .5s ease;
       }
     }
     .content{
@@ -87,11 +89,6 @@
     &.isMobile{
       .List{
         .projectPage{
-          &.opened{
-            .wrapProjectImages{
-              
-            }
-          }
           .wrapProjectImages{
             width: 90vw;
           }
