@@ -21,7 +21,6 @@ section.home{
       }
     }
   }
-
   .projects{
     .project-list{
       font-size: 0;
@@ -109,12 +108,19 @@ section.home{
         .project-item{
           font-size: $small-size;
           display: block;
+          &.active{
+            color: gray;
+          }
         }
       }
     }
     .project-detail{
       .project-image{
+        transform: translate3d(-50%, -50%, 0);
         &.show{
+          width: 90vw;
+          height: auto;
+          transform: translate3d(-50%, -50%, 0);
           &.opened{
             width: 80vw;
             height: auto;

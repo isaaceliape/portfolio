@@ -73,6 +73,16 @@ body.App {
   }
 }
 
+.subtitle{
+  position: fixed;
+  bottom: 10vh;
+  left: 1rem;
+  font-size: inherit;
+  z-index: 2;
+  font-weight: 100;
+  display: none;
+}
+
 .marquee {
   display: block;
   position: relative;
@@ -194,6 +204,9 @@ body.App {
           }
         }
       }
+    }
+    .subtitle{
+      display: block;
     }
   }
 }

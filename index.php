@@ -26,6 +26,7 @@
   <body class="App">
     <div class="cursor">+</div>
     <h1 class="menu show">menu</h1>
+    <h1 class="subtitle">subtitle</h1>
     <nav class="nav">
       <h1 class="close">close</h1>
       <ul class="nav-list">
@@ -46,7 +47,7 @@
       </div>
       <div class="project-detail">
         <img src="assets/images/projects/flplny.png" alt="flplny" class="project-image" data-project-id="flplny">
-        <img src="assets/images/projects/fundacao_lemann.png" alt="fundacao lemann" class="project-image" data-project-id="fundacaolemann">
+        <img src="assets/images/projects/fundacao_lemann.png" alt="fundacao lemann" class="project-image" data-project-id="">
         <img src="assets/images/projects/getty_endless_possibilities.png" alt="getty endless possibilities" class="project-image" data-project-id="gettyendeless">
         <img src="assets/images/projects/hp_magic_works.png" alt="hp magic works" class="project-image" data-project-id="hpmagicwords">
         <div class="project-wrapper">

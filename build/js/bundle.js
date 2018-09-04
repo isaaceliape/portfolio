@@ -139,6 +139,8 @@ var _Cursor2 = _interopRequireDefault(_Cursor);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var App = function () {
@@ -150,26 +152,30 @@ var App = function () {
     this.el = document.body;
     this.currentPage = 'home', this.pages = {};
     this.isMobile = false;
-    this.projects = [{
+    this.pos = 0, this.projectsEl = 0, this.projects = [{
       description: 'the first book written by people who’ve never written before.',
       id: 'hpmagicwords',
       tecnologies: ['html5/css3', 'javascript', 'custom framework'],
-      link: 'https://www.hpmagicwords.com.br/tool/'
+      link: 'https://www.hpmagicwords.com.br/tool/',
+      subtitle: 'speech api'
     }, {
       description: 'creating protraits of famous people with gettyimages photos',
       id: 'gettyendeless',
       tecnologies: ['html5/css3', 'javascript', 'webGL'],
-      link: 'http://www.gettyendless.com/'
+      link: 'http://www.gettyendless.com/',
+      subtitle: 'webGL'
     }, {
       description: 'responsive semplice-based portfolio',
       id: 'flplny',
       tecnologies: ['html5/css3', 'javascript', 'animations', 'wordpress'],
-      link: 'http://flplny.com/'
+      link: 'http://flplny.com/',
+      subtitle: 'responsive'
     }, {
       description: 'cms and responsive website',
       id: 'fundacaolemann',
       tecnologies: ['html5/css3', 'javascript', 'wordpress'],
-      link: 'http://www.fundacaolemann.org.br/'
+      link: 'http://www.fundacaolemann.org.br/',
+      subtitle: 'responsive'
     }];
   }
 
@@ -178,11 +184,16 @@ var App = function () {
     value: function init() {
       console.log('INIT APP =]');
       this.isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
+      this.projectsEl = [].concat(_toConsumableArray(document.querySelectorAll('section.home .project-item[data-project-id]')));
+      this.projectsImagesEl = [].concat(_toConsumableArray(document.querySelectorAll('section.home .project-image')));
+      this.subtitle = document.querySelector('.subtitle');
       console.log(this.isMobile);
 
       this.onOrientationChange = this.onOrientationChange.bind(this);
 
-      window.addEventListener('deviceorientation', this.onOrientationChange, true);
+      if (this.isMobile) {
+        window.addEventListener('deviceorientation', this.onOrientationChange, true);
+      }
 
       this.menu = document.querySelector('.menu');
       this.pages = {
@@ -200,7 +211,41 @@ var App = function () {
   }, {
     key: 'onOrientationChange',
     value: function onOrientationChange(e) {
-      console.log(e);
+      var percent = 0;
+      var beta = Number(e.beta) - 20;
+      percent = (beta * 100 / 30).toFixed(0);
+      percent = percent <= 0 ? 0 : percent;
+      percent = percent >= 100 ? 100 : percent;
+      var fraction = 100 / this.projectsEl.length;
+
+      var pos = 0;
+      this.projectsEl.forEach(function (value, i) {
+        var start = fraction * i;
+        var end = fraction * (i + 1);
+        if (percent >= start && percent <= end) {
+          pos = i;
+        }
+      });
+      // pos = pos === 0 ? 1 : pos;
+
+      if (this.pos !== pos) {
+        this.pos = pos;
+        console.log({ pos: pos, percent: percent });
+        this.updateActiveProject();
+      }
+    }
+  }, {
+    key: 'updateActiveProject',
+    value: function updateActiveProject() {
+      this.projectsEl.forEach(function (el) {
+        el.classList.remove('active');
+      });
+      this.projectsImagesEl.forEach(function (el) {
+        el.classList.remove('show');
+      });
+      this.projectsEl[this.pos].classList.add('active');
+      this.projectsImagesEl[this.pos].classList.add('show');
+      this.subtitle.innerText = this.projects[this.pos].subtitle;
     }
   }]);
 
