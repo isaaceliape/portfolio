@@ -16,7 +16,9 @@ var Cursor = function () {
     this.app = app;
     this.el = app.el.querySelector('.cursor');
 
-    window.addEventListener('mousemove', this.onMouseMove.bind(this));
+    if (!this.isMobile) {
+      window.addEventListener('mousemove', this.onMouseMove.bind(this));
+    }
   }
 
   _createClass(Cursor, [{
@@ -144,10 +146,10 @@ var App = function () {
     _classCallCheck(this, App);
 
     // INITIAL RULES
-    this.isMobile = window.isMobile;
     this.currentPage = 'home';
     this.el = document.body;
     this.currentPage = 'home', this.pages = {};
+    this.isMobile = false;
     this.projects = [{
       description: 'the first book written by people who’ve never written before.',
       id: 'hpmagicwords',
@@ -175,6 +177,12 @@ var App = function () {
     key: 'init',
     value: function init() {
       console.log('INIT APP =]');
+      this.isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
+      console.log(this.isMobile);
+
+      this.onOrientationChange = this.onOrientationChange.bind(this);
+
+      window.addEventListener('deviceorientation', this.onOrientationChange, true);
 
       this.menu = document.querySelector('.menu');
       this.pages = {
@@ -188,6 +196,11 @@ var App = function () {
       this.Nav = new _Nav2.default(this);
 
       this.pages.home.show();
+    }
+  }, {
+    key: 'onOrientationChange',
+    value: function onOrientationChange(e) {
+      console.log(e);
     }
   }]);
 
@@ -219,27 +232,29 @@ var About = function () {
     this.closeBtn = this.el.querySelector('.close');
     this.marquee = this.el.querySelector('.call-to-action .marquee');
 
-    this.marquee.addEventListener('mouseover', function () {
-      _this.app.Cursor.el.classList.add('white');
-      _this.el.classList.add('black');
-    });
+    if (!this.app.isMobile) {
+      this.marquee.addEventListener('mouseover', function () {
+        _this.app.Cursor.el.classList.add('white');
+        _this.el.classList.add('black');
+      });
 
-    this.marquee.addEventListener('mouseleave', function () {
-      _this.app.Cursor.el.classList.remove('white');
-      _this.el.classList.remove('black');
-    });
+      this.marquee.addEventListener('mouseleave', function () {
+        _this.app.Cursor.el.classList.remove('white');
+        _this.el.classList.remove('black');
+      });
+
+      this.closeBtn.addEventListener('mouseover', function () {
+        _this.app.Cursor.el.classList.add('rotate');
+      });
+
+      this.closeBtn.addEventListener('mouseleave', function () {
+        _this.app.Cursor.el.classList.remove('rotate');
+      });
+    }
 
     this.closeBtn.addEventListener('click', function () {
       _this.app.Cursor.el.classList.add('rotate');
       _this.app.Nav.gotoPage('home');
-    });
-
-    this.closeBtn.addEventListener('mouseover', function () {
-      _this.app.Cursor.el.classList.add('rotate');
-    });
-
-    this.closeBtn.addEventListener('mouseleave', function () {
-      _this.app.Cursor.el.classList.remove('rotate');
     });
   }
 
@@ -367,13 +382,15 @@ var Home = function () {
     this.mouseOverProjectContent = this.mouseOverProjectContent.bind(this);
     this.mouseLeaveProjectContent = this.mouseLeaveProjectContent.bind(this);
 
-    this.closeProjectBtn.addEventListener('mouseover', function () {
-      _this.app.Cursor.el.classList.add('rotate');
-    });
+    if (!this.isMobile) {
+      this.closeProjectBtn.addEventListener('mouseover', function () {
+        _this.app.Cursor.el.classList.add('rotate');
+      });
 
-    this.closeProjectBtn.addEventListener('mouseleave', function () {
-      _this.app.Cursor.el.classList.remove('rotate');
-    });
+      this.closeProjectBtn.addEventListener('mouseleave', function () {
+        _this.app.Cursor.el.classList.remove('rotate');
+      });
+    }
 
     this.closeProjectBtn.addEventListener('click', this.closeProject);
     this.projectHitArea.addEventListener('click', this.closeProject);
@@ -436,9 +453,12 @@ var Home = function () {
 
       image.classList.add('opened');
       this.projectWrapper.classList.add('show');
+      this.projectContent.scrollTop = 0;
 
-      this.projectContent.addEventListener('mouseover', this.mouseOverProjectContent);
-      this.projectContent.addEventListener('mouseleave', this.mouseLeaveProjectContent);
+      if (!this.app.isMobile) {
+        this.projectContent.addEventListener('mouseover', this.mouseOverProjectContent);
+        this.projectContent.addEventListener('mouseleave', this.mouseLeaveProjectContent);
+      }
 
       this.removeListener();
     }

@@ -4,7 +4,9 @@ export default class Cursor {
     this.app = app;
     this.el = app.el.querySelector('.cursor');
 
-    window.addEventListener('mousemove', this.onMouseMove.bind(this));
+    if(!this.isMobile){
+      window.addEventListener('mousemove', this.onMouseMove.bind(this));
+    }
   }
 
   onMouseMove(event) {

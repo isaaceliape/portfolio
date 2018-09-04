@@ -1,4 +1,3 @@
-
 import Nav from './components/Nav';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -9,11 +8,11 @@ import Cursor from './components/Cursor';
 class App {
   constructor() {
     // INITIAL RULES
-    this.isMobile = window.isMobile;
     this.currentPage = 'home';
     this.el = document.body;
     this.currentPage = 'home',
     this.pages = {};
+    this.isMobile = false;
     this.projects = [
       {
         description: 'the first book written by people who’ve never written before.',
@@ -62,6 +61,12 @@ class App {
   
   init() {
     console.log('INIT APP =]');
+    this.isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
+    console.log(this.isMobile);
+    
+    this.onOrientationChange = this.onOrientationChange.bind(this);
+
+    window.addEventListener('deviceorientation', this.onOrientationChange , true);
     
     this.menu = document.querySelector('.menu');
     this.pages = {
@@ -75,6 +80,11 @@ class App {
     this.Nav = new Nav(this);
 
     this.pages.home.show();
+  }
+
+  onOrientationChange(e){
+    console.log(e);
+
   }
 }
 

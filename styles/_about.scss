@@ -69,4 +69,22 @@ section.about{
     right: 1rem;
     bottom: 0;
   }
+  @media only screen and (max-width: 600px) {
+    .portrait{
+      height: auto;
+      width: 70vw;
+      z-index: 0;
+      &:hover{
+        z-index: 0;
+      }
+    }
+    .call-to-action{
+      a.marquee{
+        &:hover{
+          animation-play-state: running;
+          color: #000;
+        }
+      }
+    }
+  }
 }

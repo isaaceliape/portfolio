@@ -1,11 +1,5 @@
 $red: #ff0028;
-$lightBlue: #41bcfd;
-$lightGray: #f2f1ed;
-$lightGray1: #6e6e6e;
-$lightGray2: #d7d1c0;
-$lightGray3: #727272;
-$darkGray: #222222;
-$darkBlue: #001c2c;
+
 @import url("//hello.myfonts.net/count/354675");
 
 @font-face {
@@ -18,7 +12,10 @@ $darkBlue: #001c2c;
 
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
-$default-fontsize: 73px;
+$default-size: 73px;
+$small-size: 40px;
+
+
 * {
   margin: 0;
   padding: 0;
@@ -48,7 +45,7 @@ button {
 body.App {
   font-family: 'ahamono';
   background-color: #fff;
-  font-size: $default-fontsize;
+  font-size: $default-size;
   line-height: 1.2em; 
 
   &.blockScroll {
@@ -90,7 +87,7 @@ body.App {
   position: fixed;
   left: 1rem;
   bottom: 0;
-  font-size: $default-fontsize;
+  font-size: inherit;
   font-weight: 100;
   z-index: 1;
   display: none;
@@ -103,7 +100,7 @@ body.App {
   position: fixed;
   left: 0;
   top: 0;
-  font-size: $default-fontsize;
+  font-size: inherit;
   font-weight: 100;
   transform: translate3d(-50%,-50%,0);
   transition: transform .2s ease;
@@ -122,7 +119,7 @@ body.App {
   position: fixed;
   left: 0;
   top: 0;
-  height: 73px;
+  height: inherit;
   width: 100%;
   height: 100%;
   background-color: #000;
@@ -136,18 +133,18 @@ body.App {
     position: absolute;
     left: 1rem;
     top: 1rem;
-    font-size: $default-fontsize;
+    font-size: inherit;
     font-weight: 100;
   }
   .nav-list{
     font-size: 0;
-    height: 73px;
+    height: inherit;
     width: 100vw;
     position: absolute;
     bottom: 1rem;
     left: 0;
     .nav-item{
-      font-size: $default-fontsize;
+      font-size: inherit;
       width: 33.33%;
       text-align: center;
       display: inline-block;
@@ -173,6 +170,31 @@ body.App {
   }
   100% {
     left: -100%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  body.App{
+    font-size: $small-size;
+    .cursor{
+      display: none;
+    }
+    .menu{
+      font-size: inherit;
+    }
+    .nav{
+      .nav-list{
+        height: auto;
+        .nav-item{
+          display: block;
+          padding-left: 1rem;
+          .link{
+            font-size: $small-size;
+            display: block;
+          }
+        }
+      }
+    }
   }
 }
 

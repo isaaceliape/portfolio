@@ -27,7 +27,7 @@ section.home{
       font-size: 0;
       padding: 1rem;
       .project-item{
-        font-size: $default-fontsize;
+        font-size: $default-size;
         list-style-type: none;
         display: inline-block;
         overflow: hidden;
@@ -66,9 +66,8 @@ section.home{
       pointer-events: all;
     }
     .close{
-      position: absolute;
-      right: 1rem;
-      bottom: 0;
+      display: block;
+      float: right;
     }
     .descrition,
     .project-link,
@@ -95,6 +94,32 @@ section.home{
         display: inline-block;
         &:hover{
           animation-play-state: paused;
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .marquee{
+      animation-duration: 0s;
+      left: 0;
+    }
+    .projects{
+      .project-list{
+        .project-item{
+          font-size: $small-size;
+          display: block;
+        }
+      }
+    }
+    .project-detail{
+      .project-image{
+        &.show{
+          &.opened{
+            width: 80vw;
+            height: auto;
+            transform: translate3d(-50%, -150%, 0) scale(1);
+          }
         }
       }
     }

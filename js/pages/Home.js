@@ -20,18 +20,21 @@ export default class Home {
     this.mouseOverProjectContent = this.mouseOverProjectContent.bind(this);
     this.mouseLeaveProjectContent = this.mouseLeaveProjectContent.bind(this);
 
-    this.closeProjectBtn.addEventListener('mouseover', () => {
-      this.app.Cursor.el.classList.add('rotate');
-    });
-
-    this.closeProjectBtn.addEventListener('mouseleave', () => {
-      this.app.Cursor.el.classList.remove('rotate');
-    });
+    if(!this.isMobile){
+      this.closeProjectBtn.addEventListener('mouseover', () => {
+        this.app.Cursor.el.classList.add('rotate');
+      });
+  
+      this.closeProjectBtn.addEventListener('mouseleave', () => {
+        this.app.Cursor.el.classList.remove('rotate');
+      });
+    }
 
     this.closeProjectBtn.addEventListener('click', this.closeProject);
     this.projectHitArea.addEventListener('click', this.closeProject);
 
     this.addListeners();
+
   }
 
   mouseOverProjectLink(event){
@@ -72,9 +75,12 @@ export default class Home {
 
     image.classList.add('opened');
     this.projectWrapper.classList.add('show');
+    this.projectContent.scrollTop = 0;
 
-    this.projectContent.addEventListener('mouseover', this.mouseOverProjectContent);
-    this.projectContent.addEventListener('mouseleave', this.mouseLeaveProjectContent);
+    if(!this.app.isMobile){
+      this.projectContent.addEventListener('mouseover', this.mouseOverProjectContent);
+      this.projectContent.addEventListener('mouseleave', this.mouseLeaveProjectContent);
+    }
 
     this.removeListener();
   }
