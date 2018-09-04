@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Awards from './pages/Awards';
 import Services from './pages/Services';
+import Cursor from './components/Cursor';
 
 class App {
   constructor() {
@@ -11,32 +12,69 @@ class App {
     this.isMobile = window.isMobile;
     this.currentPage = 'home';
     this.el = document.body;
-    this.data = {
-      currentPage: 'home',
-      pages: {
-        home: new Home(this),
-        awards: new Awards(this),
-        about: new About(this),
-        services: new Services(this),
-      }
-    };
+    this.currentPage = 'home',
+    this.pages = {};
+    this.projects = [
+      {
+        description: 'the first book written by people who’ve never written before.',
+        id: 'hpmagicwords',
+        tecnologies: [
+          'html5/css3',
+          'javascript',
+          'custom framework',
+        ],
+        link: 'https://www.hpmagicwords.com.br/tool/',
+      },
+      {
+        description: 'creating protraits of famous people with gettyimages photos',
+        id: 'gettyendeless',
+        tecnologies: [
+          'html5/css3',
+          'javascript',
+          'webGL',
+        ],
+        link: 'http://www.gettyendless.com/',
+      },
+      {
+        description: 'responsive semplice-based portfolio',
+        id: 'flplny',
+        tecnologies: [
+          'html5/css3',
+          'javascript',
+          'animations',
+          'wordpress',
+        ],
+        link: 'http://flplny.com/',
+      },
+      {
+        description: 'cms and responsive website',
+        id: 'fundacaolemann',
+        tecnologies: [
+          'html5/css3',
+          'javascript',
+          'wordpress',
+        ],
+        link: 'http://www.fundacaolemann.org.br/',
+      },
+    ];
 
-    this.data.pages.home.show();
   }
-
+  
   init() {
     console.log('INIT APP =]');
+    
     this.menu = document.querySelector('.menu');
-    this.cursor = document.querySelector('.cursor');
-
+    this.pages = {
+      home: new Home(this),
+      awards: new Awards(this),
+      about: new About(this),
+      services: new Services(this),
+    };
+    
+    this.Cursor = new Cursor(this);
     this.Nav = new Nav(this);
 
-    window.addEventListener('mousemove', this.onMouseMove.bind(this));
-  }
-  onMouseMove(event) {
-    const { pageX: x, pageY: y } = event;
-    this.cursor.style.left = `${x}px`;
-    this.cursor.style.top = `${y}px`;
+    this.pages.home.show();
   }
 }
 

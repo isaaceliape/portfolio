@@ -45,10 +45,26 @@
         </ul>
       </div>
       <div class="project-detail">
-        <img src="assets/images/projects/flplny.png" alt="flplny" class="project-image" data-project-id="hpmagicwords">
-        <img src="assets/images/projects/fundacao_lemann.png" alt="fundacao lemann" class="project-image" data-project-id="gettyendeless">
-        <img src="assets/images/projects/getty_endless_possibilities.png" alt="getty endless possibilities" class="project-image" data-project-id="flplny">
-        <img src="assets/images/projects/hp_magic_works.png" alt="hp magic works" class="project-image" data-project-id="fundacaolemann">
+        <img src="assets/images/projects/flplny.png" alt="flplny" class="project-image" data-project-id="flplny">
+        <img src="assets/images/projects/fundacao_lemann.png" alt="fundacao lemann" class="project-image" data-project-id="fundacaolemann">
+        <img src="assets/images/projects/getty_endless_possibilities.png" alt="getty endless possibilities" class="project-image" data-project-id="gettyendeless">
+        <img src="assets/images/projects/hp_magic_works.png" alt="hp magic works" class="project-image" data-project-id="hpmagicwords">
+        <div class="project-wrapper">
+          <div class="project-hit-area"></div>
+          <div class="project-content">
+            <p class="description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda, animi?</p>
+            <ul class="list-itens">
+              <li>Lorem, ipsum.</li>
+              <li>Lorem, ipsum.</li>
+              <li>Lorem, ipsum.</li>
+              <li>Lorem, ipsum.</li>
+            </ul>
+            <p class="project-link">
+              <a href="#" class="marquee" target="_blank">launch website</a>
+            </p>
+            <div class="close">close</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -74,6 +90,7 @@
         <li class="services-list-item">javascript</li>
         <li class="services-list-item">cms</li>
       </ul>
+      <div class="close">close</div>
     </section>
 
     <section class="page awards">
@@ -86,6 +103,7 @@
         <li class="awards-list-item">1 site inspire</li>
         <li class="awards-list-item">2 fwa</li>
       </ul>
+      <div class="close">close</div>
     </section>
 
     <script src="build/js/bundle.js"></script>

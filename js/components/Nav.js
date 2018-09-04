@@ -2,7 +2,7 @@
 export default class Navegation {
   constructor(app) {
     this.app = app;
-    this.el = this.app.el.querySelector('.nav');
+    this.el = app.el.querySelector('.nav');
     this.btnClose = this.el.querySelector('.close');
     this.links = [...this.el.querySelectorAll('.link')];
 
@@ -12,40 +12,33 @@ export default class Navegation {
         this.gotoPage(pageId);
       });
     });
-    this.app.menu.addEventListener('click', this.open.bind(this));
 
-    this.btnClose.addEventListener('click', this.close.bind(this));
+    this.app.menu.addEventListener('click', this.show.bind(this));
+
+    this.btnClose.addEventListener('click', this.hide.bind(this));
     this.btnClose.addEventListener('mouseover', () => {
-      this.app.cursor.classList.add('rotate');
+      this.app.Cursor.el.classList.add('rotate');
     });
 
     this.btnClose.addEventListener('mouseleave', () => {
-      this.app.cursor.classList.remove('rotate');
+      this.app.Cursor.el.classList.remove('rotate');
     });
   }
 
   gotoPage(pageId){
-    this.close();
-    this.app.data.pages[this.app.data.currentPage].hide();
-    this.app.data.currentPage = pageId;
-    this.app.data.pages[this.app.data.currentPage].show();
-  }
-  
-  open() {
-    console.log('nav open');
-    this.el.classList.add('show');
-    this.app.cursor.classList.add('white');
-  }
-  
-  close() {
-    console.log('nav close');
-    this.app.cursor.classList.remove('white');
-    this.el.classList.remove('show');
-  }
-
-  hide() {
+    this.hide();
+    this.app.pages[this.app.currentPage].hide();
+    this.app.currentPage = pageId;
+    this.app.pages[this.app.currentPage].show();
   }
 
   show() {
+    this.el.classList.add('show');
+    this.app.Cursor.el.classList.add('white');
+  }
+  
+  hide() {
+    this.app.Cursor.el.classList.remove('white');
+    this.el.classList.remove('show');
   }
 }

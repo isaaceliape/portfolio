@@ -1,0 +1,102 @@
+section.home{
+  .project-detail{
+    .project-image{
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate3d(-50%,-50%,0) scale(0.7);
+      height: 70vh;
+      width: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .2s ease;
+      filter: grayscale(100%);
+      &.show{
+        transform: translate3d(-50%,-50%,0) scale(1);
+        opacity: 0.5;
+        &.opened{
+          transition: all .5s ease;
+          transform: translate3d(-50%,-60%,0) scale(1.1);
+        }
+      }
+    }
+  }
+
+  .projects{
+    .project-list{
+      font-size: 0;
+      padding: 1rem;
+      .project-item{
+        font-size: $default-fontsize;
+        list-style-type: none;
+        display: inline-block;
+        overflow: hidden;
+        margin-right: 1rem;
+        vertical-align: top;
+        position: relative;
+        &:first-child{
+          pointer-events: none;
+        }
+        &.white{
+          color: #fff;
+          z-index: 2;
+        }
+        &:hover{
+          .marquee{
+            animation-duration: 0s;
+            left: 0;
+          }
+        }
+      }
+    }
+  }
+  .project-wrapper{
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    transform: translateY(100%);
+    transition: all .5s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3;
+    &.show{
+      transform: translateY(0%);
+      opacity: 1;
+      pointer-events: all;
+    }
+    .close{
+      position: absolute;
+      right: 1rem;
+      bottom: 0;
+    }
+    .descrition,
+    .project-link,
+    .list-itens{
+      margin-top: 5rem;
+      display: block;
+    }
+    
+    .project-hit-area{
+      height: 40vh;
+    }
+    .project-content{
+      box-sizing: border-box;
+      width: 100vw;
+      height: 60vh;
+      overflow: auto;
+      background-color: #fff;
+      padding: 1rem;
+    }
+    .project-link{
+      display: block;
+      margin-bottom: 10rem;
+      a.marquee{
+        display: inline-block;
+        &:hover{
+          animation-play-state: paused;
+        }
+      }
+    }
+  }
+}
