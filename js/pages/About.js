@@ -5,6 +5,11 @@ export default class About {
     this.el = this.app.el.querySelector('section.about');
     this.closeBtn = this.el.querySelector('.close');
     this.marquee = this.el.querySelector('.call-to-action .marquee');
+    this.portrait = this.el.querySelector('.portrait');
+    this.timer = '';
+
+    this.hide = this.hide.bind(this);
+    this.showPortrait = this.showPortrait.bind(this);
 
     if(!this.app.isMobile){
       this.marquee.addEventListener('mouseover', () => {
@@ -26,23 +31,22 @@ export default class About {
       });
     }
 
-    this.closeBtn.addEventListener('click', () => {
-      this.app.Cursor.el.classList.add('rotate');
-      this.app.Nav.gotoPage('home');
-    });
+    this.closeBtn.addEventListener('click', this.hide);
 
+  }
+  showPortrait(){
+    this.portrait.classList.add('show');
   }
   show() {
     this.el.classList.add('show');
+    clearTimeout(this.timer);
+    this.timer = setTimeout(this.showPortrait, 1500);
   }
-
+  
   hide() {
     this.el.classList.remove('show');
-  }
-
-  open() {
-  }
-
-  close() {
+    this.portrait.classList.remove('show');
+    this.app.Cursor.el.classList.remove('rotate');
+    this.app.Nav.gotoPage('home');
   }
 }

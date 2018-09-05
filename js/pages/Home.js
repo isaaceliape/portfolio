@@ -93,18 +93,17 @@ export default class Home {
     this.projectImages.forEach((img) => {
       img.classList.remove('show');
     });
-    console.log('onOrientationChange');
     
     const image = this.projectImages.find(x => x.dataset.projectId === projectId);
     image.classList.add('show');
-    this.el.classList.add('black');
+    this.app.el.classList.add('black');
     this.app.Cursor.el.classList.add('white');
     event.currentTarget.classList.add('white');
   }
   
   mouseLeaveProjectLink(event){
     event.currentTarget.classList.remove('white');
-    this.el.classList.remove('black');
+    this.app.el.classList.remove('black');
     this.app.Cursor.el.classList.remove('white');
     this.projectImages.forEach((img) => {
       img.classList.remove('show');
@@ -156,7 +155,7 @@ export default class Home {
     image.classList.remove('opened');
     image.classList.remove('show');
     currentProjectItem.classList.remove('white');
-    this.el.classList.remove('black');
+    this.app.el.classList.remove('black');
     this.projectWrapper.classList.remove('show');
     this.app.Cursor.el.classList.remove('white');
     this.app.menu.classList.add('show');

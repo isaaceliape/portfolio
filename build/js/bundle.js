@@ -60,12 +60,34 @@ var Navegation = function () {
     this.el = app.el.querySelector('.nav');
     this.btnClose = this.el.querySelector('.close');
     this.links = [].concat(_toConsumableArray(this.el.querySelectorAll('.link')));
+    this.icons = [].concat(_toConsumableArray(this.el.querySelectorAll('.icon')));
+
+    this.onMouseOverLink = this.onMouseOverLink.bind(this);
+    this.onMouseLeaveLink = this.onMouseLeaveLink.bind(this);
+    this.hide = this.hide.bind(this);
+    this.hide = this.hide.bind(this);
 
     this.links.forEach(function (el) {
       el.addEventListener('click', function (event) {
-        var pageId = event.currentTarget.dataset.pageId;
+        var _event$currentTarget$ = event.currentTarget.dataset,
+            pageId = _event$currentTarget$.pageId,
+            iconId = _event$currentTarget$.iconId;
 
+        var currentIcon = _this.icons.find(function (x) {
+          return x.classList.contains(iconId);
+        });
+        currentIcon.classList.add('expand');
+        _this.app.Cursor.el.classList.remove('white');
+        _this.el.classList.add('hideLinks');
         _this.gotoPage(pageId);
+
+        setTimeout(function () {
+          currentIcon.classList.remove('expand');
+          _this.app.Cursor.el.classList.add('white');
+          _this.app.el.classList.remove('black');
+          _this.el.classList.remove('hideLinks');
+          _this.hide();
+        }, 1500);
       });
     });
 
@@ -82,9 +104,25 @@ var Navegation = function () {
   }
 
   _createClass(Navegation, [{
+    key: 'onMouseOverLink',
+    value: function onMouseOverLink(e) {
+      var iconId = e.currentTarget.dataset.iconId;
+
+      var currentIcon = this.icons.find(function (x) {
+        return x.classList.contains(iconId);
+      });
+      currentIcon.classList.add('active');
+    }
+  }, {
+    key: 'onMouseLeaveLink',
+    value: function onMouseLeaveLink() {
+      this.icons.forEach(function (el) {
+        el.classList.remove('active');
+      });
+    }
+  }, {
     key: 'gotoPage',
     value: function gotoPage(pageId) {
-      this.hide();
       this.app.pages[this.app.currentPage].hide();
       this.app.currentPage = pageId;
       this.app.pages[this.app.currentPage].show();
@@ -92,14 +130,32 @@ var Navegation = function () {
   }, {
     key: 'show',
     value: function show() {
+      var _this2 = this;
+
+      this.app.pages[this.app.currentPage].hide();
+      this.app.el.classList.add('black');
       this.el.classList.add('show');
       this.app.Cursor.el.classList.add('white');
+
+      this.links.forEach(function (el) {
+        el.addEventListener('mouseover', _this2.onMouseOverLink);
+        el.addEventListener('mouseleave', _this2.onMouseLeaveLink);
+      });
     }
   }, {
     key: 'hide',
     value: function hide() {
+      var _this3 = this;
+
+      this.app.pages[this.app.currentPage].show();
+      this.app.el.classList.remove('black');
       this.app.Cursor.el.classList.remove('white');
       this.el.classList.remove('show');
+
+      this.links.forEach(function (el) {
+        el.removeEventListener('mouseover', _this3.onMouseOverLink);
+        el.removeEventListener('mouseleave', _this3.onMouseLeaveLink);
+      });
     }
   }]);
 
@@ -225,6 +281,11 @@ var About = function () {
     this.el = this.app.el.querySelector('section.about');
     this.closeBtn = this.el.querySelector('.close');
     this.marquee = this.el.querySelector('.call-to-action .marquee');
+    this.portrait = this.el.querySelector('.portrait');
+    this.timer = '';
+
+    this.hide = this.hide.bind(this);
+    this.showPortrait = this.showPortrait.bind(this);
 
     if (!this.app.isMobile) {
       this.marquee.addEventListener('mouseover', function () {
@@ -246,28 +307,29 @@ var About = function () {
       });
     }
 
-    this.closeBtn.addEventListener('click', function () {
-      _this.app.Cursor.el.classList.add('rotate');
-      _this.app.Nav.gotoPage('home');
-    });
+    this.closeBtn.addEventListener('click', this.hide);
   }
 
   _createClass(About, [{
+    key: 'showPortrait',
+    value: function showPortrait() {
+      this.portrait.classList.add('show');
+    }
+  }, {
     key: 'show',
     value: function show() {
       this.el.classList.add('show');
+      clearTimeout(this.timer);
+      this.timer = setTimeout(this.showPortrait, 1500);
     }
   }, {
     key: 'hide',
     value: function hide() {
       this.el.classList.remove('show');
+      this.portrait.classList.remove('show');
+      this.app.Cursor.el.classList.remove('rotate');
+      this.app.Nav.gotoPage('home');
     }
-  }, {
-    key: 'open',
-    value: function open() {}
-  }, {
-    key: 'close',
-    value: function close() {}
   }]);
 
   return About;
@@ -455,13 +517,12 @@ var Home = function () {
       this.projectImages.forEach(function (img) {
         img.classList.remove('show');
       });
-      console.log('onOrientationChange');
 
       var image = this.projectImages.find(function (x) {
         return x.dataset.projectId === projectId;
       });
       image.classList.add('show');
-      this.el.classList.add('black');
+      this.app.el.classList.add('black');
       this.app.Cursor.el.classList.add('white');
       event.currentTarget.classList.add('white');
     }
@@ -469,7 +530,7 @@ var Home = function () {
     key: 'mouseLeaveProjectLink',
     value: function mouseLeaveProjectLink(event) {
       event.currentTarget.classList.remove('white');
-      this.el.classList.remove('black');
+      this.app.el.classList.remove('black');
       this.app.Cursor.el.classList.remove('white');
       this.projectImages.forEach(function (img) {
         img.classList.remove('show');
@@ -533,7 +594,7 @@ var Home = function () {
       image.classList.remove('opened');
       image.classList.remove('show');
       currentProjectItem.classList.remove('white');
-      this.el.classList.remove('black');
+      this.app.el.classList.remove('black');
       this.projectWrapper.classList.remove('show');
       this.app.Cursor.el.classList.remove('white');
       this.app.menu.classList.add('show');

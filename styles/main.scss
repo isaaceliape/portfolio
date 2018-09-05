@@ -63,15 +63,14 @@ body.App {
   left: 0;
   top: 0;
   display: none;
-  z-index: 0;
-  background-color: #fff;
   box-sizing: border-box;
-  transition: background-color .5s ease;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 2;
+  display: block;
   &.show{
-     display: block;
-  }
-  &.black{
-    background-color: #000;
+    pointer-events: all;
+    opacity: 1;
   }
 }
 
@@ -101,7 +100,7 @@ body.App {
   bottom: 0;
   font-size: inherit;
   font-weight: 100;
-  z-index: 1;
+  z-index: 3;
   display: none;
   &.show{
     display: block;
@@ -131,13 +130,66 @@ body.App {
   position: fixed;
   left: 0;
   top: 0;
-  height: inherit;
   width: 100%;
   height: 100%;
-  background-color: #000;
   display: none;
-  z-index: 2;
+  z-index: 0;
   color: #fff;
+  &.hideLinks{
+    .close{
+      display: none;
+    }
+    .nav-list{
+      .nav-item{
+        display: none;
+      }
+    }
+  }
+  .icon{
+    position: fixed;
+    backface-visibility: hidden;
+    opacity: 0;
+    &.active{
+      opacity: 1;
+    }
+    &.circle{
+      left: 5rem;
+      top: 100vh;
+      transform: translate3d(0,-140%,0) scale(1.5);
+      &.expand{
+        left: 50%;
+        top: 50%;
+        opacity: 1;
+        transform: translate3d(-50%,-50%,0) scale(30);
+        transition: transform 2s ease, left 1.5s ease, top 1.5s ease;
+      }
+    }
+    &.square{
+      top: 100vh;
+      left: 50%;
+      transform: translate3d(-50%,-140%,0) scale(1.4);
+      &.expand{
+        top: 50%;
+        left: 50%;
+        opacity: 1;
+        transform: translate3d(-50%,-50%,0) scale(30);
+        transition: transform 2s ease, left 1.5s ease, top 1.5s ease;
+      }
+    }
+    &.triangle{
+      top: 100vh;
+      left: 100vw;
+      transform: translate3d(-280%,-150%,0) scale(1.4);
+      &.expand{
+        top: 50%;
+        left: 50%;
+        opacity: 1;
+        transform: translate3d(-50%,-50%,0) scale(70);
+        transition: transform 2s ease, left 1.5s ease, top 1.5s ease;
+      }
+    }
+  }
+
   &.show{
     display: block;
   }
@@ -163,6 +215,10 @@ body.App {
       box-sizing: border-box;
       .link{
         cursor: pointer;
+        position: relative;
+        &:hover{
+          opacity: 0;
+        }
       }
       &:first-child{
         text-align: left;

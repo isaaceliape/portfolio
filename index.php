@@ -29,10 +29,15 @@
     <h1 class="subtitle"></h1>
     <nav class="nav">
       <h1 class="close">close</h1>
+
+      <img src="assets/images/Oval.svg" class="icon circle"/>
+      <img src="assets/images/Rectangle.svg" class="icon square"/>
+      <img src="assets/images/Triangle.svg" class="icon triangle"/>
+
       <ul class="nav-list">
-        <li class="nav-item"><span class="link" data-page-id="about">about</span></li>
-        <li class="nav-item"><span class="link" data-page-id="services">services</span></li>
-        <li class="nav-item"><span class="link" data-page-id="awards">awards</span></li>
+        <li class="nav-item"><span class="link" data-page-id="about"data-icon-id="circle">about</span></li>
+        <li class="nav-item"><span class="link" data-page-id="services"data-icon-id="square">services</span></li>
+        <li class="nav-item"><span class="link" data-page-id="awards"data-icon-id="triangle">awards</span></li>
       </ul>
     </nav>
     <section class="page home">
@@ -97,7 +102,7 @@
     <section class="page awards">
       <ul class="awards-list">
         <li class="awards-list-item">2 cannes lions</li>
-        <li class="awards-list-item">3 awwards</li>
+        <li class="awards-list-item">3 awwwards</li>
         <li class="awards-list-item">1 css awards</li>
         <li class="awards-list-item">1 css light</li>
         <li class="awards-list-item">1 css nectar</li>

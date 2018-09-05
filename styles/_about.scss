@@ -23,6 +23,7 @@ section.about{
       &:hover{
         animation-play-state: paused;
         color: #fff;
+        pointer-events: none;
       }
     }
     .marquee{
@@ -37,8 +38,14 @@ section.about{
     position: fixed;
     left: 50%;
     top: 50%;
-    transform: translate3d(-50%,-50%,0);
+    transform: translate3d(-50%,-40%,0);
     z-index: 0;
+    opacity: 0;
+    &.show{
+      transition: all .7s ease;
+      opacity: 1;
+      transform: translate3d(-50%,-50%,0);
+    }
     &:hover{
       z-index: 2;
     }
