@@ -84,7 +84,7 @@ export default class Home {
       this.pos = pos;
       this.updateActiveProject();
       clearTimeout(this.timer);
-      this.timer = setTimeout(this.resetActiveProject, 2000);
+      // this.timer = setTimeout(this.resetActiveProject, 2000);
     }
   }
   
@@ -146,7 +146,7 @@ export default class Home {
   
   closeProject(){
     window.addEventListener('deviceorientation', this.onOrientationChange);
-    
+
     this.removeListener();
     this.projectContent.removeEventListener('mouseover', this.mouseOverProjectContent);
     this.projectContent.removeEventListener('mouseleave', this.mouseLeaveProjectContent);

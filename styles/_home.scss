@@ -110,6 +110,7 @@ section.home{
           display: block;
           &.active{
             color: #fff;
+            z-index: 1;
           }
         }
       }
