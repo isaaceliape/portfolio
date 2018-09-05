@@ -84,7 +84,7 @@ export default class Home {
       this.pos = pos;
       this.updateActiveProject();
       clearTimeout(this.timer);
-      // this.timer = setTimeout(this.resetActiveProject, 2000);
+      this.timer = setTimeout(this.resetActiveProject, 2000);
     }
   }
   
