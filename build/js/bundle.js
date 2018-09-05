@@ -139,8 +139,6 @@ var _Cursor2 = _interopRequireDefault(_Cursor);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var App = function () {
@@ -184,16 +182,6 @@ var App = function () {
     value: function init() {
       console.log('INIT APP =]');
       this.isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
-      this.projectsEl = [].concat(_toConsumableArray(document.querySelectorAll('section.home .project-item[data-project-id]')));
-      this.projectsImagesEl = [].concat(_toConsumableArray(document.querySelectorAll('section.home .project-image')));
-      this.subtitle = document.querySelector('.subtitle');
-      console.log(this.isMobile);
-
-      this.onOrientationChange = this.onOrientationChange.bind(this);
-
-      if (this.isMobile) {
-        window.addEventListener('deviceorientation', this.onOrientationChange, true);
-      }
 
       this.menu = document.querySelector('.menu');
       this.pages = {
@@ -207,45 +195,6 @@ var App = function () {
       this.Nav = new _Nav2.default(this);
 
       this.pages.home.show();
-    }
-  }, {
-    key: 'onOrientationChange',
-    value: function onOrientationChange(e) {
-      var percent = 0;
-      var beta = Number(e.beta) - 20;
-      percent = (beta * 100 / 30).toFixed(0);
-      percent = percent <= 0 ? 0 : percent;
-      percent = percent >= 100 ? 100 : percent;
-      var fraction = 100 / this.projectsEl.length;
-
-      var pos = 0;
-      this.projectsEl.forEach(function (value, i) {
-        var start = fraction * i;
-        var end = fraction * (i + 1);
-        if (percent >= start && percent <= end) {
-          pos = i;
-        }
-      });
-      // pos = pos === 0 ? 1 : pos;
-
-      if (this.pos !== pos) {
-        this.pos = pos;
-        console.log({ pos: pos, percent: percent });
-        this.updateActiveProject();
-      }
-    }
-  }, {
-    key: 'updateActiveProject',
-    value: function updateActiveProject() {
-      this.projectsEl.forEach(function (el) {
-        el.classList.remove('active');
-      });
-      this.projectsImagesEl.forEach(function (el) {
-        el.classList.remove('show');
-      });
-      this.projectsEl[this.pos].classList.add('active');
-      this.projectsImagesEl[this.pos].classList.add('show');
-      this.subtitle.innerText = this.projects[this.pos].subtitle;
     }
   }]);
 
@@ -418,6 +367,7 @@ var Home = function () {
     this.projectContent = this.projectWrapper.querySelector('.project-content');
     this.projectItens = [].concat(_toConsumableArray(this.el.querySelectorAll('.project-item[data-project-id]')));
     this.projectImages = [].concat(_toConsumableArray(this.el.querySelectorAll('.project-image')));
+    this.subtitle = this.app.el.querySelector('.subtitle');
 
     this.openProject = this.openProject.bind(this);
     this.addListeners = this.addListeners.bind(this);
@@ -426,8 +376,12 @@ var Home = function () {
     this.mouseLeaveProjectLink = this.mouseLeaveProjectLink.bind(this);
     this.mouseOverProjectContent = this.mouseOverProjectContent.bind(this);
     this.mouseLeaveProjectContent = this.mouseLeaveProjectContent.bind(this);
+    this.onOrientationChange = this.onOrientationChange.bind(this);
+    this.updateActiveProject = this.updateActiveProject.bind(this);
+    this.resetActiveProject = this.resetActiveProject.bind(this);
+    this.timer = '';
 
-    if (!this.isMobile) {
+    if (!this.app.isMobile) {
       this.closeProjectBtn.addEventListener('mouseover', function () {
         _this.app.Cursor.el.classList.add('rotate');
       });
@@ -435,15 +389,65 @@ var Home = function () {
       this.closeProjectBtn.addEventListener('mouseleave', function () {
         _this.app.Cursor.el.classList.remove('rotate');
       });
+    } else {
+      window.addEventListener('deviceorientation', this.onOrientationChange);
     }
 
     this.closeProjectBtn.addEventListener('click', this.closeProject);
     this.projectHitArea.addEventListener('click', this.closeProject);
-
     this.addListeners();
   }
 
   _createClass(Home, [{
+    key: 'resetActiveProject',
+    value: function resetActiveProject() {
+      this.el.classList.remove('black');
+      for (var i = 0; i < this.projectItens.length; i += 1) {
+        this.projectItens[i].classList.remove('active');
+        this.projectImages[i].classList.remove('show');
+      }
+      this.subtitle.innerText = '';
+    }
+  }, {
+    key: 'updateActiveProject',
+    value: function updateActiveProject() {
+      this.el.classList.add('black');
+      for (var i = 0; i < this.projectItens.length; i += 1) {
+        this.projectItens[i].classList.remove('active');
+        this.projectImages[i].classList.remove('show');
+      }
+      this.projectItens[this.pos].classList.add('active');
+      this.projectImages[this.pos].classList.add('show');
+      this.subtitle.innerText = this.app.projects[this.pos].subtitle;
+    }
+  }, {
+    key: 'onOrientationChange',
+    value: function onOrientationChange(e) {
+      var percent = 0;
+      var beta = Number(e.beta) - 20;
+      percent = (beta * 100 / 30).toFixed(0);
+      percent = percent <= 0 ? 0 : percent;
+      percent = percent >= 100 ? 100 : percent;
+      var fraction = 100 / this.projectItens.length;
+
+      var pos = 0;
+      this.projectItens.forEach(function (value, i) {
+        var start = fraction * i;
+        var end = fraction * (i + 1);
+        if (percent >= start && percent <= end) {
+          pos = i;
+        }
+      });
+      // pos = pos === 0 ? 1 : pos;
+
+      if (this.pos !== pos) {
+        this.pos = pos;
+        this.updateActiveProject();
+        clearTimeout(this.timer);
+        this.timer = setTimeout(this.resetActiveProject, 2000);
+      }
+    }
+  }, {
     key: 'mouseOverProjectLink',
     value: function mouseOverProjectLink(event) {
       var projectId = event.currentTarget.dataset.projectId;
@@ -451,10 +455,11 @@ var Home = function () {
       this.projectImages.forEach(function (img) {
         img.classList.remove('show');
       });
+      console.log('onOrientationChange');
+
       var image = this.projectImages.find(function (x) {
         return x.dataset.projectId === projectId;
       });
-
       image.classList.add('show');
       this.el.classList.add('black');
       this.app.Cursor.el.classList.add('white');
@@ -473,6 +478,13 @@ var Home = function () {
   }, {
     key: 'openProject',
     value: function openProject(event) {
+      clearTimeout(this.timer);
+      window.removeEventListener('deviceorientation', this.onOrientationChange);
+      this.subtitle.innerText = '';
+      for (var i = 0; i < this.projectItens.length; i += 1) {
+        this.projectItens[i].classList.remove('active');
+      }
+
       var projectId = event.currentTarget.dataset.projectId;
 
       var image = this.projectImages.find(function (x) {
@@ -510,6 +522,8 @@ var Home = function () {
   }, {
     key: 'closeProject',
     value: function closeProject() {
+      window.addEventListener('deviceorientation', this.onOrientationChange);
+
       this.removeListener();
       this.projectContent.removeEventListener('mouseover', this.mouseOverProjectContent);
       this.projectContent.removeEventListener('mouseleave', this.mouseLeaveProjectContent);
@@ -541,9 +555,9 @@ var Home = function () {
       var _this2 = this;
 
       this.projectItens.forEach(function (el) {
-        el.addEventListener('mouseover', _this2.mouseOverProjectLink, true);
-        el.addEventListener('mouseleave', _this2.mouseLeaveProjectLink, true);
-        el.addEventListener('click', _this2.openProject, true);
+        el.addEventListener('mouseover', _this2.mouseOverProjectLink);
+        el.addEventListener('mouseleave', _this2.mouseLeaveProjectLink);
+        el.addEventListener('click', _this2.openProject);
       });
     }
   }, {
@@ -552,9 +566,9 @@ var Home = function () {
       var _this3 = this;
 
       this.projectItens.forEach(function (el) {
-        el.removeEventListener('mouseover', _this3.mouseOverProjectLink, true);
-        el.removeEventListener('mouseleave', _this3.mouseLeaveProjectLink, true);
-        el.removeEventListener('click', _this3.openProject, true);
+        el.removeEventListener('mouseover', _this3.mouseOverProjectLink);
+        el.removeEventListener('mouseleave', _this3.mouseLeaveProjectLink);
+        el.removeEventListener('click', _this3.openProject);
       });
     }
   }, {

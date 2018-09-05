@@ -68,16 +68,6 @@ class App {
   init() {
     console.log('INIT APP =]');
     this.isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
-    this.projectsEl = [...document.querySelectorAll('section.home .project-item[data-project-id]')];
-    this.projectsImagesEl = [...document.querySelectorAll('section.home .project-image')];
-    this.subtitle = document.querySelector('.subtitle');
-    console.log(this.isMobile);
-    
-    this.onOrientationChange = this.onOrientationChange.bind(this);
-
-    if(this.isMobile){
-      window.addEventListener('deviceorientation', this.onOrientationChange , true);
-    }
     
     this.menu = document.querySelector('.menu');
     this.pages = {
@@ -91,43 +81,6 @@ class App {
     this.Nav = new Nav(this);
 
     this.pages.home.show();
-  }
-
-  onOrientationChange(e){
-    let percent = 0;
-    const beta = Number(e.beta) - 20;
-    percent = ((beta * 100) / 30).toFixed(0);
-    percent = percent <= 0 ? 0 : percent;
-    percent = percent >= 100 ? 100 : percent;
-    const fraction = 100 / this.projectsEl.length;
-
-    let pos = 0;
-    this.projectsEl.forEach((value, i) => {
-      const start = fraction * i;
-      const end = fraction * (i + 1);
-      if (percent >= start && percent <= end) {
-        pos = i;
-      }
-    });
-    // pos = pos === 0 ? 1 : pos;
-
-    if(this.pos !== pos){
-      this.pos = pos;
-      console.log({pos, percent});
-      this.updateActiveProject();
-    }
-  }
-
-  updateActiveProject(){
-    this.projectsEl.forEach((el) => {
-      el.classList.remove('active');
-    });
-    this.projectsImagesEl.forEach((el) => {
-      el.classList.remove('show');
-    });
-    this.projectsEl[this.pos].classList.add('active');
-    this.projectsImagesEl[this.pos].classList.add('show');
-    this.subtitle.innerText = this.projects[this.pos].subtitle;
   }
 }
 

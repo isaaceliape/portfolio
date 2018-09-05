@@ -11,6 +11,7 @@ export default class Home {
     this.projectContent = this.projectWrapper.querySelector('.project-content');
     this.projectItens = [...this.el.querySelectorAll('.project-item[data-project-id]')];
     this.projectImages = [...this.el.querySelectorAll('.project-image')];
+    this.subtitle = this.app.el.querySelector('.subtitle');
 
     this.openProject = this.openProject.bind(this);
     this.addListeners = this.addListeners.bind(this);
@@ -19,8 +20,12 @@ export default class Home {
     this.mouseLeaveProjectLink = this.mouseLeaveProjectLink.bind(this);
     this.mouseOverProjectContent = this.mouseOverProjectContent.bind(this);
     this.mouseLeaveProjectContent = this.mouseLeaveProjectContent.bind(this);
+    this.onOrientationChange = this.onOrientationChange.bind(this);
+    this.updateActiveProject = this.updateActiveProject.bind(this);
+    this.resetActiveProject = this.resetActiveProject.bind(this);
+    this.timer = '';
 
-    if(!this.isMobile){
+    if (!this.app.isMobile) {
       this.closeProjectBtn.addEventListener('mouseover', () => {
         this.app.Cursor.el.classList.add('rotate');
       });
@@ -28,22 +33,69 @@ export default class Home {
       this.closeProjectBtn.addEventListener('mouseleave', () => {
         this.app.Cursor.el.classList.remove('rotate');
       });
+    } else {
+      window.addEventListener('deviceorientation', this.onOrientationChange);
     }
 
     this.closeProjectBtn.addEventListener('click', this.closeProject);
     this.projectHitArea.addEventListener('click', this.closeProject);
-
     this.addListeners();
-
   }
 
+  resetActiveProject(){
+    this.el.classList.remove('black');
+    for(let i = 0 ; i < this.projectItens.length; i += 1){
+      this.projectItens[i].classList.remove('active');
+      this.projectImages[i].classList.remove('show');
+    }
+    this.subtitle.innerText = '';
+  }
+
+  updateActiveProject(){
+    this.el.classList.add('black');
+    for(let i = 0 ; i < this.projectItens.length; i += 1){
+      this.projectItens[i].classList.remove('active');
+      this.projectImages[i].classList.remove('show');
+    }
+    this.projectItens[this.pos].classList.add('active');
+    this.projectImages[this.pos].classList.add('show');
+    this.subtitle.innerText = this.app.projects[this.pos].subtitle;
+  }
+
+  onOrientationChange(e){
+    let percent = 0;
+    const beta = Number(e.beta) - 20;
+    percent = ((beta * 100) / 30).toFixed(0);
+    percent = percent <= 0 ? 0 : percent;
+    percent = percent >= 100 ? 100 : percent;
+    const fraction = 100 / this.projectItens.length;
+    
+    let pos = 0;
+    this.projectItens.forEach((value, i) => {
+      const start = fraction * i;
+      const end = fraction * (i + 1);
+      if (percent >= start && percent <= end) {
+        pos = i;
+      }
+    });
+    // pos = pos === 0 ? 1 : pos;
+    
+    if(this.pos !== pos){
+      this.pos = pos;
+      this.updateActiveProject();
+      clearTimeout(this.timer);
+      this.timer = setTimeout(this.resetActiveProject, 2000);
+    }
+  }
+  
   mouseOverProjectLink(event){
     const { projectId } = event.currentTarget.dataset;
     this.projectImages.forEach((img) => {
       img.classList.remove('show');
     });
-    const image = this.projectImages.find(x => x.dataset.projectId === projectId);
+    console.log('onOrientationChange');
     
+    const image = this.projectImages.find(x => x.dataset.projectId === projectId);
     image.classList.add('show');
     this.el.classList.add('black');
     this.app.Cursor.el.classList.add('white');
@@ -58,8 +110,15 @@ export default class Home {
       img.classList.remove('show');
     });
   }
-  
+
   openProject(event){
+    clearTimeout(this.timer);
+    window.removeEventListener('deviceorientation', this.onOrientationChange);
+    this.subtitle.innerText = '';
+    for(let i = 0 ; i < this.projectItens.length; i += 1){
+      this.projectItens[i].classList.remove('active');
+    }
+
     const { projectId } = event.currentTarget.dataset;
     const image = this.projectImages.find(x => x.dataset.projectId == projectId);
     const { description, link, tecnologies } = this.app.projects.find(x => x.id == projectId);
@@ -86,6 +145,8 @@ export default class Home {
   }
   
   closeProject(){
+    window.addEventListener('deviceorientation', this.onOrientationChange);
+    
     this.removeListener();
     this.projectContent.removeEventListener('mouseover', this.mouseOverProjectContent);
     this.projectContent.removeEventListener('mouseleave', this.mouseLeaveProjectContent);
@@ -111,17 +172,17 @@ export default class Home {
 
   addListeners(){
     this.projectItens.forEach((el) => {
-      el.addEventListener('mouseover', this.mouseOverProjectLink, true);
-      el.addEventListener('mouseleave', this.mouseLeaveProjectLink, true);
-      el.addEventListener('click', this.openProject, true);
+      el.addEventListener('mouseover', this.mouseOverProjectLink);
+      el.addEventListener('mouseleave', this.mouseLeaveProjectLink);
+      el.addEventListener('click', this.openProject);
     });
   }
 
   removeListener(){
     this.projectItens.forEach((el) => {
-      el.removeEventListener('mouseover', this.mouseOverProjectLink, true);
-      el.removeEventListener('mouseleave', this.mouseLeaveProjectLink, true);
-      el.removeEventListener('click', this.openProject, true);
+      el.removeEventListener('mouseover', this.mouseOverProjectLink);
+      el.removeEventListener('mouseleave', this.mouseLeaveProjectLink);
+      el.removeEventListener('click', this.openProject);
     });
   }
 

@@ -47,7 +47,9 @@ body.App {
   background-color: #fff;
   font-size: $default-size;
   line-height: 1.2em; 
-
+  &.black {
+    background-color: #000;
+  }
   &.blockScroll {
     overflow: hidden;
     height: 100vh;
@@ -80,7 +82,7 @@ body.App {
   font-size: inherit;
   z-index: 2;
   font-weight: 100;
-  display: none;
+  color: #fff;
 }
 
 .marquee {
@@ -207,6 +209,9 @@ body.App {
     }
     .subtitle{
       display: block;
+    }
+    .menu{
+      bottom: 5vh;
     }
   }
 }
