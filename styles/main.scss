@@ -150,13 +150,13 @@ body.App {
   }
   .nav-list{
     font-size: 0;
-    height: inherit;
+    height: $default-size;
     width: 100vw;
     position: absolute;
     bottom: 1rem;
     left: 0;
     .nav-item{
-      font-size: inherit;
+      font-size: $default-size;
       width: 33.33%;
       text-align: center;
       display: inline-block;
