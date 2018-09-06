@@ -25,14 +25,27 @@
 
   <body class="App">
     <div class="cursor">+</div>
-    <h1 class="menu show">menu</h1>
+    <h1 class="menu show">
+      <span>menu</span>
+      <div class="icons">
+        <img src="assets/images/Oval-black.svg" />
+        <img src="assets/images/Rectangle-black.svg" />
+        <img src="assets/images/Triangle-black.svg" />
+      </div>
+    </h1>
     <h1 class="subtitle"></h1>
     <nav class="nav">
       <h1 class="close">close</h1>
 
-      <div class="icon-wrapper circle" data-ratio="120"><img src="assets/images/Oval.svg" class="icon"/></div>
-      <div class="icon-wrapper square" data-ratio="120"><img src="assets/images/Rectangle.svg" class="icon"/></div>
-      <div class="icon-wrapper triangle" data-ratio="300"><img src="assets/images/Triangle.svg" class="icon"/></div>
+      <div class="icon-wrapper circle" data-ratio="120">
+        <img src="assets/images/Oval.svg" class="icon" />
+      </div>
+      <div class="icon-wrapper square" data-ratio="120">
+        <img src="assets/images/Rectangle.svg" class="icon" />
+      </div>
+      <div class="icon-wrapper triangle" data-ratio="300">
+        <img src="assets/images/Triangle.svg" class="icon" />
+      </div>
 
       <ul class="nav-list">
         <li class="nav-item"><span class="link" data-page-id="about"data-icon-id="circle">about</span></li>

@@ -59,6 +59,7 @@ var Navegation = function () {
     this.btnClose = this.el.querySelector('.close');
     this.links = [].concat(_toConsumableArray(this.el.querySelectorAll('.link')));
     this.icons = [].concat(_toConsumableArray(this.el.querySelectorAll('.icon-wrapper')));
+    this.targetSize = this.app.isMobile ? 'vh' : 'vw';
 
     this.hide = this.hide.bind(this);
     this.link_mouseover = this.link_mouseover.bind(this);
@@ -68,52 +69,6 @@ var Navegation = function () {
   }
 
   _createClass(Navegation, [{
-    key: 'btnClose_mouseover',
-    value: function btnClose_mouseover() {
-      this.app.Cursor.el.classList.add('rotate');
-    }
-  }, {
-    key: 'btnClose_mouseleave',
-    value: function btnClose_mouseleave() {
-      this.app.Cursor.el.classList.remove('rotate');
-    }
-  }, {
-    key: 'link_mouseover',
-    value: function link_mouseover(e) {
-      var iconId = e.currentTarget.dataset.iconId;
-
-      var currentIcon = this.icons.find(function (x) {
-        return x.classList.contains(iconId);
-      });
-
-      var _e$currentTarget$getB = e.currentTarget.getBoundingClientRect(),
-          x = _e$currentTarget$getB.x,
-          y = _e$currentTarget$getB.y,
-          width = _e$currentTarget$getB.width;
-
-      var iconWidth = currentIcon.getBoundingClientRect().width;
-
-      currentIcon.firstElementChild.style.width = '10vh';
-
-      currentIcon.classList.add('active');
-      currentIcon.style.left = x - iconWidth + width / 2 + 'px';
-      currentIcon.style.top = y + 'px';
-    }
-  }, {
-    key: 'link_mouseleave',
-    value: function link_mouseleave() {
-      this.icons.forEach(function (el) {
-        el.classList.remove('active');
-      });
-    }
-  }, {
-    key: 'gotoPage',
-    value: function gotoPage(pageId) {
-      this.app.pages[this.app.currentPage].hide();
-      this.app.currentPage = pageId;
-      this.app.pages[this.app.currentPage].show();
-    }
-  }, {
     key: 'show',
     value: function show() {
       var _this = this;
@@ -142,12 +97,8 @@ var Navegation = function () {
           var ratio = iconWrapper.dataset.ratio;
 
 
-          if (_this.app.isMobile) {
-            iconWrapper.firstElementChild.style.width = window.innerHeight / 100 * ratio + 'px';
-          } else {
-            iconWrapper.firstElementChild.style.width = window.innerWidth / 100 * ratio + 'px';
-          }
           iconWrapper.classList.add('animate');
+          iconWrapper.firstElementChild.style.height = '' + ratio + _this.targetSize;
 
           iconWrapper.style.left = '50%';
           iconWrapper.style.top = '50%';
@@ -163,7 +114,7 @@ var Navegation = function () {
             _this.el.classList.remove('hideLinks');
             iconWrapper.classList.remove('active');
             iconWrapper.classList.remove('animate');
-            iconWrapper.firstElementChild.style.width = '10vh';
+            iconWrapper.firstElementChild.style.height = '10vh';
             _this.hide();
           }, 1500);
         });
@@ -182,6 +133,7 @@ var Navegation = function () {
       this.app.pages[this.app.currentPage].show();
       this.app.el.classList.remove('black');
       this.app.Cursor.el.classList.remove('white');
+      this.app.Cursor.el.classList.remove('rotate');
       this.el.classList.remove('show');
 
       this.btnClose.removeEventListener('click', this.hide.bind(this));
@@ -192,6 +144,52 @@ var Navegation = function () {
         el.removeEventListener('mouseover', _this2.link_mouseover);
         el.removeEventListener('mouseleave', _this2.link_mouseleave);
       });
+    }
+  }, {
+    key: 'btnClose_mouseover',
+    value: function btnClose_mouseover() {
+      this.app.Cursor.el.classList.add('rotate');
+    }
+  }, {
+    key: 'btnClose_mouseleave',
+    value: function btnClose_mouseleave() {
+      this.app.Cursor.el.classList.remove('rotate');
+    }
+  }, {
+    key: 'link_mouseover',
+    value: function link_mouseover(e) {
+      var iconId = e.currentTarget.dataset.iconId;
+
+      var currentIcon = this.icons.find(function (x) {
+        return x.classList.contains(iconId);
+      });
+
+      var _e$currentTarget$getB = e.currentTarget.getBoundingClientRect(),
+          x = _e$currentTarget$getB.x,
+          y = _e$currentTarget$getB.y,
+          width = _e$currentTarget$getB.width;
+
+      var iconRect = currentIcon.firstElementChild.getBoundingClientRect();
+
+      currentIcon.firstElementChild.style.height = '10vh';
+
+      currentIcon.classList.add('active');
+      currentIcon.style.left = x + width / 2 + 'px';
+      currentIcon.style.top = y + iconRect.height / 2 + 'px';
+    }
+  }, {
+    key: 'link_mouseleave',
+    value: function link_mouseleave() {
+      this.icons.forEach(function (el) {
+        el.classList.remove('active');
+      });
+    }
+  }, {
+    key: 'gotoPage',
+    value: function gotoPage(pageId) {
+      this.app.pages[this.app.currentPage].hide();
+      this.app.currentPage = pageId;
+      this.app.pages[this.app.currentPage].show();
     }
   }]);
 

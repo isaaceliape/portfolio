@@ -19,7 +19,7 @@ $small-size: 40px;
 * {
   margin: 0;
   padding: 0;
-  cursor: none;
+  cursor: none !important;
   &::-moz-selection {
     background:rgba(0, 0, 0, 0.99);
     color:#fff;
@@ -105,6 +105,26 @@ body.App {
   &.show{
     display: block;
   }
+  span{
+    vertical-align: top;
+  }
+  &:hover{
+    span{
+      display: none;
+    }
+    .icons{
+      display: inline-block;
+    }
+  }
+  .icons{
+    height: $default-size;
+    display: none;
+    font-size: 0;
+    img{
+      vertical-align: top;
+      margin-right: 1rem;
+    }
+  }
 }
 
 .cursor{
@@ -162,7 +182,7 @@ body.App {
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 10vh;
+      height: 10vh;
       transform: translate3d(-50%,-50%,0);
     }
   }
