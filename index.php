@@ -30,9 +30,9 @@
     <nav class="nav">
       <h1 class="close">close</h1>
 
-      <img src="assets/images/Oval.svg" class="icon circle"/>
-      <img src="assets/images/Rectangle.svg" class="icon square"/>
-      <img src="assets/images/Triangle.svg" class="icon triangle"/>
+      <div class="icon-wrapper circle" data-ratio="120"><img src="assets/images/Oval.svg" class="icon"/></div>
+      <div class="icon-wrapper square" data-ratio="120"><img src="assets/images/Rectangle.svg" class="icon"/></div>
+      <div class="icon-wrapper triangle" data-ratio="300"><img src="assets/images/Triangle.svg" class="icon"/></div>
 
       <ul class="nav-list">
         <li class="nav-item"><span class="link" data-page-id="about"data-icon-id="circle">about</span></li>

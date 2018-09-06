@@ -8,7 +8,6 @@ import Cursor from './components/Cursor';
 class App {
   constructor() {
     // INITIAL RULES
-    this.currentPage = 'home';
     this.el = document.body;
     this.currentPage = 'home',
     this.pages = {};
@@ -79,6 +78,8 @@ class App {
     
     this.Cursor = new Cursor(this);
     this.Nav = new Nav(this);
+
+    this.menu.addEventListener('click', this.Nav.show.bind(this.Nav));
 
     this.pages.home.show();
   }

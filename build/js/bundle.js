@@ -52,70 +52,56 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Navegation = function () {
   function Navegation(app) {
-    var _this = this;
-
     _classCallCheck(this, Navegation);
 
     this.app = app;
     this.el = app.el.querySelector('.nav');
     this.btnClose = this.el.querySelector('.close');
     this.links = [].concat(_toConsumableArray(this.el.querySelectorAll('.link')));
-    this.icons = [].concat(_toConsumableArray(this.el.querySelectorAll('.icon')));
+    this.icons = [].concat(_toConsumableArray(this.el.querySelectorAll('.icon-wrapper')));
 
-    this.onMouseOverLink = this.onMouseOverLink.bind(this);
-    this.onMouseLeaveLink = this.onMouseLeaveLink.bind(this);
     this.hide = this.hide.bind(this);
-    this.hide = this.hide.bind(this);
-
-    this.links.forEach(function (el) {
-      el.addEventListener('click', function (event) {
-        var _event$currentTarget$ = event.currentTarget.dataset,
-            pageId = _event$currentTarget$.pageId,
-            iconId = _event$currentTarget$.iconId;
-
-        var currentIcon = _this.icons.find(function (x) {
-          return x.classList.contains(iconId);
-        });
-        currentIcon.classList.add('expand');
-        _this.app.Cursor.el.classList.remove('white');
-        _this.el.classList.add('hideLinks');
-        _this.gotoPage(pageId);
-
-        setTimeout(function () {
-          currentIcon.classList.remove('expand');
-          _this.app.Cursor.el.classList.add('white');
-          _this.app.el.classList.remove('black');
-          _this.el.classList.remove('hideLinks');
-          _this.hide();
-        }, 1500);
-      });
-    });
-
-    this.app.menu.addEventListener('click', this.show.bind(this));
-
-    this.btnClose.addEventListener('click', this.hide.bind(this));
-    this.btnClose.addEventListener('mouseover', function () {
-      _this.app.Cursor.el.classList.add('rotate');
-    });
-
-    this.btnClose.addEventListener('mouseleave', function () {
-      _this.app.Cursor.el.classList.remove('rotate');
-    });
+    this.link_mouseover = this.link_mouseover.bind(this);
+    this.link_mouseleave = this.link_mouseleave.bind(this);
+    this.btnClose_mouseover = this.btnClose_mouseover.bind(this);
+    this.btnClose_mouseleave = this.btnClose_mouseleave.bind(this);
   }
 
   _createClass(Navegation, [{
-    key: 'onMouseOverLink',
-    value: function onMouseOverLink(e) {
+    key: 'btnClose_mouseover',
+    value: function btnClose_mouseover() {
+      this.app.Cursor.el.classList.add('rotate');
+    }
+  }, {
+    key: 'btnClose_mouseleave',
+    value: function btnClose_mouseleave() {
+      this.app.Cursor.el.classList.remove('rotate');
+    }
+  }, {
+    key: 'link_mouseover',
+    value: function link_mouseover(e) {
       var iconId = e.currentTarget.dataset.iconId;
 
       var currentIcon = this.icons.find(function (x) {
         return x.classList.contains(iconId);
       });
+
+      var _e$currentTarget$getB = e.currentTarget.getBoundingClientRect(),
+          x = _e$currentTarget$getB.x,
+          y = _e$currentTarget$getB.y,
+          width = _e$currentTarget$getB.width;
+
+      var iconWidth = currentIcon.getBoundingClientRect().width;
+
+      currentIcon.firstElementChild.style.width = '10vh';
+
       currentIcon.classList.add('active');
+      currentIcon.style.left = x - iconWidth + width / 2 + 'px';
+      currentIcon.style.top = y + 'px';
     }
   }, {
-    key: 'onMouseLeaveLink',
-    value: function onMouseLeaveLink() {
+    key: 'link_mouseleave',
+    value: function link_mouseleave() {
       this.icons.forEach(function (el) {
         el.classList.remove('active');
       });
@@ -130,31 +116,81 @@ var Navegation = function () {
   }, {
     key: 'show',
     value: function show() {
-      var _this2 = this;
+      var _this = this;
 
-      this.app.pages[this.app.currentPage].hide();
+      this.app.pages.home.hide();
       this.app.el.classList.add('black');
       this.el.classList.add('show');
       this.app.Cursor.el.classList.add('white');
 
+      this.btnClose.addEventListener('click', this.hide.bind(this));
+      this.btnClose.addEventListener('mouseover', this.btnClose_mouseover);
+      this.btnClose.addEventListener('mouseleave', this.btnClose_mouseleave);
+
       this.links.forEach(function (el) {
-        el.addEventListener('mouseover', _this2.onMouseOverLink);
-        el.addEventListener('mouseleave', _this2.onMouseLeaveLink);
+        el.addEventListener('click', function (event) {
+          el.removeEventListener('mouseover', _this.link_mouseover);
+          el.removeEventListener('mouseleave', _this.link_mouseleave);
+
+          var _event$currentTarget$ = event.currentTarget.dataset,
+              pageId = _event$currentTarget$.pageId,
+              iconId = _event$currentTarget$.iconId;
+
+          var iconWrapper = _this.icons.find(function (x) {
+            return x.classList.contains(iconId);
+          });
+          var ratio = iconWrapper.dataset.ratio;
+
+
+          if (_this.app.isMobile) {
+            iconWrapper.firstElementChild.style.width = window.innerHeight / 100 * ratio + 'px';
+          } else {
+            iconWrapper.firstElementChild.style.width = window.innerWidth / 100 * ratio + 'px';
+          }
+          iconWrapper.classList.add('animate');
+
+          iconWrapper.style.left = '50%';
+          iconWrapper.style.top = '50%';
+          iconWrapper.style.transform = 'translate3d(-50%,-50%,0)';
+
+          _this.app.Cursor.el.classList.remove('white');
+          _this.el.classList.add('hideLinks');
+          _this.gotoPage(pageId);
+
+          setTimeout(function () {
+            _this.app.Cursor.el.classList.add('white');
+            _this.app.el.classList.remove('black');
+            _this.el.classList.remove('hideLinks');
+            iconWrapper.classList.remove('active');
+            iconWrapper.classList.remove('animate');
+            iconWrapper.firstElementChild.style.width = '10vh';
+            _this.hide();
+          }, 1500);
+        });
+      });
+
+      this.links.forEach(function (el) {
+        el.addEventListener('mouseover', _this.link_mouseover);
+        el.addEventListener('mouseleave', _this.link_mouseleave);
       });
     }
   }, {
     key: 'hide',
     value: function hide() {
-      var _this3 = this;
+      var _this2 = this;
 
       this.app.pages[this.app.currentPage].show();
       this.app.el.classList.remove('black');
       this.app.Cursor.el.classList.remove('white');
       this.el.classList.remove('show');
 
+      this.btnClose.removeEventListener('click', this.hide.bind(this));
+      this.btnClose.removeEventListener('mouseover', this.btnClose_mouseover);
+      this.btnClose.removeEventListener('mouseleave', this.btnClose_mouseleave);
+
       this.links.forEach(function (el) {
-        el.removeEventListener('mouseover', _this3.onMouseOverLink);
-        el.removeEventListener('mouseleave', _this3.onMouseLeaveLink);
+        el.removeEventListener('mouseover', _this2.link_mouseover);
+        el.removeEventListener('mouseleave', _this2.link_mouseleave);
       });
     }
   }]);
@@ -202,7 +238,6 @@ var App = function () {
     _classCallCheck(this, App);
 
     // INITIAL RULES
-    this.currentPage = 'home';
     this.el = document.body;
     this.currentPage = 'home', this.pages = {};
     this.isMobile = false;
@@ -250,6 +285,8 @@ var App = function () {
       this.Cursor = new _Cursor2.default(this);
       this.Nav = new _Nav2.default(this);
 
+      this.menu.addEventListener('click', this.Nav.show.bind(this.Nav));
+
       this.pages.home.show();
     }
   }]);
@@ -286,6 +323,9 @@ var About = function () {
 
     this.hide = this.hide.bind(this);
     this.showPortrait = this.showPortrait.bind(this);
+    this.closeBtn_mouseover = this.closeBtn_mouseover.bind(this);
+    this.closeBtn_mouseleave = this.closeBtn_mouseleave.bind(this);
+    this.closeBtn_click = this.closeBtn_click.bind(this);
 
     if (!this.app.isMobile) {
       this.marquee.addEventListener('mouseover', function () {
@@ -297,17 +337,9 @@ var About = function () {
         _this.app.Cursor.el.classList.remove('white');
         _this.el.classList.remove('black');
       });
-
-      this.closeBtn.addEventListener('mouseover', function () {
-        _this.app.Cursor.el.classList.add('rotate');
-      });
-
-      this.closeBtn.addEventListener('mouseleave', function () {
-        _this.app.Cursor.el.classList.remove('rotate');
-      });
     }
 
-    this.closeBtn.addEventListener('click', this.hide);
+    this.closeBtn.addEventListener('click', this.closeBtn_click);
   }
 
   _createClass(About, [{
@@ -316,19 +348,42 @@ var About = function () {
       this.portrait.classList.add('show');
     }
   }, {
+    key: 'closeBtn_mouseover',
+    value: function closeBtn_mouseover() {
+      this.app.Cursor.el.classList.add('rotate');
+    }
+  }, {
+    key: 'closeBtn_mouseleave',
+    value: function closeBtn_mouseleave() {
+      this.app.Cursor.el.classList.remove('rotate');
+    }
+  }, {
+    key: 'closeBtn_click',
+    value: function closeBtn_click() {
+      this.app.Nav.gotoPage('home');
+    }
+  }, {
     key: 'show',
     value: function show() {
+      if (!this.app.isMobile) {
+        this.closeBtn.addEventListener('mouseover', this.closeBtn_mouseover);
+        this.closeBtn.addEventListener('mouseleave', this.closeBtn_mouseleave);
+      }
+
       this.el.classList.add('show');
       clearTimeout(this.timer);
-      this.timer = setTimeout(this.showPortrait, 1500);
+      this.timer = setTimeout(this.showPortrait, 1000);
     }
   }, {
     key: 'hide',
     value: function hide() {
+      clearTimeout(this.timer);
+      this.closeBtn.removeEventListener('mouseover', this.closeBtn_mouseover);
+      this.closeBtn.removeEventListener('mouseleave', this.closeBtn_mouseleave);
+
       this.el.classList.remove('show');
       this.portrait.classList.remove('show');
       this.app.Cursor.el.classList.remove('rotate');
-      this.app.Nav.gotoPage('home');
     }
   }]);
 

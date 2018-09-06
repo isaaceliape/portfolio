@@ -10,6 +10,9 @@ export default class About {
 
     this.hide = this.hide.bind(this);
     this.showPortrait = this.showPortrait.bind(this);
+    this.closeBtn_mouseover = this.closeBtn_mouseover.bind(this);
+    this.closeBtn_mouseleave = this.closeBtn_mouseleave.bind(this);
+    this.closeBtn_click = this.closeBtn_click.bind(this);
 
     if(!this.app.isMobile){
       this.marquee.addEventListener('mouseover', () => {
@@ -21,32 +24,41 @@ export default class About {
         this.app.Cursor.el.classList.remove('white');
         this.el.classList.remove('black');
       });
-      
-      this.closeBtn.addEventListener('mouseover', () => {
-        this.app.Cursor.el.classList.add('rotate');
-      });
-  
-      this.closeBtn.addEventListener('mouseleave', () => {
-        this.app.Cursor.el.classList.remove('rotate');
-      });
     }
 
-    this.closeBtn.addEventListener('click', this.hide);
+    this.closeBtn.addEventListener('click', this.closeBtn_click);
 
   }
   showPortrait(){
     this.portrait.classList.add('show');
   }
+  closeBtn_mouseover(){
+    this.app.Cursor.el.classList.add('rotate');
+  }
+  closeBtn_mouseleave(){
+    this.app.Cursor.el.classList.remove('rotate');
+  }
+  closeBtn_click(){
+    this.app.Nav.gotoPage('home');
+  }
   show() {
+    if(!this.app.isMobile){
+      this.closeBtn.addEventListener('mouseover', this.closeBtn_mouseover);
+      this.closeBtn.addEventListener('mouseleave', this.closeBtn_mouseleave);
+    }
+
     this.el.classList.add('show');
     clearTimeout(this.timer);
-    this.timer = setTimeout(this.showPortrait, 1500);
+    this.timer = setTimeout(this.showPortrait, 1000);
   }
   
   hide() {
+    clearTimeout(this.timer);
+    this.closeBtn.removeEventListener('mouseover', this.closeBtn_mouseover);
+    this.closeBtn.removeEventListener('mouseleave', this.closeBtn_mouseleave);
+
     this.el.classList.remove('show');
     this.portrait.classList.remove('show');
     this.app.Cursor.el.classList.remove('rotate');
-    this.app.Nav.gotoPage('home');
   }
 }
