@@ -40,6 +40,12 @@ section.home{
           color: #fff;
           z-index: 2;
         }
+        &.stop{
+          .marquee{
+            animation-duration: 0s;
+            left: 0;
+          }
+        }
         &:hover{
           .marquee{
             animation-duration: 0s;
@@ -76,12 +82,12 @@ section.home{
     }
     
     .project-hit-area{
-      height: 40vh;
+      height: 50vh;
     }
     .project-content{
       box-sizing: border-box;
       width: 100vw;
-      height: 60vh;
+      height: 50vh;
       overflow: auto;
       background-color: #fff;
       padding: 1rem;

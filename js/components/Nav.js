@@ -25,11 +25,11 @@ export default class Navegation {
     this.btnClose.addEventListener('mouseleave', this.btnClose_mouseleave);
 
     this.links.forEach((el) => {
-      el.addEventListener('click', (event) => {
+      el.addEventListener('click', (e) => {
         el.removeEventListener('mouseover', this.link_mouseover);
         el.removeEventListener('mouseleave', this.link_mouseleave);
 
-        const { pageId, iconId } = event.currentTarget.dataset;
+        const { pageId, iconId } = e.currentTarget.dataset;
         const iconWrapper = this.icons.find(x => x.classList.contains(iconId));
         const { ratio } = iconWrapper.dataset;
 
@@ -50,7 +50,7 @@ export default class Navegation {
           this.el.classList.remove('hideLinks');
           iconWrapper.classList.remove('active');
           iconWrapper.classList.remove('animate');
-          iconWrapper.firstElementChild.style.height = '10vh';
+          iconWrapper.firstElementChild.style.height = '8vh';
           this.hide();
         }, 1500);
       });
@@ -92,7 +92,7 @@ export default class Navegation {
     const { x, y, width} = e.currentTarget.getBoundingClientRect();
     const iconRect = currentIcon.firstElementChild.getBoundingClientRect();
 
-    currentIcon.firstElementChild.style.height = '10vh';
+    currentIcon.firstElementChild.style.height = '8vh';
 
     currentIcon.classList.add('active');
     currentIcon.style.left = `${(x + (width / 2))}px`;

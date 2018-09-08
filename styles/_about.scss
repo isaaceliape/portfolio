@@ -17,13 +17,12 @@ section.about{
     position: relative;
     width: 100%;
     box-sizing: border-box;
-    z-index: 1;
+    z-index: 3;
     transition: color .5s ease;
     a.marquee{
       &:hover{
         animation-play-state: paused;
         color: #fff;
-        pointer-events: none;
       }
     }
     .marquee{
@@ -41,13 +40,15 @@ section.about{
     transform: translate3d(-50%,-40%,0);
     z-index: 0;
     opacity: 0;
+    filter: grayscale(1);
     &.show{
-      transition: all .7s ease;
+      transition: transform .7s ease, opacity .7s ease;
       opacity: 1;
       transform: translate3d(-50%,-50%,0);
     }
     &:hover{
       z-index: 2;
+      filter: grayscale(0);
     }
   }
   .contact-link{

@@ -83,13 +83,13 @@ var Navegation = function () {
       this.btnClose.addEventListener('mouseleave', this.btnClose_mouseleave);
 
       this.links.forEach(function (el) {
-        el.addEventListener('click', function (event) {
+        el.addEventListener('click', function (e) {
           el.removeEventListener('mouseover', _this.link_mouseover);
           el.removeEventListener('mouseleave', _this.link_mouseleave);
 
-          var _event$currentTarget$ = event.currentTarget.dataset,
-              pageId = _event$currentTarget$.pageId,
-              iconId = _event$currentTarget$.iconId;
+          var _e$currentTarget$data = e.currentTarget.dataset,
+              pageId = _e$currentTarget$data.pageId,
+              iconId = _e$currentTarget$data.iconId;
 
           var iconWrapper = _this.icons.find(function (x) {
             return x.classList.contains(iconId);
@@ -114,7 +114,7 @@ var Navegation = function () {
             _this.el.classList.remove('hideLinks');
             iconWrapper.classList.remove('active');
             iconWrapper.classList.remove('animate');
-            iconWrapper.firstElementChild.style.height = '10vh';
+            iconWrapper.firstElementChild.style.height = '8vh';
             _this.hide();
           }, 1500);
         });
@@ -171,7 +171,7 @@ var Navegation = function () {
 
       var iconRect = currentIcon.firstElementChild.getBoundingClientRect();
 
-      currentIcon.firstElementChild.style.height = '10vh';
+      currentIcon.firstElementChild.style.height = '8vh';
 
       currentIcon.classList.add('active');
       currentIcon.style.left = x + width / 2 + 'px';
@@ -591,7 +591,7 @@ var Home = function () {
     }
   }, {
     key: 'openProject',
-    value: function openProject(event) {
+    value: function openProject(e) {
       clearTimeout(this.timer);
       window.removeEventListener('deviceorientation', this.onOrientationChange);
       this.subtitle.innerText = '';
@@ -599,7 +599,7 @@ var Home = function () {
         this.projectItens[i].classList.remove('active');
       }
 
-      var projectId = event.currentTarget.dataset.projectId;
+      var projectId = e.currentTarget.dataset.projectId;
 
       var image = this.projectImages.find(function (x) {
         return x.dataset.projectId == projectId;
@@ -623,6 +623,7 @@ var Home = function () {
       this.projectTechs.innerHTML = techList;
 
       image.classList.add('opened');
+      e.currentTarget.classList.add('stop');
       this.projectWrapper.classList.add('show');
       this.projectContent.scrollTop = 0;
 
@@ -647,6 +648,7 @@ var Home = function () {
       image.classList.remove('opened');
       image.classList.remove('show');
       currentProjectItem.classList.remove('white');
+      currentProjectItem.classList.remove('stop');
       this.app.el.classList.remove('black');
       this.projectWrapper.classList.remove('show');
       this.app.Cursor.el.classList.remove('white');

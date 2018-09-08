@@ -110,7 +110,7 @@ export default class Home {
     });
   }
 
-  openProject(event){
+  openProject(e){
     clearTimeout(this.timer);
     window.removeEventListener('deviceorientation', this.onOrientationChange);
     this.subtitle.innerText = '';
@@ -118,7 +118,7 @@ export default class Home {
       this.projectItens[i].classList.remove('active');
     }
 
-    const { projectId } = event.currentTarget.dataset;
+    const { projectId } = e.currentTarget.dataset;
     const image = this.projectImages.find(x => x.dataset.projectId == projectId);
     const { description, link, tecnologies } = this.app.projects.find(x => x.id == projectId);
     let techList = '';
@@ -132,6 +132,7 @@ export default class Home {
     this.projectTechs.innerHTML = techList;
 
     image.classList.add('opened');
+    e.currentTarget.classList.add('stop');
     this.projectWrapper.classList.add('show');
     this.projectContent.scrollTop = 0;
 
@@ -155,6 +156,7 @@ export default class Home {
     image.classList.remove('opened');
     image.classList.remove('show');
     currentProjectItem.classList.remove('white');
+    currentProjectItem.classList.remove('stop');
     this.app.el.classList.remove('black');
     this.projectWrapper.classList.remove('show');
     this.app.Cursor.el.classList.remove('white');
