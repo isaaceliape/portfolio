@@ -288,6 +288,7 @@ var Gamepad = function () {
     this.projectAnimationIn = '';
     this.blockAnimation = false;
     this.pressedOutInstance = null;
+    this.showGamepadInstructions = true;
     this.gamepadMessage = this.app.el.querySelector('.gamepad-message');
 
     this.gameLoop = this.gameLoop.bind(this);
@@ -320,13 +321,10 @@ var Gamepad = function () {
   }, {
     key: 'gamepadConnected',
     value: function gamepadConnected() {
-      var _this2 = this;
-
       console.log('gamepad CONNECTED');
-      this.gamepadMessage.style.opacity = 1;
-      setTimeout(function () {
-        _this2.gamepadMessage.style.opacity = 0;
-      }, 3000);
+      if (this.showGamepadInstructions) {
+        this.gamepadMessage.style.opacity = 1;
+      }
       this.animationLoop = requestAnimationFrame(this.gameLoop);
     }
   }, {
@@ -338,12 +336,12 @@ var Gamepad = function () {
   }, {
     key: 'updateSelectedProject',
     value: function updateSelectedProject() {
-      var _this3 = this;
+      var _this2 = this;
 
       var targetProjectLink = this.app.pages.home.projectItens[this.app.currentProject];
 
       this.app.pages.home.projectItens.forEach(function (el) {
-        el.dispatchEvent(_this3.mouseleave);
+        el.dispatchEvent(_this2.mouseleave);
         el.classList.remove('stop');
       });
 
@@ -356,10 +354,10 @@ var Gamepad = function () {
   }, {
     key: 'clearSelectedProject',
     value: function clearSelectedProject() {
-      var _this4 = this;
+      var _this3 = this;
 
       this.app.pages.home.projectItens.forEach(function (el) {
-        el.dispatchEvent(_this4.mouseleave);
+        el.dispatchEvent(_this3.mouseleave);
         el.classList.remove('stop');
       });
     }
@@ -371,48 +369,51 @@ var Gamepad = function () {
   }, {
     key: 'gameLoop',
     value: function gameLoop() {
-      var _this5 = this;
+      var _this4 = this;
 
       var gamepads = navigator.getGamepads ? navigator.getGamepads() : navigator.webkitGetGamepads;
       var gp = gamepads[0];
 
       if (!gamepads || !gp) return;
-
       if (buttonPressed(gp.buttons[0])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
+          _this4.gamepadMessage.style.opacity = 0;
+          _this4.showGamepadInstructions = false;
           console.log('x');
 
-          if (_this5.app.pages.home.projectWrapper.classList.contains('show')) {
-            _this5.app.pages.home.closeProject();
+          if (_this4.app.pages.home.projectWrapper.classList.contains('show')) {
+            _this4.app.pages.home.closeProject();
           } else {
-            _this5.app.Nav.gotoPage('home');
+            _this4.app.Nav.gotoPage('home');
           }
         }, 50);
       }
       if (buttonPressed(gp.buttons[2])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (!_this5.blockAnimation && _this5.app.currentPage !== 'services') {
+          _this4.gamepadMessage.style.opacity = 0;
+          _this4.showGamepadInstructions = false;
+          if (!_this4.blockAnimation && _this4.app.currentPage !== 'services') {
             console.log('■');
-            _this5.blockAnimation = true;
-            _this5.app.pages[_this5.app.currentPage].hide();
-            _this5.app.Nav.show();
-            _this5.app.Nav.icons.forEach(function (el) {
+            _this4.blockAnimation = true;
+            _this4.app.pages[_this4.app.currentPage].hide();
+            _this4.app.Nav.show();
+            _this4.app.Nav.icons.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this5.app.Nav.links.forEach(function (el) {
+            _this4.app.Nav.links.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this5.app.Nav.links[1].dispatchEvent(_this5.mouseover);
-            _this5.app.Nav.icons[1].classList.add('active');
+            _this4.app.Nav.links[1].dispatchEvent(_this4.mouseover);
+            _this4.app.Nav.icons[1].classList.add('active');
 
             setTimeout(function () {
-              _this5.app.Nav.links[1].dispatchEvent(_this5.click);
+              _this4.app.Nav.links[1].dispatchEvent(_this4.click);
               setTimeout(function () {
                 console.log('OUT!');
-                _this5.blockAnimation = false;
-                _this5.app.Nav.links[1].dispatchEvent(_this5.mouseleave);
+                _this4.blockAnimation = false;
+                _this4.app.Nav.links[1].dispatchEvent(_this4.mouseleave);
               }, 700);
             }, 700);
           }
@@ -421,26 +422,28 @@ var Gamepad = function () {
       if (buttonPressed(gp.buttons[1])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (!_this5.blockAnimation && _this5.app.currentPage !== 'about') {
+          _this4.gamepadMessage.style.opacity = 0;
+          _this4.showGamepadInstructions = false;
+          if (!_this4.blockAnimation && _this4.app.currentPage !== 'about') {
             console.log('●');
-            _this5.blockAnimation = true;
-            _this5.app.pages[_this5.app.currentPage].hide();
-            _this5.app.Nav.show();
-            _this5.app.Nav.icons.forEach(function (el) {
+            _this4.blockAnimation = true;
+            _this4.app.pages[_this4.app.currentPage].hide();
+            _this4.app.Nav.show();
+            _this4.app.Nav.icons.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this5.app.Nav.links.forEach(function (el) {
+            _this4.app.Nav.links.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this5.app.Nav.links[0].dispatchEvent(_this5.mouseover);
-            _this5.app.Nav.icons[0].classList.add('active');
+            _this4.app.Nav.links[0].dispatchEvent(_this4.mouseover);
+            _this4.app.Nav.icons[0].classList.add('active');
 
             setTimeout(function () {
-              _this5.app.Nav.links[0].dispatchEvent(_this5.click);
+              _this4.app.Nav.links[0].dispatchEvent(_this4.click);
               setTimeout(function () {
                 console.log('OUT!');
-                _this5.blockAnimation = false;
-                _this5.app.Nav.links[0].dispatchEvent(_this5.mouseleave);
+                _this4.blockAnimation = false;
+                _this4.app.Nav.links[0].dispatchEvent(_this4.mouseleave);
               }, 700);
             }, 700);
           }
@@ -449,44 +452,60 @@ var Gamepad = function () {
       if (buttonPressed(gp.buttons[3])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (!_this5.blockAnimation && _this5.app.currentPage !== 'awards') {
+          _this4.gamepadMessage.style.opacity = 0;
+          _this4.showGamepadInstructions = false;
+          if (!_this4.blockAnimation && _this4.app.currentPage !== 'awards') {
             console.log('▲');
-            _this5.blockAnimation = true;
-            _this5.app.pages[_this5.app.currentPage].hide();
-            _this5.app.Nav.show();
-            _this5.app.Nav.icons.forEach(function (el) {
+            _this4.blockAnimation = true;
+            _this4.app.pages[_this4.app.currentPage].hide();
+            _this4.app.Nav.show();
+            _this4.app.Nav.icons.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this5.app.Nav.links.forEach(function (el) {
+            _this4.app.Nav.links.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this5.app.Nav.links[2].dispatchEvent(_this5.mouseover);
-            _this5.app.Nav.icons[2].classList.add('active');
+            _this4.app.Nav.links[2].dispatchEvent(_this4.mouseover);
+            _this4.app.Nav.icons[2].classList.add('active');
 
             setTimeout(function () {
-              _this5.app.Nav.links[2].dispatchEvent(_this5.click);
+              _this4.app.Nav.links[2].dispatchEvent(_this4.click);
               setTimeout(function () {
                 console.log('OUT!');
-                _this5.blockAnimation = false;
-                _this5.app.Nav.links[2].dispatchEvent(_this5.mouseleave);
+                _this4.blockAnimation = false;
+                _this4.app.Nav.links[2].dispatchEvent(_this4.mouseleave);
               }, 700);
             }, 700);
           }
         }, 50);
       }
       if (buttonPressed(gp.buttons[9])) {
-        console.log('option');
-        currentPage = 'home';
+        clearTimeout(this.pressedOutInstance);
+        this.pressedOutInstance = setTimeout(function () {
+          _this4.gamepadMessage.style.opacity = 0;
+          _this4.showGamepadInstructions = false;
+          console.log('option');
+        }, 50);
+      }
+      if (buttonPressed(gp.buttons[8])) {
+        clearTimeout(this.pressedOutInstance);
+        this.pressedOutInstance = setTimeout(function () {
+          _this4.gamepadMessage.style.opacity = 0;
+          _this4.showGamepadInstructions = false;
+          console.log('share');
+        }, 50);
       }
       if (buttonPressed(gp.buttons[14])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (_this5.app.currentPage === 'home') {
+          _this4.gamepadMessage.style.opacity = 0;
+          _this4.showGamepadInstructions = false;
+          if (_this4.app.currentPage === 'home') {
             console.log('left');
-            _this5.lastPressedButton = 'left';
+            _this4.lastPressedButton = 'left';
 
-            if (_this5.app.pages.home.projectWrapper.classList.contains('show')) {
-              _this5.app.pages.home.closeProject();
+            if (_this4.app.pages.home.projectWrapper.classList.contains('show')) {
+              _this4.app.pages.home.closeProject();
             }
           }
         }, 50);
@@ -494,17 +513,19 @@ var Gamepad = function () {
       if (buttonPressed(gp.buttons[15])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (_this5.app.currentPage === 'home') {
+          _this4.gamepadMessage.style.opacity = 0;
+          _this4.showGamepadInstructions = false;
+          if (_this4.app.currentPage === 'home') {
             console.log('right');
-            _this5.lastPressedButton = 'right';
-            var targetProjectLink = _this5.app.pages.home.projectItens[_this5.app.currentProject];
+            _this4.lastPressedButton = 'right';
+            var targetProjectLink = _this4.app.pages.home.projectItens[_this4.app.currentProject];
 
-            clearTimeout(_this5.lastPressedTimer);
-            _this5.lastPressedTimer = setTimeout(_this5.lastPressedAction, 250);
+            clearTimeout(_this4.lastPressedTimer);
+            _this4.lastPressedTimer = setTimeout(_this4.lastPressedAction, 250);
 
             if (targetProjectLink.classList.contains('white')) {
-              clearTimeout(_this5.clearSelectedProjectTimer);
-              targetProjectLink.dispatchEvent(_this5.click);
+              clearTimeout(_this4.clearSelectedProjectTimer);
+              targetProjectLink.dispatchEvent(_this4.click);
               console.log(targetProjectLink);
             }
           }
@@ -513,30 +534,34 @@ var Gamepad = function () {
       if (buttonPressed(gp.buttons[12])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (_this5.app.currentPage === 'home') {
+          _this4.gamepadMessage.style.opacity = 0;
+          _this4.showGamepadInstructions = false;
+          if (_this4.app.currentPage === 'home') {
             console.log('top');
-            _this5.lastPressedButton = 'top';
-            _this5.app.currentProject = _this5.app.currentProject - 1 < 0 ? _this5.app.projects.length - 1 : _this5.app.currentProject - 1;
+            _this4.lastPressedButton = 'top';
+            _this4.app.currentProject = _this4.app.currentProject - 1 < 0 ? _this4.app.projects.length - 1 : _this4.app.currentProject - 1;
 
-            _this5.updateSelectedProject();
+            _this4.updateSelectedProject();
 
-            clearTimeout(_this5.clearSelectedProjectTimer);
-            _this5.clearSelectedProjectTimer = setTimeout(_this5.clearSelectedProject, 2000);
+            clearTimeout(_this4.clearSelectedProjectTimer);
+            _this4.clearSelectedProjectTimer = setTimeout(_this4.clearSelectedProject, 2000);
           }
         }, 50);
       }
       if (buttonPressed(gp.buttons[13])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (_this5.app.currentPage === 'home') {
+          _this4.gamepadMessage.style.opacity = 0;
+          _this4.showGamepadInstructions = false;
+          if (_this4.app.currentPage === 'home') {
             console.log('down');
-            _this5.lastPressedButton = 'down';
-            _this5.app.currentProject = _this5.app.currentProject + 1 > _this5.app.projects.length - 1 ? 0 : _this5.app.currentProject + 1;
+            _this4.lastPressedButton = 'down';
+            _this4.app.currentProject = _this4.app.currentProject + 1 > _this4.app.projects.length - 1 ? 0 : _this4.app.currentProject + 1;
 
-            _this5.updateSelectedProject();
+            _this4.updateSelectedProject();
 
-            clearTimeout(_this5.clearSelectedProjectTimer);
-            _this5.clearSelectedProjectTimer = setTimeout(_this5.clearSelectedProject, 2000);
+            clearTimeout(_this4.clearSelectedProjectTimer);
+            _this4.clearSelectedProjectTimer = setTimeout(_this4.clearSelectedProject, 2000);
           }
         }, 50);
       }

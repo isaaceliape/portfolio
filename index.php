@@ -24,7 +24,7 @@
   </head>
 
   <body class="App">
-    <div class="gamepad-message">gamepad connected<br>enjoy =]</div>
+    <img src="assets/images/gamepad.png" alt="gamepad instructions" class="gamepad-message"/>
     <div class="cursor">+</div>
     <h1 class="menu show">
       <span>menu</span>
