@@ -305,13 +305,9 @@ var Gamepad = function () {
   _createClass(Gamepad, [{
     key: 'init',
     value: function init() {
-      var _this = this;
-
       console.log('gamepad');
-      setTimeout(function () {
-        window.addEventListener('gamepadconnected', _this.gamepadConnected);
-        window.addEventListener('gampaddisconnected', _this.gampadDisconnected);
-      }, 2000);
+      window.addEventListener('gamepadconnected', this.gamepadConnected);
+      window.addEventListener('gampaddisconnected', this.gampadDisconnected);
     }
   }, {
     key: 'lastPressedAction',
@@ -321,11 +317,13 @@ var Gamepad = function () {
   }, {
     key: 'gamepadConnected',
     value: function gamepadConnected() {
+      var _this = this;
+
       console.log('gamepad CONNECTED');
-      if (this.showGamepadInstructions) {
-        this.gamepadMessage.style.opacity = 1;
-      }
-      this.animationLoop = requestAnimationFrame(this.gameLoop);
+      setTimeout(function () {
+        _this.gamepadMessage.style.opacity = 1;
+        _this.animationLoop = requestAnimationFrame(_this.gameLoop);
+      }, 2000);
     }
   }, {
     key: 'gampadDisconnected',
@@ -379,7 +377,6 @@ var Gamepad = function () {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
           _this4.gamepadMessage.style.opacity = 0;
-          _this4.showGamepadInstructions = false;
           console.log('x');
 
           if (_this4.app.pages.home.projectWrapper.classList.contains('show')) {
@@ -393,7 +390,6 @@ var Gamepad = function () {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
           _this4.gamepadMessage.style.opacity = 0;
-          _this4.showGamepadInstructions = false;
           if (!_this4.blockAnimation && _this4.app.currentPage !== 'services') {
             console.log('■');
             _this4.blockAnimation = true;
@@ -423,7 +419,6 @@ var Gamepad = function () {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
           _this4.gamepadMessage.style.opacity = 0;
-          _this4.showGamepadInstructions = false;
           if (!_this4.blockAnimation && _this4.app.currentPage !== 'about') {
             console.log('●');
             _this4.blockAnimation = true;
@@ -453,7 +448,6 @@ var Gamepad = function () {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
           _this4.gamepadMessage.style.opacity = 0;
-          _this4.showGamepadInstructions = false;
           if (!_this4.blockAnimation && _this4.app.currentPage !== 'awards') {
             console.log('▲');
             _this4.blockAnimation = true;
@@ -482,8 +476,7 @@ var Gamepad = function () {
       if (buttonPressed(gp.buttons[9])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          _this4.gamepadMessage.style.opacity = 0;
-          _this4.showGamepadInstructions = false;
+          _this4.gamepadMessage.style.opacity = 1;
           console.log('option');
         }, 50);
       }
@@ -491,7 +484,6 @@ var Gamepad = function () {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
           _this4.gamepadMessage.style.opacity = 0;
-          _this4.showGamepadInstructions = false;
           console.log('share');
         }, 50);
       }
@@ -499,7 +491,6 @@ var Gamepad = function () {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
           _this4.gamepadMessage.style.opacity = 0;
-          _this4.showGamepadInstructions = false;
           if (_this4.app.currentPage === 'home') {
             console.log('left');
             _this4.lastPressedButton = 'left';
@@ -514,7 +505,6 @@ var Gamepad = function () {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
           _this4.gamepadMessage.style.opacity = 0;
-          _this4.showGamepadInstructions = false;
           if (_this4.app.currentPage === 'home') {
             console.log('right');
             _this4.lastPressedButton = 'right';
@@ -535,7 +525,6 @@ var Gamepad = function () {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
           _this4.gamepadMessage.style.opacity = 0;
-          _this4.showGamepadInstructions = false;
           if (_this4.app.currentPage === 'home') {
             console.log('top');
             _this4.lastPressedButton = 'top';
@@ -552,7 +541,6 @@ var Gamepad = function () {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
           _this4.gamepadMessage.style.opacity = 0;
-          _this4.showGamepadInstructions = false;
           if (_this4.app.currentPage === 'home') {
             console.log('down');
             _this4.lastPressedButton = 'down';

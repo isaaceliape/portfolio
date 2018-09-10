@@ -28,20 +28,18 @@ export default class Gamepad {
 
   init() {
     console.log('gamepad');
-    setTimeout(() => {
-      window.addEventListener('gamepadconnected', this.gamepadConnected);
-      window.addEventListener('gampaddisconnected', this.gampadDisconnected);
-    }, 2000);
+    window.addEventListener('gamepadconnected', this.gamepadConnected);
+    window.addEventListener('gampaddisconnected', this.gampadDisconnected);
   }
   lastPressedAction(){
     this.lastPressedButton = '';
   }
   gamepadConnected() {
     console.log('gamepad CONNECTED');
-    if(this.showGamepadInstructions){
+    setTimeout(() => {
       this.gamepadMessage.style.opacity = 1;
-    }
-    this.animationLoop = requestAnimationFrame(this.gameLoop);
+      this.animationLoop = requestAnimationFrame(this.gameLoop);
+    }, 2000);
   }
   gampadDisconnected() {
     console.log('gamepad DISCONNECTED');
@@ -80,7 +78,6 @@ export default class Gamepad {
       clearTimeout(this.pressedOutInstance);
       this.pressedOutInstance = setTimeout(() => {
         this.gamepadMessage.style.opacity = 0;
-        this.showGamepadInstructions = false;
         console.log('x');
 
         if (this.app.pages.home.projectWrapper.classList.contains('show')) {
@@ -94,7 +91,6 @@ export default class Gamepad {
       clearTimeout(this.pressedOutInstance);
       this.pressedOutInstance = setTimeout(() => {
         this.gamepadMessage.style.opacity = 0;
-        this.showGamepadInstructions = false;
         if(!this.blockAnimation && this.app.currentPage !== 'services'){
           console.log('■');
           this.blockAnimation = true;
@@ -124,7 +120,6 @@ export default class Gamepad {
       clearTimeout(this.pressedOutInstance);
       this.pressedOutInstance = setTimeout(() => {
         this.gamepadMessage.style.opacity = 0;
-        this.showGamepadInstructions = false;
         if(!this.blockAnimation && this.app.currentPage !== 'about'){
           console.log('●');
           this.blockAnimation = true;
@@ -154,7 +149,6 @@ export default class Gamepad {
       clearTimeout(this.pressedOutInstance);
       this.pressedOutInstance = setTimeout(() => {
         this.gamepadMessage.style.opacity = 0;
-        this.showGamepadInstructions = false;
         if(!this.blockAnimation && this.app.currentPage !== 'awards'){
           console.log('▲');
           this.blockAnimation = true;
@@ -183,8 +177,7 @@ export default class Gamepad {
     if (buttonPressed(gp.buttons[9])) {
       clearTimeout(this.pressedOutInstance);
       this.pressedOutInstance = setTimeout(() => {
-        this.gamepadMessage.style.opacity = 0;
-        this.showGamepadInstructions = false;
+        this.gamepadMessage.style.opacity = 1;
         console.log('option');
       }, 50);
     }
@@ -192,7 +185,6 @@ export default class Gamepad {
       clearTimeout(this.pressedOutInstance);
       this.pressedOutInstance = setTimeout(() => {
         this.gamepadMessage.style.opacity = 0;
-        this.showGamepadInstructions = false;
         console.log('share');
       }, 50);
     }
@@ -200,7 +192,6 @@ export default class Gamepad {
       clearTimeout(this.pressedOutInstance);
       this.pressedOutInstance = setTimeout(() => {
         this.gamepadMessage.style.opacity = 0;
-        this.showGamepadInstructions = false;
         if (this.app.currentPage === 'home') {
           console.log('left');
           this.lastPressedButton = 'left';
@@ -216,7 +207,6 @@ export default class Gamepad {
       clearTimeout(this.pressedOutInstance);
       this.pressedOutInstance = setTimeout(() => {
         this.gamepadMessage.style.opacity = 0;
-        this.showGamepadInstructions = false;
         if (this.app.currentPage === 'home') {
           console.log('right');
           this.lastPressedButton = 'right';
@@ -237,7 +227,6 @@ export default class Gamepad {
       clearTimeout(this.pressedOutInstance);
       this.pressedOutInstance = setTimeout(() => {
         this.gamepadMessage.style.opacity = 0;
-        this.showGamepadInstructions = false;
         if (this.app.currentPage === 'home') {
           console.log('top');
           this.lastPressedButton = 'top';
@@ -254,7 +243,6 @@ export default class Gamepad {
       clearTimeout(this.pressedOutInstance);
       this.pressedOutInstance = setTimeout(() => {
         this.gamepadMessage.style.opacity = 0;
-        this.showGamepadInstructions = false;
         if (this.app.currentPage === 'home') {
           console.log('down');
           this.lastPressedButton = 'down';
