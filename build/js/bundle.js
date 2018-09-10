@@ -304,10 +304,13 @@ var Gamepad = function () {
   _createClass(Gamepad, [{
     key: 'init',
     value: function init() {
+      var _this = this;
+
       console.log('gamepad');
-      setTimeout(function () {}, 2000);
-      window.addEventListener('gamepadconnected', this.gamepadConnected);
-      window.addEventListener('gampaddisconnected', this.gampadDisconnected);
+      setTimeout(function () {
+        window.addEventListener('gamepadconnected', _this.gamepadConnected);
+        window.addEventListener('gampaddisconnected', _this.gampadDisconnected);
+      }, 2000);
     }
   }, {
     key: 'lastPressedAction',
@@ -317,12 +320,12 @@ var Gamepad = function () {
   }, {
     key: 'gamepadConnected',
     value: function gamepadConnected() {
-      var _this = this;
+      var _this2 = this;
 
       console.log('gamepad CONNECTED');
       this.gamepadMessage.style.opacity = 1;
       setTimeout(function () {
-        _this.gamepadMessage.style.opacity = 0;
+        _this2.gamepadMessage.style.opacity = 0;
       }, 3000);
       this.animationLoop = requestAnimationFrame(this.gameLoop);
     }
@@ -335,12 +338,12 @@ var Gamepad = function () {
   }, {
     key: 'updateSelectedProject',
     value: function updateSelectedProject() {
-      var _this2 = this;
+      var _this3 = this;
 
       var targetProjectLink = this.app.pages.home.projectItens[this.app.currentProject];
 
       this.app.pages.home.projectItens.forEach(function (el) {
-        el.dispatchEvent(_this2.mouseleave);
+        el.dispatchEvent(_this3.mouseleave);
         el.classList.remove('stop');
       });
 
@@ -353,10 +356,10 @@ var Gamepad = function () {
   }, {
     key: 'clearSelectedProject',
     value: function clearSelectedProject() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.app.pages.home.projectItens.forEach(function (el) {
-        el.dispatchEvent(_this3.mouseleave);
+        el.dispatchEvent(_this4.mouseleave);
         el.classList.remove('stop');
       });
     }
@@ -368,7 +371,7 @@ var Gamepad = function () {
   }, {
     key: 'gameLoop',
     value: function gameLoop() {
-      var _this4 = this;
+      var _this5 = this;
 
       var gamepads = navigator.getGamepads ? navigator.getGamepads() : navigator.webkitGetGamepads;
       var gp = gamepads[0];
@@ -380,36 +383,36 @@ var Gamepad = function () {
         this.pressedOutInstance = setTimeout(function () {
           console.log('x');
 
-          if (_this4.app.pages.home.projectWrapper.classList.contains('show')) {
-            _this4.app.pages.home.closeProject();
+          if (_this5.app.pages.home.projectWrapper.classList.contains('show')) {
+            _this5.app.pages.home.closeProject();
           } else {
-            _this4.app.Nav.gotoPage('home');
+            _this5.app.Nav.gotoPage('home');
           }
         }, 50);
       }
       if (buttonPressed(gp.buttons[2])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (!_this4.blockAnimation && _this4.app.currentPage !== 'services') {
+          if (!_this5.blockAnimation && _this5.app.currentPage !== 'services') {
             console.log('■');
-            _this4.blockAnimation = true;
-            _this4.app.pages[_this4.app.currentPage].hide();
-            _this4.app.Nav.show();
-            _this4.app.Nav.icons.forEach(function (el) {
+            _this5.blockAnimation = true;
+            _this5.app.pages[_this5.app.currentPage].hide();
+            _this5.app.Nav.show();
+            _this5.app.Nav.icons.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this4.app.Nav.links.forEach(function (el) {
+            _this5.app.Nav.links.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this4.app.Nav.links[1].dispatchEvent(_this4.mouseover);
-            _this4.app.Nav.icons[1].classList.add('active');
+            _this5.app.Nav.links[1].dispatchEvent(_this5.mouseover);
+            _this5.app.Nav.icons[1].classList.add('active');
 
             setTimeout(function () {
-              _this4.app.Nav.links[1].dispatchEvent(_this4.click);
+              _this5.app.Nav.links[1].dispatchEvent(_this5.click);
               setTimeout(function () {
                 console.log('OUT!');
-                _this4.blockAnimation = false;
-                _this4.app.Nav.links[1].dispatchEvent(_this4.mouseleave);
+                _this5.blockAnimation = false;
+                _this5.app.Nav.links[1].dispatchEvent(_this5.mouseleave);
               }, 700);
             }, 700);
           }
@@ -418,26 +421,26 @@ var Gamepad = function () {
       if (buttonPressed(gp.buttons[1])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (!_this4.blockAnimation && _this4.app.currentPage !== 'about') {
+          if (!_this5.blockAnimation && _this5.app.currentPage !== 'about') {
             console.log('●');
-            _this4.blockAnimation = true;
-            _this4.app.pages[_this4.app.currentPage].hide();
-            _this4.app.Nav.show();
-            _this4.app.Nav.icons.forEach(function (el) {
+            _this5.blockAnimation = true;
+            _this5.app.pages[_this5.app.currentPage].hide();
+            _this5.app.Nav.show();
+            _this5.app.Nav.icons.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this4.app.Nav.links.forEach(function (el) {
+            _this5.app.Nav.links.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this4.app.Nav.links[0].dispatchEvent(_this4.mouseover);
-            _this4.app.Nav.icons[0].classList.add('active');
+            _this5.app.Nav.links[0].dispatchEvent(_this5.mouseover);
+            _this5.app.Nav.icons[0].classList.add('active');
 
             setTimeout(function () {
-              _this4.app.Nav.links[0].dispatchEvent(_this4.click);
+              _this5.app.Nav.links[0].dispatchEvent(_this5.click);
               setTimeout(function () {
                 console.log('OUT!');
-                _this4.blockAnimation = false;
-                _this4.app.Nav.links[0].dispatchEvent(_this4.mouseleave);
+                _this5.blockAnimation = false;
+                _this5.app.Nav.links[0].dispatchEvent(_this5.mouseleave);
               }, 700);
             }, 700);
           }
@@ -446,26 +449,26 @@ var Gamepad = function () {
       if (buttonPressed(gp.buttons[3])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (!_this4.blockAnimation && _this4.app.currentPage !== 'awards') {
+          if (!_this5.blockAnimation && _this5.app.currentPage !== 'awards') {
             console.log('▲');
-            _this4.blockAnimation = true;
-            _this4.app.pages[_this4.app.currentPage].hide();
-            _this4.app.Nav.show();
-            _this4.app.Nav.icons.forEach(function (el) {
+            _this5.blockAnimation = true;
+            _this5.app.pages[_this5.app.currentPage].hide();
+            _this5.app.Nav.show();
+            _this5.app.Nav.icons.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this4.app.Nav.links.forEach(function (el) {
+            _this5.app.Nav.links.forEach(function (el) {
               el.classList.remove('active');
             });
-            _this4.app.Nav.links[2].dispatchEvent(_this4.mouseover);
-            _this4.app.Nav.icons[2].classList.add('active');
+            _this5.app.Nav.links[2].dispatchEvent(_this5.mouseover);
+            _this5.app.Nav.icons[2].classList.add('active');
 
             setTimeout(function () {
-              _this4.app.Nav.links[2].dispatchEvent(_this4.click);
+              _this5.app.Nav.links[2].dispatchEvent(_this5.click);
               setTimeout(function () {
                 console.log('OUT!');
-                _this4.blockAnimation = false;
-                _this4.app.Nav.links[2].dispatchEvent(_this4.mouseleave);
+                _this5.blockAnimation = false;
+                _this5.app.Nav.links[2].dispatchEvent(_this5.mouseleave);
               }, 700);
             }, 700);
           }
@@ -478,12 +481,12 @@ var Gamepad = function () {
       if (buttonPressed(gp.buttons[14])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (_this4.app.currentPage === 'home') {
+          if (_this5.app.currentPage === 'home') {
             console.log('left');
-            _this4.lastPressedButton = 'left';
+            _this5.lastPressedButton = 'left';
 
-            if (_this4.app.pages.home.projectWrapper.classList.contains('show')) {
-              _this4.app.pages.home.closeProject();
+            if (_this5.app.pages.home.projectWrapper.classList.contains('show')) {
+              _this5.app.pages.home.closeProject();
             }
           }
         }, 50);
@@ -491,17 +494,17 @@ var Gamepad = function () {
       if (buttonPressed(gp.buttons[15])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (_this4.app.currentPage === 'home') {
+          if (_this5.app.currentPage === 'home') {
             console.log('right');
-            _this4.lastPressedButton = 'right';
-            var targetProjectLink = _this4.app.pages.home.projectItens[_this4.app.currentProject];
+            _this5.lastPressedButton = 'right';
+            var targetProjectLink = _this5.app.pages.home.projectItens[_this5.app.currentProject];
 
-            clearTimeout(_this4.lastPressedTimer);
-            _this4.lastPressedTimer = setTimeout(_this4.lastPressedAction, 250);
+            clearTimeout(_this5.lastPressedTimer);
+            _this5.lastPressedTimer = setTimeout(_this5.lastPressedAction, 250);
 
             if (targetProjectLink.classList.contains('white')) {
-              clearTimeout(_this4.clearSelectedProjectTimer);
-              targetProjectLink.dispatchEvent(_this4.click);
+              clearTimeout(_this5.clearSelectedProjectTimer);
+              targetProjectLink.dispatchEvent(_this5.click);
               console.log(targetProjectLink);
             }
           }
@@ -510,30 +513,30 @@ var Gamepad = function () {
       if (buttonPressed(gp.buttons[12])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (_this4.app.currentPage === 'home') {
+          if (_this5.app.currentPage === 'home') {
             console.log('top');
-            _this4.lastPressedButton = 'top';
-            _this4.app.currentProject = _this4.app.currentProject - 1 < 0 ? _this4.app.projects.length - 1 : _this4.app.currentProject - 1;
+            _this5.lastPressedButton = 'top';
+            _this5.app.currentProject = _this5.app.currentProject - 1 < 0 ? _this5.app.projects.length - 1 : _this5.app.currentProject - 1;
 
-            _this4.updateSelectedProject();
+            _this5.updateSelectedProject();
 
-            clearTimeout(_this4.clearSelectedProjectTimer);
-            _this4.clearSelectedProjectTimer = setTimeout(_this4.clearSelectedProject, 2000);
+            clearTimeout(_this5.clearSelectedProjectTimer);
+            _this5.clearSelectedProjectTimer = setTimeout(_this5.clearSelectedProject, 2000);
           }
         }, 50);
       }
       if (buttonPressed(gp.buttons[13])) {
         clearTimeout(this.pressedOutInstance);
         this.pressedOutInstance = setTimeout(function () {
-          if (_this4.app.currentPage === 'home') {
+          if (_this5.app.currentPage === 'home') {
             console.log('down');
-            _this4.lastPressedButton = 'down';
-            _this4.app.currentProject = _this4.app.currentProject + 1 > _this4.app.projects.length - 1 ? 0 : _this4.app.currentProject + 1;
+            _this5.lastPressedButton = 'down';
+            _this5.app.currentProject = _this5.app.currentProject + 1 > _this5.app.projects.length - 1 ? 0 : _this5.app.currentProject + 1;
 
-            _this4.updateSelectedProject();
+            _this5.updateSelectedProject();
 
-            clearTimeout(_this4.clearSelectedProjectTimer);
-            _this4.clearSelectedProjectTimer = setTimeout(_this4.clearSelectedProject, 2000);
+            clearTimeout(_this5.clearSelectedProjectTimer);
+            _this5.clearSelectedProjectTimer = setTimeout(_this5.clearSelectedProject, 2000);
           }
         }, 50);
       }

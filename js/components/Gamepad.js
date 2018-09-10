@@ -28,9 +28,9 @@ export default class Gamepad {
   init() {
     console.log('gamepad');
     setTimeout(() => {
+      window.addEventListener('gamepadconnected', this.gamepadConnected);
+      window.addEventListener('gampaddisconnected', this.gampadDisconnected);
     }, 2000);
-    window.addEventListener('gamepadconnected', this.gamepadConnected);
-    window.addEventListener('gampaddisconnected', this.gampadDisconnected);
   }
   lastPressedAction(){
     this.lastPressedButton = '';
