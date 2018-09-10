@@ -56,6 +56,7 @@
     "lodash": "^4.17.10",
     "masonry-layout": "^4.2.0",
     "moment": "^2.18.1",
-    "page.js": "^4.13.3"
+    "page.js": "^4.13.3",
+    "pixi.js": "^4.8.2"
   }
 }

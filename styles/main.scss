@@ -74,6 +74,17 @@ body.App {
   }
 }
 
+.gamepad-message{
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%,-50%,0);
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  text-align: center; 
+}
+
 .subtitle{
   position: fixed;
   bottom: 10vh;
@@ -214,7 +225,7 @@ body.App {
       .link{
         cursor: pointer;
         position: relative;
-        &:hover{
+        &.active{
           opacity: 0;
         }
       }
@@ -227,6 +238,24 @@ body.App {
         padding-right: 1rem;
       }
     }
+  }
+}
+
+.canvas-wrapper {
+	position: absolute;
+	overflow: hidden;
+  top: 50%;
+  left: 50%;
+	width: 100vw;
+  height: 100vh;
+  transform: translate3d(-50%,-50%,0);
+  z-index: 0;
+  
+  canvas {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 }
 

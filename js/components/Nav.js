@@ -28,8 +28,8 @@ export default class Navegation {
       el.addEventListener('click', (e) => {
         el.removeEventListener('mouseover', this.link_mouseover);
         el.removeEventListener('mouseleave', this.link_mouseleave);
-
         const { pageId, iconId } = e.currentTarget.dataset;
+
         const iconWrapper = this.icons.find(x => x.classList.contains(iconId));
         const { ratio } = iconWrapper.dataset;
 
@@ -92,6 +92,7 @@ export default class Navegation {
     const { x, y, width} = e.currentTarget.getBoundingClientRect();
     const iconRect = currentIcon.firstElementChild.getBoundingClientRect();
 
+    e.currentTarget.classList.add('active');
     currentIcon.firstElementChild.style.height = '8vh';
 
     currentIcon.classList.add('active');
@@ -100,6 +101,9 @@ export default class Navegation {
   }
   
   link_mouseleave() {
+    this.links.forEach((el) => {
+      el.classList.remove('active');
+    });
     this.icons.forEach((el) => {
       el.classList.remove('active');
     });

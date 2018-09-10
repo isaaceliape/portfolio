@@ -24,13 +24,14 @@
   </head>
 
   <body class="App">
+    <div class="gamepad-message">gamepad connected<br>enjoy =]</div>
     <div class="cursor">+</div>
     <h1 class="menu show">
       <span>menu</span>
       <div class="icons">
-        <img src="assets/images/Oval-black.svg" />
-        <img src="assets/images/Rectangle-black.svg" />
-        <img src="assets/images/Triangle-black.svg" />
+        <img src="assets/images/Oval-black.svg"  />
+        <img src="assets/images/Rectangle-black.svg"  />
+        <img src="assets/images/Triangle-black.svg"  />
       </div>
     </h1>
     <h1 class="subtitle"></h1>
@@ -56,6 +57,7 @@
     <section class="page home">
       <div class="projects">
         <ul class="project-list">
+          <div id="js-canvas-wrapper" class="canvas-wrapper"></div>
           <li class="project-item"><span>sclp</span></li>
           <li class="project-item" data-project-id="hpmagicwords"><span class="marquee">hpmagicwords</span></li>
           <li class="project-item" data-project-id="gettyendeless"><span class="marquee">gettyendeless</span></li>
@@ -64,10 +66,6 @@
         </ul>
       </div>
       <div class="project-detail">
-        <img src="assets/images/projects/flplny.png" alt="flplny" class="project-image" data-project-id="flplny">
-        <img src="assets/images/projects/fundacao_lemann.png" alt="fundacao lemann" class="project-image" data-project-id="fundacaolemann">
-        <img src="assets/images/projects/getty_endless_possibilities.png" alt="getty endless possibilities" class="project-image" data-project-id="gettyendeless">
-        <img src="assets/images/projects/hp_magic_works.png" alt="hp magic works" class="project-image" data-project-id="hpmagicwords">
         <div class="project-wrapper">
           <div class="project-hit-area"></div>
           <div class="project-content">

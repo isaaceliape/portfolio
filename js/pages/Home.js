@@ -10,16 +10,15 @@ export default class Home {
     this.closeProjectBtn = this.projectWrapper.querySelector('.close');
     this.projectContent = this.projectWrapper.querySelector('.project-content');
     this.projectItens = [...this.el.querySelectorAll('.project-item[data-project-id]')];
-    this.projectImages = [...this.el.querySelectorAll('.project-image')];
     this.subtitle = this.app.el.querySelector('.subtitle');
 
     this.openProject = this.openProject.bind(this);
     this.addListeners = this.addListeners.bind(this);
     this.closeProject = this.closeProject.bind(this);
-    this.mouseOverProjectLink = this.mouseOverProjectLink.bind(this);
-    this.mouseLeaveProjectLink = this.mouseLeaveProjectLink.bind(this);
-    this.mouseOverProjectContent = this.mouseOverProjectContent.bind(this);
-    this.mouseLeaveProjectContent = this.mouseLeaveProjectContent.bind(this);
+    this.projectLink_mouseover = this.projectLink_mouseover.bind(this);
+    this.projectLink_mouseleave = this.projectLink_mouseleave.bind(this);
+    this.projectContent_mouseover = this.projectContent_mouseover.bind(this);
+    this.projectContent_mouseleave = this.projectContent_mouseleave.bind(this);
     this.onOrientationChange = this.onOrientationChange.bind(this);
     this.updateActiveProject = this.updateActiveProject.bind(this);
     this.resetActiveProject = this.resetActiveProject.bind(this);
@@ -46,7 +45,6 @@ export default class Home {
     this.el.classList.remove('black');
     for(let i = 0 ; i < this.projectItens.length; i += 1){
       this.projectItens[i].classList.remove('active');
-      this.projectImages[i].classList.remove('show');
     }
     this.subtitle.innerText = '';
   }
@@ -55,10 +53,9 @@ export default class Home {
     this.el.classList.add('black');
     for(let i = 0 ; i < this.projectItens.length; i += 1){
       this.projectItens[i].classList.remove('active');
-      this.projectImages[i].classList.remove('show');
     }
     this.projectItens[this.pos].classList.add('active');
-    this.projectImages[this.pos].classList.add('show');
+
     this.subtitle.innerText = this.app.projects[this.pos].subtitle;
   }
 
@@ -88,25 +85,28 @@ export default class Home {
     }
   }
   
-  mouseOverProjectLink(event){
+  projectLink_mouseover(event){
     const { projectId } = event.currentTarget.dataset;
-    this.projectImages.forEach((img) => {
-      img.classList.remove('show');
-    });
     
-    const image = this.projectImages.find(x => x.dataset.projectId === projectId);
-    image.classList.add('show');
+    this.projectItens.forEach((el) => {
+      if(el.dataset.projectId !== projectId){
+        el.classList.add('hide');
+      }
+    });
+    event.currentTarget.classList.add('white');
     this.app.el.classList.add('black');
     this.app.Cursor.el.classList.add('white');
-    event.currentTarget.classList.add('white');
+    this.app.liquidImages.canvas.showImage(projectId);
   }
   
-  mouseLeaveProjectLink(event){
+  projectLink_mouseleave(event){
     event.currentTarget.classList.remove('white');
     this.app.el.classList.remove('black');
     this.app.Cursor.el.classList.remove('white');
-    this.projectImages.forEach((img) => {
-      img.classList.remove('show');
+    this.app.liquidImages.canvas.hideImages();
+
+    this.projectItens.forEach((el) => {
+      el.classList.remove('hide');
     });
   }
 
@@ -119,26 +119,24 @@ export default class Home {
     }
 
     const { projectId } = e.currentTarget.dataset;
-    const image = this.projectImages.find(x => x.dataset.projectId == projectId);
     const { description, link, tecnologies } = this.app.projects.find(x => x.id == projectId);
     let techList = '';
     tecnologies.forEach((item) => {
       techList += `<li class="tech-item">${item}</li>`;
     });
 
+    this.app.liquidImages.canvas.expandImage(projectId);
     this.app.menu.classList.remove('show');
     this.projectDescription.innerText = description;
     this.projectLink.setAttribute('href', link);
     this.projectTechs.innerHTML = techList;
-
-    image.classList.add('opened');
     e.currentTarget.classList.add('stop');
     this.projectWrapper.classList.add('show');
     this.projectContent.scrollTop = 0;
 
     if(!this.app.isMobile){
-      this.projectContent.addEventListener('mouseover', this.mouseOverProjectContent);
-      this.projectContent.addEventListener('mouseleave', this.mouseLeaveProjectContent);
+      this.projectContent.addEventListener('mouseover', this.projectContent_mouseover);
+      this.projectContent.addEventListener('mouseleave', this.projectContent_mouseleave);
     }
 
     this.removeListener();
@@ -148,41 +146,43 @@ export default class Home {
     window.addEventListener('deviceorientation', this.onOrientationChange);
 
     this.removeListener();
-    this.projectContent.removeEventListener('mouseover', this.mouseOverProjectContent);
-    this.projectContent.removeEventListener('mouseleave', this.mouseLeaveProjectContent);
+    this.projectContent.removeEventListener('mouseover', this.projectContent_mouseover);
+    this.projectContent.removeEventListener('mouseleave', this.projectContent_mouseleave);
 
-    const image = this.el.querySelector('.project-image.show.opened');
     const currentProjectItem = this.el.querySelector('.project-item.white');
-    image.classList.remove('opened');
-    image.classList.remove('show');
+    this.app.liquidImages.canvas.resetImageSize(currentProjectItem.dataset.projectId);
     currentProjectItem.classList.remove('white');
     currentProjectItem.classList.remove('stop');
     this.app.el.classList.remove('black');
     this.projectWrapper.classList.remove('show');
     this.app.Cursor.el.classList.remove('white');
     this.app.menu.classList.add('show');
+    this.app.liquidImages.canvas.hideImages();
+    this.projectItens.forEach((el) => {
+      el.classList.remove('hide');
+    });
     setTimeout(this.addListeners, 500);
   }
 
-  mouseOverProjectContent(){
+  projectContent_mouseover(){
     this.app.Cursor.el.classList.remove('white');
   }
-  mouseLeaveProjectContent(){
+  projectContent_mouseleave(){
     this.app.Cursor.el.classList.add('white');
   }
 
   addListeners(){
     this.projectItens.forEach((el) => {
-      el.addEventListener('mouseover', this.mouseOverProjectLink);
-      el.addEventListener('mouseleave', this.mouseLeaveProjectLink);
+      el.addEventListener('mouseover', this.projectLink_mouseover);
+      el.addEventListener('mouseleave', this.projectLink_mouseleave);
       el.addEventListener('click', this.openProject);
     });
   }
 
   removeListener(){
     this.projectItens.forEach((el) => {
-      el.removeEventListener('mouseover', this.mouseOverProjectLink);
-      el.removeEventListener('mouseleave', this.mouseLeaveProjectLink);
+      el.removeEventListener('mouseover', this.projectLink_mouseover);
+      el.removeEventListener('mouseleave', this.projectLink_mouseleave);
       el.removeEventListener('click', this.openProject);
     });
   }

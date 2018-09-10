@@ -4,12 +4,15 @@ import About from './pages/About';
 import Awards from './pages/Awards';
 import Services from './pages/Services';
 import Cursor from './components/Cursor';
+import Gamepad from './components/Gamepad';
+import LiquidImages from './components/LiquidImages';
 
 class App {
   constructor() {
     // INITIAL RULES
     this.el = document.body;
     this.currentPage = 'home',
+    this.currentProject = 0,
     this.pages = {};
     this.isMobile = false;
     this.pos = 0,
@@ -24,6 +27,7 @@ class App {
           'custom framework',
         ],
         link: 'https://www.hpmagicwords.com.br/tool/',
+        image: 'assets/images/projects/hp_magic_works.png',
         subtitle: 'speech api',
       },
       {
@@ -35,6 +39,7 @@ class App {
           'webGL',
         ],
         link: 'http://www.gettyendless.com/',
+        image: 'assets/images/projects/getty_endless_possibilities.png',
         subtitle: 'webGL',
       },
       {
@@ -47,6 +52,7 @@ class App {
           'wordpress',
         ],
         link: 'http://flplny.com/',
+        image: 'assets/images/projects/flplny.png',
         subtitle: 'responsive',
       },
       {
@@ -58,6 +64,7 @@ class App {
           'wordpress',
         ],
         link: 'http://www.fundacaolemann.org.br/',
+        image: 'assets/images/projects/fundacao_lemann.png',
         subtitle: 'responsive',
       },
     ];
@@ -76,8 +83,12 @@ class App {
       services: new Services(this),
     };
     
+    this.Gamepad = new Gamepad(this);
+    this.Gamepad.init();
+
     this.Cursor = new Cursor(this);
     this.Nav = new Nav(this);
+    this.liquidImages = new LiquidImages(this);
 
     this.menu.addEventListener('click', this.Nav.show.bind(this.Nav));
 

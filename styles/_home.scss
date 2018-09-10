@@ -40,6 +40,9 @@ section.home{
           color: #fff;
           z-index: 2;
         }
+        &.hide{
+          opacity: 0;
+        }
         &.stop{
           .marquee{
             animation-duration: 0s;
