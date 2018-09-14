@@ -20,6 +20,7 @@ export default class CanvasSlideshow{
     this.options.interactionEvent    = this.options.hasOwnProperty('interactionEvent') ? this.options.interactionEvent : '';
     this.options.displacementCenter  = this.options.hasOwnProperty('displacementCenter') ? this.options.displacementCenter : false;
     this.options.dispatchPointerOver = this.options.hasOwnProperty('dispatchPointerOver') ? this.options.dispatchPointerOver : false;
+    this.options.isMobile            = this.options.hasOwnProperty('isMobile') ? this.options.isMobile : false;
     this.images = [];
 
     //  PIXI VARIABLES
@@ -128,15 +129,33 @@ export default class CanvasSlideshow{
   }
   expandImage(id){
     const image = this.images.find(x => x.id === id);
-    TweenMax.to(image.scale, .3,{ x: 0.7, y: 0.7, ease: Cubic.easeInOut });
+    if (this.options.isMobile) {
+      image.width = (window.innerWidth / 100) * 80;
+      image.height = image.width / 1.6;
+      const targetHeight = (window.innerHeight / 4);
+      TweenMax.to(image.scale, .3,{ x: 0.2, y: 0.2, ease: Cubic.easeInOut });
+      TweenMax.to(image, .3,{ y: targetHeight, ease: Cubic.easeInOut });
+    } else {
+      TweenMax.to(image.scale, .3,{ x: 0.7, y: 0.7, ease: Cubic.easeInOut });
+    }
   }
   resetImageSize(id){
     const image = this.images.find(x => x.id === id);
-    TweenMax.to(image.scale, .3,{ x: 0.5, y: 0.5, ease: Cubic.easeInOut });
+    if (this.options.isMobile) {
+      image.width = window.innerWidth / 2;
+      image.height = image.width / 1.6;
+      image.y = this.renderer.height / 2;
+    } else {
+      TweenMax.to(image.scale, .3,{ x: 0.5, y: 0.5, ease: Cubic.easeInOut });
+    }
   }
   showImage(id) {
     const image = this.images.find(x => x.id === id);
     this.hideImages();
+    if (this.options.isMobile) {
+      image.width = (window.innerWidth / 100) * 80;
+      image.height = image.width / 1.6;
+    }
     image.alpha = 1;
   }
 

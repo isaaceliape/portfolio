@@ -43,20 +43,29 @@ export default class Home {
 
   resetActiveProject(){
     this.el.classList.remove('black');
-    for(let i = 0 ; i < this.projectItens.length; i += 1){
-      this.projectItens[i].classList.remove('active');
-    }
+    this.projectItens.forEach((el) => {
+      el.classList.remove('active');
+      el.classList.remove('hide');
+    });
+    const { id } = this.app.projects[this.pos];
+    this.app.el.classList.remove('black');
+    this.app.liquidImages.canvas.hideImages(id);
     this.subtitle.innerText = '';
   }
 
   updateActiveProject(){
     this.el.classList.add('black');
-    for(let i = 0 ; i < this.projectItens.length; i += 1){
-      this.projectItens[i].classList.remove('active');
-    }
-    this.projectItens[this.pos].classList.add('active');
 
+    this.projectItens.forEach((el) => {
+      el.classList.remove('active');
+      el.classList.add('hide');
+    });
+    this.app.el.classList.add('black');
+    this.projectItens[this.pos].classList.add('active');
+    this.projectItens[this.pos].classList.remove('hide');
     this.subtitle.innerText = this.app.projects[this.pos].subtitle;
+    const { id } = this.app.projects[this.pos];
+    this.app.liquidImages.canvas.showImage(id);
   }
 
   onOrientationChange(e){
@@ -66,7 +75,7 @@ export default class Home {
     percent = percent <= 0 ? 0 : percent;
     percent = percent >= 100 ? 100 : percent;
     const fraction = 100 / this.projectItens.length;
-    
+
     let pos = 0;
     this.projectItens.forEach((value, i) => {
       const start = fraction * i;
@@ -75,8 +84,7 @@ export default class Home {
         pos = i;
       }
     });
-    // pos = pos === 0 ? 1 : pos;
-    
+
     if(this.pos !== pos){
       this.pos = pos;
       this.updateActiveProject();
@@ -84,15 +92,16 @@ export default class Home {
       this.timer = setTimeout(this.resetActiveProject, 2000);
     }
   }
-  
+
   projectLink_mouseover(event){
     const { projectId } = event.currentTarget.dataset;
-    
+
     this.projectItens.forEach((el) => {
       if(el.dataset.projectId !== projectId){
         el.classList.add('hide');
       }
     });
+
     event.currentTarget.classList.add('white');
     this.app.el.classList.add('black');
     this.app.Cursor.el.classList.add('white');
@@ -114,9 +123,10 @@ export default class Home {
     clearTimeout(this.timer);
     window.removeEventListener('deviceorientation', this.onOrientationChange);
     this.subtitle.innerText = '';
-    for(let i = 0 ; i < this.projectItens.length; i += 1){
-      this.projectItens[i].classList.remove('active');
-    }
+
+    this.projectItens.forEach((el) => {
+      el.classList.remove('active');
+    });
 
     const { projectId } = e.currentTarget.dataset;
     const { description, link, tecnologies } = this.app.projects.find(x => x.id == projectId);

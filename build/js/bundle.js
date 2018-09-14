@@ -40,6 +40,7 @@ var CanvasSlideshow = function () {
     this.options.interactionEvent = this.options.hasOwnProperty('interactionEvent') ? this.options.interactionEvent : '';
     this.options.displacementCenter = this.options.hasOwnProperty('displacementCenter') ? this.options.displacementCenter : false;
     this.options.dispatchPointerOver = this.options.hasOwnProperty('dispatchPointerOver') ? this.options.dispatchPointerOver : false;
+    this.options.isMobile = this.options.hasOwnProperty('isMobile') ? this.options.isMobile : false;
     this.images = [];
 
     //  PIXI VARIABLES
@@ -152,7 +153,15 @@ var CanvasSlideshow = function () {
       var image = this.images.find(function (x) {
         return x.id === id;
       });
-      _gsap.TweenMax.to(image.scale, .3, { x: 0.7, y: 0.7, ease: _gsap.Cubic.easeInOut });
+      if (this.options.isMobile) {
+        image.width = window.innerWidth / 100 * 80;
+        image.height = image.width / 1.6;
+        var targetHeight = window.innerHeight / 4;
+        _gsap.TweenMax.to(image.scale, .3, { x: 0.2, y: 0.2, ease: _gsap.Cubic.easeInOut });
+        _gsap.TweenMax.to(image, .3, { y: targetHeight, ease: _gsap.Cubic.easeInOut });
+      } else {
+        _gsap.TweenMax.to(image.scale, .3, { x: 0.7, y: 0.7, ease: _gsap.Cubic.easeInOut });
+      }
     }
   }, {
     key: 'resetImageSize',
@@ -160,7 +169,13 @@ var CanvasSlideshow = function () {
       var image = this.images.find(function (x) {
         return x.id === id;
       });
-      _gsap.TweenMax.to(image.scale, .3, { x: 0.5, y: 0.5, ease: _gsap.Cubic.easeInOut });
+      if (this.options.isMobile) {
+        image.width = window.innerWidth / 2;
+        image.height = image.width / 1.6;
+        image.y = this.renderer.height / 2;
+      } else {
+        _gsap.TweenMax.to(image.scale, .3, { x: 0.5, y: 0.5, ease: _gsap.Cubic.easeInOut });
+      }
     }
   }, {
     key: 'showImage',
@@ -169,6 +184,10 @@ var CanvasSlideshow = function () {
         return x.id === id;
       });
       this.hideImages();
+      if (this.options.isMobile) {
+        image.width = window.innerWidth / 100 * 80;
+        image.height = image.width / 1.6;
+      }
       image.alpha = 1;
     }
   }, {
@@ -606,6 +625,7 @@ var LiquidImages = function LiquidImages(app) {
 
   this.app = app;
   this.canvas = new _CanvasSlideshow2.default({
+    isMobile: this.app.isMobile,
     sprites: this.app.projects,
     centerSprites: true,
     displacementImage: '../../../assets/images/pattern-clouds.jpg',
@@ -1118,21 +1138,32 @@ var Home = function () {
     key: 'resetActiveProject',
     value: function resetActiveProject() {
       this.el.classList.remove('black');
-      for (var i = 0; i < this.projectItens.length; i += 1) {
-        this.projectItens[i].classList.remove('active');
-      }
+      this.projectItens.forEach(function (el) {
+        el.classList.remove('active');
+        el.classList.remove('hide');
+      });
+      var id = this.app.projects[this.pos].id;
+
+      this.app.el.classList.remove('black');
+      this.app.liquidImages.canvas.hideImages(id);
       this.subtitle.innerText = '';
     }
   }, {
     key: 'updateActiveProject',
     value: function updateActiveProject() {
       this.el.classList.add('black');
-      for (var i = 0; i < this.projectItens.length; i += 1) {
-        this.projectItens[i].classList.remove('active');
-      }
-      this.projectItens[this.pos].classList.add('active');
 
+      this.projectItens.forEach(function (el) {
+        el.classList.remove('active');
+        el.classList.add('hide');
+      });
+      this.app.el.classList.add('black');
+      this.projectItens[this.pos].classList.add('active');
+      this.projectItens[this.pos].classList.remove('hide');
       this.subtitle.innerText = this.app.projects[this.pos].subtitle;
+      var id = this.app.projects[this.pos].id;
+
+      this.app.liquidImages.canvas.showImage(id);
     }
   }, {
     key: 'onOrientationChange',
@@ -1152,7 +1183,6 @@ var Home = function () {
           pos = i;
         }
       });
-      // pos = pos === 0 ? 1 : pos;
 
       if (this.pos !== pos) {
         this.pos = pos;
@@ -1172,6 +1202,7 @@ var Home = function () {
           el.classList.add('hide');
         }
       });
+
       event.currentTarget.classList.add('white');
       this.app.el.classList.add('black');
       this.app.Cursor.el.classList.add('white');
@@ -1195,9 +1226,10 @@ var Home = function () {
       clearTimeout(this.timer);
       window.removeEventListener('deviceorientation', this.onOrientationChange);
       this.subtitle.innerText = '';
-      for (var i = 0; i < this.projectItens.length; i += 1) {
-        this.projectItens[i].classList.remove('active');
-      }
+
+      this.projectItens.forEach(function (el) {
+        el.classList.remove('active');
+      });
 
       var projectId = e.currentTarget.dataset.projectId;
 
