@@ -101,6 +101,8 @@ export default class Home {
         el.classList.add('hide');
       }
     });
+    const { subtitle } = this.app.projects.find(x => x.id === projectId);
+    this.subtitle.innerText = subtitle;
 
     event.currentTarget.classList.add('white');
     this.app.el.classList.add('black');
@@ -113,6 +115,7 @@ export default class Home {
     this.app.el.classList.remove('black');
     this.app.Cursor.el.classList.remove('white');
     this.app.liquidImages.canvas.hideImages();
+    this.subtitle.innerText = '';
 
     this.projectItens.forEach((el) => {
       el.classList.remove('hide');
@@ -142,7 +145,7 @@ export default class Home {
     this.projectTechs.innerHTML = techList;
     e.currentTarget.classList.add('stop');
     this.projectWrapper.classList.add('show');
-    this.projectContent.scrollTop = 0;
+    this.projectWrapper.scrollTop = 0;
 
     if(!this.app.isMobile){
       this.projectContent.addEventListener('mouseover', this.projectContent_mouseover);
@@ -151,7 +154,7 @@ export default class Home {
 
     this.removeListener();
   }
-  
+
   closeProject(){
     window.addEventListener('deviceorientation', this.onOrientationChange);
 

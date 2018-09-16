@@ -1203,6 +1203,13 @@ var Home = function () {
         }
       });
 
+      var _app$projects$find = this.app.projects.find(function (x) {
+        return x.id === projectId;
+      }),
+          subtitle = _app$projects$find.subtitle;
+
+      this.subtitle.innerText = subtitle;
+
       event.currentTarget.classList.add('white');
       this.app.el.classList.add('black');
       this.app.Cursor.el.classList.add('white');
@@ -1215,6 +1222,7 @@ var Home = function () {
       this.app.el.classList.remove('black');
       this.app.Cursor.el.classList.remove('white');
       this.app.liquidImages.canvas.hideImages();
+      this.subtitle.innerText = '';
 
       this.projectItens.forEach(function (el) {
         el.classList.remove('hide');
@@ -1233,12 +1241,12 @@ var Home = function () {
 
       var projectId = e.currentTarget.dataset.projectId;
 
-      var _app$projects$find = this.app.projects.find(function (x) {
+      var _app$projects$find2 = this.app.projects.find(function (x) {
         return x.id == projectId;
       }),
-          description = _app$projects$find.description,
-          link = _app$projects$find.link,
-          tecnologies = _app$projects$find.tecnologies;
+          description = _app$projects$find2.description,
+          link = _app$projects$find2.link,
+          tecnologies = _app$projects$find2.tecnologies;
 
       var techList = '';
       tecnologies.forEach(function (item) {
@@ -1252,7 +1260,7 @@ var Home = function () {
       this.projectTechs.innerHTML = techList;
       e.currentTarget.classList.add('stop');
       this.projectWrapper.classList.add('show');
-      this.projectContent.scrollTop = 0;
+      this.projectWrapper.scrollTop = 0;
 
       if (!this.app.isMobile) {
         this.projectContent.addEventListener('mouseover', this.projectContent_mouseover);

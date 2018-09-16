@@ -69,15 +69,12 @@
         <div class="project-wrapper">
           <div class="project-hit-area"></div>
           <div class="project-content">
-            <p class="description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda, animi?</p>
+            <p class="description"><!-- Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda, animi? --></p>
             <ul class="list-itens">
-              <li>Lorem, ipsum.</li>
-              <li>Lorem, ipsum.</li>
-              <li>Lorem, ipsum.</li>
-              <li>Lorem, ipsum.</li>
+              <!-- <li>Lorem, ipsum.</li> -->
             </ul>
             <p class="project-link">
-              <a href="#" class="marquee" target="_blank">launch website</a>
+              <a href="#" class="marquee" target="_blank"><!-- launch website --></a>
             </p>
             <div class="close">close</div>
           </div>
