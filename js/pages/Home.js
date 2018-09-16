@@ -2,26 +2,27 @@ export default class Home {
   constructor(app) {
     this.app = app;
     this.el = this.app.el.querySelector('section.home');
+    this.logo = this.app.el.querySelector('.logo');
+    this.subtitle = this.app.el.querySelector('.subtitle');
     this.projectWrapper = this.el.querySelector('.project-wrapper');
-    this.projectHitArea = this.projectWrapper.querySelector('.project-hit-area');
-    this.projectDescription = this.projectWrapper.querySelector('.description');
+    this.projectItens = [...this.el.querySelectorAll('.project-item[data-project-id]')];
     this.projectLink = this.projectWrapper.querySelector('.project-link .marquee');
     this.projectTechs = this.projectWrapper.querySelector('.list-itens');
-    this.closeProjectBtn = this.projectWrapper.querySelector('.close');
     this.projectContent = this.projectWrapper.querySelector('.project-content');
-    this.projectItens = [...this.el.querySelectorAll('.project-item[data-project-id]')];
-    this.subtitle = this.app.el.querySelector('.subtitle');
+    this.projectHitArea = this.projectWrapper.querySelector('.project-hit-area');
+    this.closeProjectBtn = this.projectWrapper.querySelector('.close');
+    this.projectDescription = this.projectWrapper.querySelector('.description');
 
     this.openProject = this.openProject.bind(this);
     this.addListeners = this.addListeners.bind(this);
     this.closeProject = this.closeProject.bind(this);
+    this.resetActiveProject = this.resetActiveProject.bind(this);
+    this.onOrientationChange = this.onOrientationChange.bind(this);
+    this.updateActiveProject = this.updateActiveProject.bind(this);
     this.projectLink_mouseover = this.projectLink_mouseover.bind(this);
     this.projectLink_mouseleave = this.projectLink_mouseleave.bind(this);
     this.projectContent_mouseover = this.projectContent_mouseover.bind(this);
     this.projectContent_mouseleave = this.projectContent_mouseleave.bind(this);
-    this.onOrientationChange = this.onOrientationChange.bind(this);
-    this.updateActiveProject = this.updateActiveProject.bind(this);
-    this.resetActiveProject = this.resetActiveProject.bind(this);
     this.timer = '';
 
     if (!this.app.isMobile) {
@@ -105,6 +106,7 @@ export default class Home {
     this.subtitle.innerText = subtitle;
 
     event.currentTarget.classList.add('white');
+    this.logo.classList.add('hide');
     this.app.el.classList.add('black');
     this.app.Cursor.el.classList.add('white');
     this.app.liquidImages.canvas.showImage(projectId);
@@ -112,6 +114,7 @@ export default class Home {
   
   projectLink_mouseleave(event){
     event.currentTarget.classList.remove('white');
+    this.logo.classList.remove('hide');
     this.app.el.classList.remove('black');
     this.app.Cursor.el.classList.remove('white');
     this.app.liquidImages.canvas.hideImages();
@@ -166,6 +169,7 @@ export default class Home {
     this.app.liquidImages.canvas.resetImageSize(currentProjectItem.dataset.projectId);
     currentProjectItem.classList.remove('white');
     currentProjectItem.classList.remove('stop');
+    this.logo.classList.remove('hide');
     this.app.el.classList.remove('black');
     this.projectWrapper.classList.remove('show');
     this.app.Cursor.el.classList.remove('white');

@@ -119,6 +119,11 @@ section.home{
         .project-item{
           font-size: $small-size;
           display: block;
+          &.logo{
+            &.hide{
+              opacity: 0;
+            }
+          }
           &.active{
             color: #fff;
             z-index: 1;

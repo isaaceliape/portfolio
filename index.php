@@ -58,7 +58,7 @@
       <div class="projects">
         <ul class="project-list">
           <div id="js-canvas-wrapper" class="canvas-wrapper"></div>
-          <li class="project-item"><span>sclp</span></li>
+          <li class="project-item logo"><span>sclp</span></li>
           <li class="project-item" data-project-id="hpmagicwords"><span class="marquee">hpmagicwords</span></li>
           <li class="project-item" data-project-id="gettyendeless"><span class="marquee">gettyendeless</span></li>
           <li class="project-item" data-project-id="flplny"><span class="marquee">flplny</span></li>
