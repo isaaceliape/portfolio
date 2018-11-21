@@ -23,6 +23,7 @@ export default class Navegation {
     this.btnClose.addEventListener('click', this.hide.bind(this));
     this.btnClose.addEventListener('mouseover', this.btnClose_mouseover);
     this.btnClose.addEventListener('mouseleave', this.btnClose_mouseleave);
+    window.removeEventListener('deviceorientation', app.pages.home.onOrientationChange);
 
     this.links.forEach((el) => {
       el.addEventListener('click', (e) => {
@@ -72,6 +73,7 @@ export default class Navegation {
     this.btnClose.removeEventListener('click', this.hide.bind(this));
     this.btnClose.removeEventListener('mouseover', this.btnClose_mouseover);
     this.btnClose.removeEventListener('mouseleave', this.btnClose_mouseleave);
+    window.addEventListener('deviceorientation', app.pages.home.onOrientationChange);
 
     this.links.forEach((el) => {
       el.removeEventListener('mouseover', this.link_mouseover);
