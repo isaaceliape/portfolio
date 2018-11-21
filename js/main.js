@@ -72,7 +72,7 @@ class App {
   }
   
   init() {
-    console.log('INIT APP =]');
+    console.log('INIT APP =] v2');
     this.isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) !== null;
     
     this.menu = document.querySelector('.menu');
