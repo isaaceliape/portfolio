@@ -88,10 +88,10 @@ body.App {
 
 .subtitle{
   position: fixed;
-  bottom: 10vh;
+  bottom: 0;
   left: 1rem;
   font-size: inherit;
-  z-index: 2;
+  z-index: 3;
   font-weight: 100;
   color: #fff;
 }
@@ -293,6 +293,7 @@ body.App {
     }
     .subtitle{
       display: block;
+      bottom: 3vh;
     }
     .menu{
       bottom: 5vh;

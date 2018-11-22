@@ -74,7 +74,7 @@
               <!-- <li>Lorem, ipsum.</li> -->
             </ul>
             <p class="project-link">
-              <a href="#" class="marquee" target="_blank"><!-- launch website --></a>
+              <a href="#" class="marquee" target="_blank">launch website</a>
             </p>
             <div class="close">close</div>
           </div>
