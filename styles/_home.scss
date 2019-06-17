@@ -30,11 +30,11 @@ section.home{
         list-style-type: none;
         display: inline-block;
         overflow: hidden;
-        margin-right: 1rem;
         vertical-align: top;
         position: relative;
-        &:first-child{
+        &.logo{
           pointer-events: none;
+          margin-right: 1rem;
         }
         &.white{
           color: #fff;

@@ -277,6 +277,14 @@ body.App {
     }
     .menu{
       font-size: inherit;
+      &:hover{
+        span{
+          display: block;
+        }
+        .icons{
+          display: none;
+        }
+      }
     }
     .nav{
       .nav-list{
@@ -287,6 +295,9 @@ body.App {
           .link{
             font-size: $small-size;
             display: block;
+            &.active {
+              opacity: 1;
+            }
           }
         }
       }

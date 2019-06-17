@@ -23,6 +23,7 @@ export default class Home {
     this.projectLink_mouseleave = this.projectLink_mouseleave.bind(this);
     this.projectContent_mouseover = this.projectContent_mouseover.bind(this);
     this.projectContent_mouseleave = this.projectContent_mouseleave.bind(this);
+    this.switchProjectsTimeOut = null;
     this.timer = '';
 
     if (!this.app.isMobile) {
@@ -96,6 +97,7 @@ export default class Home {
 
   projectLink_mouseover(event){
     const { projectId } = event.currentTarget.dataset;
+    clearTimeout(this.switchProjectsTimeOut);
 
     this.projectItens.forEach((el) => {
       if(el.dataset.projectId !== projectId){
@@ -115,10 +117,13 @@ export default class Home {
   projectLink_mouseleave(event){
     event.currentTarget.classList.remove('white');
     this.logo.classList.remove('hide');
-    this.app.el.classList.remove('black');
     this.app.Cursor.el.classList.remove('white');
     this.app.liquidImages.canvas.hideImages();
     this.subtitle.innerText = '';
+
+    this.switchProjectsTimeOut = setTimeout(() => {
+      this.app.el.classList.remove('black');
+    },100);
 
     this.projectItens.forEach((el) => {
       el.classList.remove('hide');

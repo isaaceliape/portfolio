@@ -55,7 +55,6 @@ section.about{
     position: absolute;
     left: 1rem;
     bottom: 0;
-    vertical-align: top;
     display: block;
     &:hover{
       .contact-text{
@@ -81,9 +80,9 @@ section.about{
     .portrait{
       height: auto;
       width: 70vw;
-      z-index: 0;
       &:hover{
         z-index: 0;
+        filter: grayscale(1);
       }
     }
     .call-to-action{
